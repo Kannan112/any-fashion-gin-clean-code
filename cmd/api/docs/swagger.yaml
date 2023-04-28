@@ -1,0 +1,77 @@
+definitions:
+  req.LoginReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  res.Response:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      stastuscode:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/adminlogin:
+    post:
+      consumes:
+      - application/json
+      description: Admin login
+      operationId: admin-login
+      parameters:
+      - description: Admin login credentials
+        in: body
+        name: admin_credentials
+        required: true
+        schema:
+          $ref: '#/definitions/req.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin Login
+      tags:
+      - Admin
+  /admin/category/delete/{category_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Admin can delete a category
+      operationId: delete-category
+      parameters:
+      - description: category_id
+        in: path
+        name: category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin can delete a category
+      tags:
+      - Product Category
+swagger: "2.0"

@@ -1,0 +1,19 @@
+package interfaces
+
+import (
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
+)
+
+type ProductRepository interface {
+	CreateCategory(category req.Category) (res.Category, error)
+	UpdateCategory(category req.Category, id int) (res.Category, error)
+	DeleteCategory(id int) error
+	DisplayCategory(id int) (res.Category, error)
+	ListCategories() ([]res.Category, error)
+	AddProduct(product req.Product) (res.Product, error)
+	UpdateProduct(id int,product req.Product)(res.Product,error)
+	DeleteProduct(id int)error
+
+
+}
