@@ -12,8 +12,8 @@ type UserRepository interface {
 	UserSignUp(ctx context.Context, user req.UserReq) (res.UserData, error)
 	UserLogin(ctx context.Context, email string) (domain.Users, error)
 	IsSignIn(phno string) (bool, error)
-	OtpLogin(phone string)(int,error)
-	AddAddress(address req.Address)error
-	
-
+	OtpLogin(phone string) (int, error)
+	AddAddress(id int, address req.Address) error
+	ViewProfile(id int) (res.UserData, error)
+	EditProfile(id int,profile req.UserReq)(res.UserData,error)
 }

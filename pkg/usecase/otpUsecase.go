@@ -17,9 +17,7 @@ type OtpUseCase struct {
 }
 
 func NewOtpUseCase(cfg config.Config) services.OtpUseCase {
-	return &OtpUseCase{
-		
-	}
+	return &OtpUseCase{}
 }
 
 func (c *OtpUseCase) SendOtp(ctx context.Context, phno req.OTPData) error {

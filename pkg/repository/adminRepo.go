@@ -60,6 +60,26 @@ func (c *adminDatabase) BlockUser(body req.BlockData, adminId int) error {
 		tx.Rollback()
 		return err
 	}
-	return fmt.Errorf("irdgfhgh")
+	return fmt.Errorf("")
 
+}
+func (c *adminDatabase) UnblockUser(id int) error {
+	tx := c.DB.Begin()
+	var IsExist bool
+	query := `SELECT EXIST(SELECT * FROM users WHERE id=$1 AND is_blocked=true)`
+	err := c.DB.Raw(query, id).Scan(IsExist).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if !IsExist {
+		tx.Rollback()
+		return fmt.Errorf("no such user to unblock")
+	}
+	err = tx.Exec(`UPDATE user SET is_blocked=false WHERE id=$1`, id).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return err
 }

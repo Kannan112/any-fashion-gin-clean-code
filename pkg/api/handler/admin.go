@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -65,23 +66,21 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 
 }
 
-// AdminLogin
 // @Summary Admin Login
-// @ID admin-login
-// @Description Admin login
+// @Description Logs in an admin user and returns an authentication token
 // @Tags Admin
-// @Accept json
-// @Produce json
-// @Param admin_credentials body req.LoginReq true "Admin login credentials"
+// @Accept  json
+// @Produce  json
+// @Param admin body req.LoginReq true "Admin login details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/adminlogin [post]
+// @Router /admin/login [post]
 func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	var admin req.LoginReq
 	fmt.Println("1")
 	err := c.Bind(&admin)
 	if err != nil {
-	
+
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "bind faild",
@@ -110,16 +109,11 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	})
 }
 
-// AdminLogout
 // @Summary Admin Logout
-// @ID adminlogout
-// @Description Logs out a logged-in admin from the E-commerce web api admin panel
-// @Tags Admin
-// @Accept json
+// @Description Logs out the currently authenticated admin user
+// @Tags admin
 // @Produce json
-// @Success 200 {object} res.Response
-// @Failure 400
-// @Router /admin/adminlogout [post]
+// @Success 200 {object} resRespons
 
 func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 	c.SetCookie("AdminAuth", "", -1, "", "", false, true)
@@ -144,5 +138,16 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 		})
 		return
 	}
+	adminId, errf := handlerUtil.GetAdminIdFromContext(c)
+	if errf != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find admin_id",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	cr.adminUseCase.BlockUser(body, adminId)
 
 }

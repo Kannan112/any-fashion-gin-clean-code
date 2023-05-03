@@ -103,7 +103,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 // @Tags Otp
 // @Accept json
 // @Produce json
-// @Param otp body helperStruct.VerifyOtp true "OTP sent to user's mobile number"
+// @Param otp body req.VerifyOtp true "OTP sent to user's mobile number"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /user/otp/verify [post]

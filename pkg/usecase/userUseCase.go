@@ -87,9 +87,25 @@ func (c *userUseCase) OtpLogin(phno string) (string, error) {
 
 // -------------------AddAddress-----------
 func (c *userUseCase) AddAddress(id int, body req.Address) error {
-	return fmt.Errorf("")
+	err := c.userRepo.AddAddress(id, body)
+	return err
+
 }
 func (c *userUseCase) IsSignIn(phone string) (bool, error) {
 	signIn, err := c.userRepo.IsSignIn(phone)
 	return signIn, err
+}
+
+//--------------------ViewProfile------------------
+
+func (c *userUseCase) ViewProfile(id int) (res.UserData, error) {
+	userData, err := c.userRepo.ViewProfile(id)
+	return userData, err
+}
+
+//--------------------Edit Profile----------------
+
+func (c *userUseCase) EditProfile(id int, UpdateProfile req.UserReq) (res.UserData, error) {
+	userdata, err := c.userRepo.EditProfile(id, UpdateProfile)
+	return userdata, err
 }

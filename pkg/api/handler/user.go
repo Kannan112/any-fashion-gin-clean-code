@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -93,7 +92,7 @@ func (cr *UserHandler) UserLogout(c *gin.Context) {
 		"message": "UserLogouted",
 	})
 }
-func (cr *UserHandler) AddAddress(c *gin.Context) error {
+func (cr *UserHandler) AddAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -102,10 +101,10 @@ func (cr *UserHandler) AddAddress(c *gin.Context) error {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-		return err
+		return
 	}
 	var address req.Address
-	err = c.Bind(address)
+	err = c.Bind(&address)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -113,7 +112,7 @@ func (cr *UserHandler) AddAddress(c *gin.Context) error {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-		return err
+		return
 	}
 	err = cr.userUseCase.AddAddress(id, address)
 	if err != nil {
@@ -123,8 +122,69 @@ func (cr *UserHandler) AddAddress(c *gin.Context) error {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-		
-	}
-	return fmt.Errorf("")
+		return
 
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "address added successfully",
+		Data:       address,
+		Errors:     nil,
+	})
+
+}
+func (cr *UserHandler) ViewProfile(c *gin.Context) {
+	id, err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find the id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+	}
+	profile, err := cr.userUseCase.ViewProfile(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Profile",
+		Data:       profile,
+		Errors:     nil,
+	})
+}
+func (cr *UserHandler) EditProfile(c *gin.Context) {
+	id, err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusAccepted, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find the id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	var update req.UserReq
+	profile, err := cr.userUseCase.EditProfile(id, update)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to update the profile",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Updated successfully",
+		Data:       profile,
+		Errors:     nil,
+	})
 }

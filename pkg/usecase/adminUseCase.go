@@ -71,4 +71,7 @@ func (c *adminUseCase) AdminLogin(admin req.LoginReq) (string, error) {
 
 	return ss, nil
 }
-func (c adminUseCase) BlockUser()
+func (c adminUseCase) BlockUser(body req.BlockData, adminId int) error {
+	err := c.adminRepo.BlockUser(body, adminId)
+	return err
+}

@@ -9,6 +9,21 @@ definitions:
     - email
     - password
     type: object
+  req.OTPData:
+    properties:
+      phoneNumber:
+        type: string
+    type: object
+  req.VerifyOtp:
+    properties:
+      code:
+        type: string
+      user:
+        $ref: '#/definitions/req.OTPData'
+    required:
+    - code
+    - user
+    type: object
   res.Response:
     properties:
       data: {}
@@ -21,33 +36,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /admin/adminlogin:
-    post:
-      consumes:
-      - application/json
-      description: Admin login
-      operationId: admin-login
-      parameters:
-      - description: Admin login credentials
-        in: body
-        name: admin_credentials
-        required: true
-        schema:
-          $ref: '#/definitions/req.LoginReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Admin Login
-      tags:
-      - Admin
   /admin/category/delete/{category_id}:
     delete:
       consumes:
@@ -74,4 +62,84 @@ paths:
       summary: Admin can delete a category
       tags:
       - Product Category
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in an admin user and returns an authentication token
+      parameters:
+      - description: Admin login details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/req.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin Login
+      tags:
+      - Admin
+  /user/otp/send:
+    post:
+      consumes:
+      - application/json
+      description: Send OTP to use's mobile
+      operationId: send-otp
+      parameters:
+      - description: User mobile number
+        in: body
+        name: user_mobile
+        required: true
+        schema:
+          $ref: '#/definitions/req.OTPData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Send OTP to user's mobile
+      tags:
+      - Otp
+  /user/otp/verify:
+    post:
+      consumes:
+      - application/json
+      description: Validate the  OTP sent to use's mobile
+      operationId: validate-otp
+      parameters:
+      - description: OTP sent to user's mobile number
+        in: body
+        name: otp
+        required: true
+        schema:
+          $ref: '#/definitions/req.VerifyOtp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Validate the OTP to user's mobile
+      tags:
+      - Otp
 swagger: "2.0"

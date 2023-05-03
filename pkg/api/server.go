@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/kannan112/go-gin-clean-arch/cmd/api/docs"
 	handler "github.com/kannan112/go-gin-clean-arch/pkg/api/handler"
+	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware"
 )
 
 type ServerHTTP struct {
@@ -15,7 +16,7 @@ type ServerHTTP struct {
 
 func NewServerHTTP(userHandler *handler.UserHandler,
 	adminHandler *handler.AdminHandler,
-
+	cartHandler *handler.CartHandler,
 	productHandler *handler.ProductHandler,
 ) *ServerHTTP {
 	engine := gin.New()
@@ -39,12 +40,22 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		user.POST("logout", userHandler.UserLogout)
 
 		//address
-		// address := user.Group("/address")
-		// {
+		address := user.Group("/address")
+		{
+			address.POST("add", middleware.UserAuth, userHandler.AddAddress)
+			//address.PATCH("update/:addressId", middleware.UserAuth, userHandler.UpdateAddress)
 
-		// 	//address.POST("add", middleware.UserAuth, userHandler.AddAddress)
-		// 	//address.PATCH("update/:addressId", userHandler.UpdateAddress)
-		// }
+		}
+		profile := user.Group("/profile")
+		{
+			profile.GET("view", middleware.UserAuth, userHandler.ViewProfile)
+			profile.PATCH("edit", middleware.UserAuth, userHandler.EditProfile)
+		}
+		cart := user.Group("/cart")
+		{
+			cart.POST("add/:product_item_id", cartHandler.AddToCart)
+			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
+		}
 	}
 
 	admin := engine.Group("/admin")
@@ -65,6 +76,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		product := admin.Group("/product")
 		{
 			product.POST("add", productHandler.AddProduct)
+
 		}
 
 	}

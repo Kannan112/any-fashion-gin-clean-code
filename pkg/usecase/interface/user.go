@@ -13,4 +13,6 @@ type UserUseCase interface {
 	IsSignIn(phno string) (bool, error)
 	OtpLogin(phone string) (string, error)
 	AddAddress(id int, body req.Address) error
+	ViewProfile(id int) (res.UserData, error)
+	EditProfile(id int,UpdateProfile req.UserReq)(res.UserData,error)
 }
