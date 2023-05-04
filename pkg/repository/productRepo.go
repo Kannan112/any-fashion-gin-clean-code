@@ -19,37 +19,37 @@ func NewProductRepository(DB *gorm.DB) interfaces.ProductRepository {
 
 func (c *ProductDataBase) CreateCategory(category req.Category) (res.Category, error) {
 	var newCategoery res.Category
-	query := `INSERT INTO category(name,created_at)Values($1,NOW())RETURNING id,name`
+	query := `INSERT INTO categories(category_name,created_at)Values($1,NOW())RETURNING id,category_name`
 	err := c.DB.Raw(query, category.Name).Scan(&newCategoery).Error
 	return newCategoery, err
 }
 func (c *ProductDataBase) UpdateCategory(category req.Category, id int) (res.Category, error) {
 	var updateCategory res.Category
-	query := `UPDATE category SET name=$1,update_at=NOW() WHERE id=$2 RETURNING id,category_name`
+	query := `UPDATE categories SET category_name=$1 WHERE id=$2 RETURNING id,category_name`
 	err := c.DB.Raw(query, category.Name, id).Scan(&updateCategory).Error
 	return updateCategory, err
 }
 func (c *ProductDataBase) DeleteCategory(id int) error {
-	query := `DELETE FROM category WHERE id=$1`
+	query := `DELETE FROM categories WHERE id=$1`
 	err := c.DB.Exec(query, id).Error
 	return err
 }
 func (c *ProductDataBase) ListCategories() ([]res.Category, error) {
 	var categories []res.Category
-	query := `SELECT * FROM category`
+	query := `SELECT * FROM categories`
 	err := c.DB.Raw(query).Scan(&categories).Error
 	return categories, err
 }
 func (c *ProductDataBase) DisplayCategory(id int) (res.Category, error) {
 	var category res.Category
-	query := `SELECT * FROM category WHERE id=$1`
+	query := `SELECT * FROM categories WHERE id=$1`
 	err := c.DB.Raw(query, id).Scan(&category).Error
 	return category, err
 }
 func (c *ProductDataBase) AddProduct(product req.Product) (res.Product, error) {
 	var newProduct res.Product
 	var exits bool
-	query1 := `select exists(select 1 FROM category where id=?)`
+	query1 := `select exists(select 1 FROM categories where id=$1)`
 	c.DB.Raw(query1, product.CategoryId).Scan(&exits)
 	if !exits {
 		return res.Product{}, fmt.Errorf("no category")
@@ -63,7 +63,7 @@ func (c *ProductDataBase) AddProduct(product req.Product) (res.Product, error) {
 }
 func (c *ProductDataBase) UpdateProduct(id int, product req.Product) (res.Product, error) {
 	var updateProduct res.Product
-	query := `UPDATE product SET product_name=$1,description=$2,brand=$3,qty=$4,price=$5,category_id=$6,updated_at=NOW()WHERE id=$5
+	query := `UPDATE products SET product_name=$1,description=$2,brand=$3,qty=$4,price=$5,category_id=$6,updated_at=NOW()WHERE id=$5
 	RETURNING id,product_name,description,brand,category_id`
 	err := c.DB.Raw(query, product.Name, product.Description, product.Brand, product.Qty, product.Price, product.CategoryId).Scan(&updateProduct).Error
 	return updateProduct, err

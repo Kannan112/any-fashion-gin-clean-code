@@ -280,3 +280,42 @@ func (cr *ProductHandler) AddProduct(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
+	var product req.Product
+	productId := c.Param("id")
+	id, err := strconv.Atoi(productId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant get the id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = c.Bind(&product)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "binding failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+	}
+	productUpdate, err := cr.productuseCase.UpdateProduct(id, product)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get the productDetails",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Updated successfully",
+		Data:       productUpdate,
+		Errors:     nil,
+	})
+
+}

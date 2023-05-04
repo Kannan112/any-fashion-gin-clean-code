@@ -76,6 +76,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		product := admin.Group("/product")
 		{
 			product.POST("add", productHandler.AddProduct)
+			product.PATCH("update", productHandler.UpdateProduct)
 
 		}
 
