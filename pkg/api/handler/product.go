@@ -180,6 +180,7 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
 		Message:    "Ctegories are",

@@ -51,10 +51,15 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			profile.GET("view", middleware.UserAuth, userHandler.ViewProfile)
 			profile.PATCH("edit", middleware.UserAuth, userHandler.EditProfile)
 		}
-		cart := user.Group("/cart")
+		product := user.Group("product", middleware.UserAuth)
 		{
-			cart.POST("add/:product_item_id", cartHandler.AddToCart)
-			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
+			product.GET("listallcategories", productHandler.ListCategories)
+			product.GET("listspecific", productHandler.DisplayCategory)
+		}
+		cart := user.Group("/cart", middleware.UserAuth)
+		{
+			cart.GET("add/:product_id", cartHandler.AddToCart)
+			cart.PATCH("remove/:product_id", cartHandler.RemoveFromCart)
 		}
 	}
 
@@ -75,9 +80,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		product := admin.Group("/product")
 		{
+
 			product.POST("add", productHandler.AddProduct)
 			product.PATCH("update", productHandler.UpdateProduct)
-
 		}
 
 	}

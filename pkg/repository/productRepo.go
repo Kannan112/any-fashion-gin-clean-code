@@ -19,13 +19,13 @@ func NewProductRepository(DB *gorm.DB) interfaces.ProductRepository {
 
 func (c *ProductDataBase) CreateCategory(category req.Category) (res.Category, error) {
 	var newCategoery res.Category
-	query := `INSERT INTO categories(category_name,created_at)Values($1,NOW())RETURNING id,category_name`
+	query := `INSERT INTO categories(name,created_at)Values($1,NOW())RETURNING id,name`
 	err := c.DB.Raw(query, category.Name).Scan(&newCategoery).Error
 	return newCategoery, err
 }
 func (c *ProductDataBase) UpdateCategory(category req.Category, id int) (res.Category, error) {
 	var updateCategory res.Category
-	query := `UPDATE categories SET category_name=$1 WHERE id=$2 RETURNING id,category_name`
+	query := `UPDATE categories SET name=$1 WHERE id=$2 RETURNING id,name`
 	err := c.DB.Raw(query, category.Name, id).Scan(&updateCategory).Error
 	return updateCategory, err
 }

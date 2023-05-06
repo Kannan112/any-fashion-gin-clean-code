@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ func UserAuth(c *gin.Context) {
 		return
 	}
 	c.Set("userId", userId)
+	fmt.Println("user_id", userId)
 	c.Next()
 
 }

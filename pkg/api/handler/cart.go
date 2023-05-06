@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -30,12 +31,13 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
-	paramsid := c.Param("product_item_id")
+	paramsid := c.Param("product_id")
+	fmt.Println("par_id", paramsid)
 	productId, err := strconv.Atoi(paramsid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "cant find productid",
+			Message:    "cant find",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
@@ -51,12 +53,6 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, res.Response{
-		StatusCode: 200,
-		Message:    "product added into cart",
-		Data:       nil,
-		Errors:     nil,
-	})
 
 }
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
@@ -70,7 +66,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		})
 		return
 	}
-	paramsId := c.Param("product_item_id")
+	paramsId := c.Param("product_id")
 	productId, err := strconv.Atoi(paramsId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
