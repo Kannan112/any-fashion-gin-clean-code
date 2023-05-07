@@ -50,3 +50,7 @@ func (c ProductUseCase) DeleteProduct(id int) error {
 	err := c.productRepo.DeleteProduct(id)
 	return err
 }
+func (c ProductUseCase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
+	NewProductItem, err := c.productRepo.AddProductItem(productItem)
+	return NewProductItem, err
+}

@@ -320,3 +320,32 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 	})
 
 }
+func (cr *ProductHandler) AddProductItem(c *gin.Context) {
+	var productItem req.ProductItem
+	err := c.Bind(&productItem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Cant bind",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	newProductItem, err := cr.productuseCase.AddProductItem(productItem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Cant create",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "product created",
+		Data:       newProductItem,
+		Errors:     nil,
+	})
+}

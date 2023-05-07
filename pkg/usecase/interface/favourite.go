@@ -5,5 +5,5 @@ package interfaces
 type FavouriteUseCases interface {
 	AddToFavourites(productId, userId int) error
 	RemoveFromFav(userId, productId int) error
-	ViewFavourite(usersId)([]Response.)
+//	ViewFavourite(usersId)([]Response.)
 }

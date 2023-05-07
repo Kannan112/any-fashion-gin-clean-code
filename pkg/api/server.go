@@ -70,7 +70,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		admin.POST("logout", adminHandler.AdminLogout)
 
 		//categorys
-		category := admin.Group("/category")
+		category := admin.Group("/category",middleware.AdminAuth)
 		{
 			category.POST("add", productHandler.CreateCategory)
 			category.PATCH("update/:id", productHandler.UpdatCategory)
@@ -78,13 +78,16 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			category.GET("listall", productHandler.ListCategories)
 			category.GET("find/:id", productHandler.DisplayCategory)
 		}
-		product := admin.Group("/product")
+		product := admin.Group("/product",middleware.AdminAuth)
 		{
-
 			product.POST("add", productHandler.AddProduct)
 			product.PATCH("update", productHandler.UpdateProduct)
 		}
-
+		//product item
+		productItem := admin.Group("/product-item",middleware.AdminAuth)
+		{
+			productItem.POST("add", productHandler.AddProductItem)
+		}
 	}
 
 	return &ServerHTTP{engine: engine}
