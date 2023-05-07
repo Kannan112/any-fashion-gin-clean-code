@@ -149,5 +149,6 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 		return
 	}
 	cr.adminUseCase.BlockUser(body, adminId)
+	
 
 }
