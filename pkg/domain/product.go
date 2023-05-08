@@ -21,9 +21,9 @@ type Product struct {
 }
 
 type ProductItem struct {
-	ID          uint    `gorm:"primaryKey" json:"id"`
-	ProductID   uint    `gorm:"not null" json:"product_id" validate:"required"`
-	Product     Product `gorm:"foreignKey:ProductID" json:"-"`
+	ID          uint `gorm:"primaryKey;unique;not null" json:"id"`
+	ProductID   uint `gorm:"not null" json:"product_id" validate:"required"`
+	Product     Product
 	SKU         string
 	QntyInStock int     `gorm:"not null" json:"qnty_in_stock" validate:"required"`
 	Gender      string  `gorm:"not null" json:"gender" validate:"required"`
@@ -36,8 +36,8 @@ type ProductItem struct {
 }
 
 type Images struct {
-	Id            uint        `gorm:"primaryKey;unique;not null"`
-	ProductItemID uint        `gorm:"not null" json:"product_item_id" validate:"required"`
-	ProductItem   ProductItem `gorm:"foreignKey:ProductItemID" json:"-"`
-	FileName      string      `json:"file_name"`
+	Id            uint `gorm:"primaryKey;unique;not null"`
+	ProductItemID uint `gorm:"not null" json:"product_item_id" validate:"required"`
+	ProductItem   ProductItem
+	FileName      string `json:"file_name"`
 }

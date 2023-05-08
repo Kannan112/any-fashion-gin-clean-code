@@ -8,10 +8,10 @@ type Carts struct {
 	Total     int
 }
 type CartItem struct {
-	Id        uint `gorm:"primeryKey;unique;not null"`
-	CartsID   uint
-	Carts     Carts
-	ProductID uint
-	Product   Product
-	Quantity  int
+	Id            uint `gorm:"primeryKey;unique;not null"`
+	CartsID       uint
+	Carts         Carts
+	ProductItemID uint
+	ProductItem   ProductItem
+	Quantity      int
 }

@@ -31,7 +31,7 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
-	paramsid := c.Param("product_id")
+	paramsid := c.Param("product_item_id")
 	fmt.Println("par_id", paramsid)
 	productId, err := strconv.Atoi(paramsid)
 	if err != nil {
@@ -53,6 +53,9 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
+	c.JSON(http.StatusAccepted, gin.H{
+		"Added": "successfully",
+	})
 
 }
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
@@ -66,8 +69,8 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		})
 		return
 	}
-	paramsId := c.Param("product_id")
-	productId, err := strconv.Atoi(paramsId)
+	paramsId := c.Param("product_item_id")
+	productitemid, err := strconv.Atoi(paramsId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -77,7 +80,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		})
 		return
 	}
-	err = cr.cartUsecase.RemoveFromCart(userId, productId)
+	err = cr.cartUsecase.RemoveFromCart(userId, productitemid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -95,3 +98,32 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+// func (cr *CartHandler) ListCart(c *gin.Context) {
+// 	userId, err := handlerUtil.GetUserIdFromContext(c)
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, res.Response{
+// 			StatusCode: 400,
+// 			Message:    "Failed to Get User",
+// 			Data:       nil,
+// 			Errors:     err,
+// 		})
+// 		return
+// 	}
+// 	// Details, err := CartHandler.cartUsecase(userId)
+// 	// if err != nil {
+// 	// 	c.JSON(http.StatusBadRequest, res.Response{
+// 	// 		StatusCode: 400,
+// 	// 		Message:    "Failed",
+// 	// 		Data:       nil,
+// 	// 		Errors:     err,
+// 	// 	})
+// 	// 	return
+// 	// }
+// 	c.JSON(http.StatusOK, res.Response{
+// 		StatusCode: 200,
+// 		Message:    "Cart Details",
+// 		//Data:       Details,
+// 		Errors: nil,
+// 	})
+
+// }

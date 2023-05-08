@@ -14,15 +14,15 @@ type Product struct {
 }
 
 type ProductItem struct {
-	ID         uint
-	ProductID  uint
-	Product    Product
-	Model      string
-	Size       string
-	Material   string
-	Gender     string
-	Type       string
-	SKU        string
-	QtyInStock int
-	Price      int
+	ID        uint
+	ProductID uint
+	Product   Product
+	Model     string
+	Size      string
+	Material  string
+	Gender    string
+	Type      string
+	SKU       string
+	Qty       int
+	Price     int
 }

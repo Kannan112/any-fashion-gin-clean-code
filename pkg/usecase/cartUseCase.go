@@ -19,11 +19,16 @@ func (c *CartUsecases) CreateCart(id int) error {
 	err := c.cartRepo.CreateCart(id)
 	return err
 }
-func (c *CartUsecases) AddToCart(produtId, Userid int) error {
-	err := c.cartRepo.AddToCart(produtId, Userid)
+func (c *CartUsecases) AddToCart(produtId, userId int) error {
+	err := c.cartRepo.AddToCart(produtId, userId)
 	return err
 }
 func (c *CartUsecases) RemoveFromCart(userId, productId int) error {
 	err := c.cartRepo.RemoveFromCart(userId, productId)
 	return err
 }
+// func (c *CartUsecases) ListCart(userId int) res.ViewCart {
+// 	err := c.cartRepo.ListCart(userId)
+// 	return res.ViewCart{},
+
+// }

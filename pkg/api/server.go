@@ -58,8 +58,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
-			cart.GET("add/:product_id", cartHandler.AddToCart)
-			cart.PATCH("remove/:product_id", cartHandler.RemoveFromCart)
+			cart.POST("add/:product_item_id", cartHandler.AddToCart)
+			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
+			//cart.GET("list",cartHandler.)
 		}
 	}
 
@@ -70,7 +71,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		admin.POST("logout", adminHandler.AdminLogout)
 
 		//categorys
-		category := admin.Group("/category",middleware.AdminAuth)
+		category := admin.Group("/category", middleware.AdminAuth)
 		{
 			category.POST("add", productHandler.CreateCategory)
 			category.PATCH("update/:id", productHandler.UpdatCategory)
@@ -78,13 +79,13 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			category.GET("listall", productHandler.ListCategories)
 			category.GET("find/:id", productHandler.DisplayCategory)
 		}
-		product := admin.Group("/product",middleware.AdminAuth)
+		product := admin.Group("/product", middleware.AdminAuth)
 		{
 			product.POST("add", productHandler.AddProduct)
 			product.PATCH("update", productHandler.UpdateProduct)
 		}
 		//product item
-		productItem := admin.Group("/product-item",middleware.AdminAuth)
+		productItem := admin.Group("/product-item", middleware.AdminAuth)
 		{
 			productItem.POST("add", productHandler.AddProductItem)
 		}
