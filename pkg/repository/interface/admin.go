@@ -12,4 +12,5 @@ type AdminRepository interface {
 	CreateAdmin(ctx context.Context, admin domain.Admin) error
 	AdminLogin(email string) (domain.Admin, error)
 	BlockUser(body req.BlockData, adminId int) error
+	UnblockUser(id int) error
 }

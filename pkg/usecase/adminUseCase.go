@@ -75,3 +75,7 @@ func (c adminUseCase) BlockUser(body req.BlockData, adminId int) error {
 	err := c.adminRepo.BlockUser(body, adminId)
 	return err
 }
+func (c *adminUseCase) UnblockUser(id int) error {
+	err := c.adminRepo.UnblockUser(id)
+	return err
+}

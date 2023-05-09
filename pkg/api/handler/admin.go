@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
@@ -77,7 +77,6 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 // @Router /admin/login [post]
 func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	var admin req.LoginReq
-	fmt.Println("1")
 	err := c.Bind(&admin)
 	if err != nil {
 
@@ -148,7 +147,51 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 		})
 		return
 	}
-	cr.adminUseCase.BlockUser(body, adminId)
-	
+	errx := cr.adminUseCase.BlockUser(body, adminId)
+	if errx != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Can't Block",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Blocked user",
+		Data:       nil,
+		Errors:     nil,
+	})
 
+}
+func (cr *AdminHandler) UnblockUser(c *gin.Context) {
+	paramsId := c.Param("user_id")
+	id, err := strconv.Atoi(paramsId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "bind faild",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = cr.adminUseCase.UnblockUser(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant unblock user",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "user unblocked",
+		Data:       nil,
+		Errors:     nil,
+	})
 }
