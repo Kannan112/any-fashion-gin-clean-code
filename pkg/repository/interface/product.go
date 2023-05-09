@@ -20,6 +20,7 @@ type ProductRepository interface {
 
 	//Product-item
 	AddProductItem(productItem req.ProductItem) (res.ProductItem, error)
-//	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
-//	RemoveProductItem(id int) error
+	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
+	DeleteProductItem(id int)error
+
 }

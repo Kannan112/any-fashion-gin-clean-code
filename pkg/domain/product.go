@@ -33,6 +33,7 @@ type ProductItem struct {
 	Material    string  `gorm:"not null" json:"material" validate:"required"`
 	Price       float64 `gorm:"not null" json:"price" validate:"required"`
 	Created_at  time.Time
+	Updated_at  time.Time
 }
 
 type Images struct {

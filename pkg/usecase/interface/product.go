@@ -15,6 +15,6 @@ type ProductUseCase interface {
 	UpdateProduct(id int, product req.Product) (res.Product, error)
 	DeleteProduct(id int) error
 	AddProductItem(productItem req.ProductItem) (res.ProductItem, error)
-	//UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
-	//DeleteProductItem(id int) error
+	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
+	DeleteProductItem(id int) error
 }

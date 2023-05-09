@@ -100,6 +100,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		productItem := admin.Group("/product-item", middleware.AdminAuth)
 		{
 			productItem.POST("add", productHandler.AddProductItem)
+			productItem.PATCH("update/:id", productHandler.UpdateProductItem)
+			productItem.DELETE("delete/:id", productHandler.DeleteProductItem)
+
 		}
 	}
 

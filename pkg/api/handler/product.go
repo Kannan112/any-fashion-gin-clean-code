@@ -349,3 +349,73 @@ func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (cr *ProductHandler) UpdateProductItem(c *gin.Context) {
+	var productItem req.ProductItem
+	err := c.Bind(&productItem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Cant bind",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	paramsId := c.Param("id")
+	id, err := strconv.Atoi(paramsId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "can't find id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	UpdateProductItem, err := cr.productuseCase.UpdateProductItem(id, productItem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Update failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Updated",
+		Data:       UpdateProductItem,
+		Errors:     nil,
+	})
+}
+func (cr *ProductHandler) DeleteProductItem(c *gin.Context) {
+	paramsId := c.Param("id")
+	id, err := strconv.Atoi(paramsId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "can't find id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = cr.productuseCase.DeleteProductItem(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "can't delete item",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "item deleted",
+		Data:       nil,
+		Errors:     nil,
+	})
+}
