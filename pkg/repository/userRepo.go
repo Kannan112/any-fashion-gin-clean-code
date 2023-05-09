@@ -52,15 +52,15 @@ func (c *userDatabase) OtpLogin(phone string) (int, error) {
 func (c *userDatabase) AddAddress(id int, address req.Address) error {
 	//isDefault
 	if address.IsDefault {
-		changeAddress := `UPDATE addresses SET is_default=$1 WHERE users_id=$2 AND is_Default=$3`
+		changeAddress := `UPDATE addresses SET is_default=$1 WHERE users_id=$2 AND is_default=$3`
 		err := c.DB.Exec(changeAddress, false, id, true)
 		if err != nil {
 			fmt.Println("SET1")
 		}
 	}
 	query := `INSERT INTO addresses (users_id,house_number,street,city, district,landmark,pincode,is_default)
-	VALUES($1,$2,$3,$4,$5,$6,&7,&8)`
-	err := c.DB.Raw(query, address.Id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault).Error
+	VALUES($1,$2,$3,$4,$5,$6,$7,$8)`
+	err := c.DB.Exec(query, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault).Error
 	return err
 }
 
