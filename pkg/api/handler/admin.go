@@ -171,7 +171,7 @@ func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "bind faild",
+			Message:    "bind failed",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
