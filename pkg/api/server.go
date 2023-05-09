@@ -44,7 +44,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		address := user.Group("/address")
 		{
 			address.POST("add", middleware.UserAuth, userHandler.AddAddress)
-			//address.PATCH("update/:addressId", middleware.UserAuth, userHandler.UpdateAddress)
+			//address.PATCH("update/:addressId", middleware.UserAuth, userHandler.)
 
 		}
 		profile := user.Group("/profile")
@@ -75,6 +75,12 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		admin.POST("createadmin", adminHandler.CreateAdmin)
 		admin.POST("adminlogin", adminHandler.AdminLogin)
 		admin.POST("logout", adminHandler.AdminLogout)
+
+		adminUse := admin.Group("/user", middleware.AdminAuth)
+		{
+			adminUse.PATCH("block", adminHandler.BlockUser)
+			adminUse.PATCH("unblock", adminHandler.UnblockUser)
+		}
 
 		//categorys
 		category := admin.Group("/category", middleware.AdminAuth)
