@@ -113,7 +113,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 		tx.Rollback()
 		return domain.Orders{}, err
 	}
-	return order, nil
+	return domain.Orders{}, nil
 
 }
 func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
@@ -145,13 +145,6 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
 		tx.Rollback()
 		return err
 	}
-	//update the order status as canceled
-	// cancelOrder := `UPDATE orders SET order_status_id=$1 WHERE id=$2 AND users_id=$3`
-	// err = tx.Exec(cancelOrder, 4, orderId, userId).Error
-	// if err != nil {
-	// 	tx.Rollback()
-	// 	return err
-	// }
 
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()

@@ -88,16 +88,28 @@ func (c *ProductDataBase) DeleteProduct(id int) error {
 }
 func (c *ProductDataBase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
 	var NewProductItem res.ProductItem
-	query := `INSERT INTO product_items SET product_id=$1,sku=$2,qnty_in_stock=$3,gender=$4,model=$5,size=$6,color=$7,material=$8,price$9,update_at=NOW())
+	query := `INSERT INTO product_items (product_id,sku,qnty_in_stock,gender,model,size,color,material,price,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW())
 	RETURNING product_id,qnty_in_stock,gender,model,size,color,material,price,created_at`
 	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price).Scan(&NewProductItem).Error
 	return NewProductItem, err
 }
 func (c *ProductDataBase) UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error) {
 	var UpdateProductItem res.ProductItem
-	query := `UPDATE product_items(product_id,sku,qnty_in_stock,gender,model,size,color,material,price,created_at)SET($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW())
-	RETURNING product_id,qnty_in_stock,gender,model,size,color,material,price,created_at`
-	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price).Scan(&UpdateProductItem).Error
+	query := `UPDATE product_items
+	SET product_id = $1,
+		sku = $2,
+		qnty_in_stock = $3,
+		gender = $4,
+		model = $5,
+		size = $6,
+		color = $7,
+		material = $8,
+		price = $9,
+		updated_at = NOW()
+		WHERE id=$10
+	RETURNING product_id, qnty_in_stock, gender, model, size, color, material, price, created_at;
+	`
+	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price, id).Scan(&UpdateProductItem).Error
 	return UpdateProductItem, err
 }
 func (c *ProductDataBase) DeleteProductItem(id int) error {

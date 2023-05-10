@@ -14,6 +14,8 @@ type UserRepository interface {
 	IsSignIn(phno string) (bool, error)
 	OtpLogin(phone string) (int, error)
 	AddAddress(id int, address req.Address) error
+	UpdateAddress(id int, addressId int, address req.Address) error
+	ListallAddress(id int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)
-	EditProfile(id int,profile req.UserReq)(res.UserData,error)
+	EditProfile(id int, profile req.UserReq) (res.UserData, error)
 }

@@ -63,6 +63,21 @@ func (c *userDatabase) AddAddress(id int, address req.Address) error {
 	err := c.DB.Exec(query, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault).Error
 	return err
 }
+func (c *userDatabase) UpdateAddress(id int, addressId int, address req.Address) error {
+	//check is Default
+	if address.IsDefault {
+		changeDefault := `UPDATE addresses SET is_default = $1 WHERE users_id=$2 AND is_default=$3`
+		err := c.DB.Exec(changeDefault, false, id, true).Error
+
+		if err != nil {
+			return err
+		}
+	}
+	//UPDATE THE ADDRESS
+	updatequery := `UPDATE addresses SET users_id=$1,house_number=$2,street=$3,city=$4, district=$5,landmark=$6,pincode=$7,is_default=$8 WHERE users_id=$9 AND id=$10`
+	err := c.DB.Exec(updatequery, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault, id, addressId).Error
+	return err
+}
 
 func (c *userDatabase) ViewProfile(id int) (res.UserData, error) {
 	var profile res.UserData
@@ -76,4 +91,12 @@ func (c *userDatabase) EditProfile(id int, updatingDetails req.UserReq) (res.Use
 	UpdatedQuery := `UPDATE users SET name=$1,email=$2,mobile=$3 WHERE id=$4 RETURNING name,email,mobile`
 	err := c.DB.Raw(UpdatedQuery, updatingDetails.Name, updatingDetails.Email, updatingDetails.Mobile, id).Scan(&profile).Error
 	return profile, err
+}
+
+func (c *userDatabase) ListallAddress(id int) ([]domain.Addresss, error) {
+	var list []domain.Addresss
+	query := `SELECT * FROM addresses WHERE users_id=$1`
+	err := c.DB.Raw(query, id).Scan(&list).Error
+	return list, err
+
 }

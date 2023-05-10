@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
@@ -146,6 +147,87 @@ func (cr *UserHandler) AddAddress(c *gin.Context) {
 	})
 
 }
+func (cr *UserHandler) UpdateAddress(c *gin.Context) {
+	paramsId := c.Param("addressId")
+	addressId, err := strconv.Atoi(paramsId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Can't find ProductId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	id, err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get the userId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	var address req.Address
+	err = c.Bind(&address)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to bind Address",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = cr.userUseCase.UpdateAddress(id, addressId, address)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Can't add address",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "address updated successfully",
+		Data:       address,
+		Errors:     nil,
+	})
+}
+
+// list all addresses of user
+func (cr *UserHandler) ListallAddress(c *gin.Context) {
+	id,err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get the userId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	data,err:=cr.userUseCase.ListallAddress(id)
+	if err!=nil{
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to list",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "address updated successfully",
+		Data:       data,
+		Errors:     nil,
+	})
+}
+
 func (cr *UserHandler) ViewProfile(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 	"golang.org/x/crypto/bcrypt"
@@ -89,8 +90,21 @@ func (c *userUseCase) OtpLogin(phno string) (string, error) {
 func (c *userUseCase) AddAddress(id int, body req.Address) error {
 	err := c.userRepo.AddAddress(id, body)
 	return err
-
 }
+
+// -------------------UpdateAddress---------------
+func (c *userUseCase) UpdateAddress(id int, addressId int, address req.Address) error {
+	err := c.userRepo.UpdateAddress(id, addressId, address)
+	return err
+}
+
+// --------------------ListAddress------------------
+func (c *userUseCase) ListallAddress(id int) ([]domain.Addresss, error) {
+	list, err := c.userRepo.ListallAddress(id)
+	return list, err
+}
+
+// -------------------otp----------------------
 func (c *userUseCase) IsSignIn(phone string) (bool, error) {
 	signIn, err := c.userRepo.IsSignIn(phone)
 	return signIn, err

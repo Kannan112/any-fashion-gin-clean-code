@@ -111,7 +111,7 @@ func (ch *OrderHandler) ListAllOrders(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
-		Message:    "order canceld",
+		Message:    "List All Orders",
 		Data:       Details,
 		Errors:     nil,
 	})

@@ -44,7 +44,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		address := user.Group("/address")
 		{
 			address.POST("add", middleware.UserAuth, userHandler.AddAddress)
-			//address.PATCH("update/:addressId", middleware.UserAuth, userHandler.)
+			address.PATCH("update/:addressId", middleware.UserAuth, userHandler.UpdateAddress)
+			address.GET("list", middleware.UserAuth, userHandler.ListallAddress)
 
 		}
 		profile := user.Group("/profile")
