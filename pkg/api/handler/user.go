@@ -200,7 +200,7 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 
 // list all addresses of user
 func (cr *UserHandler) ListallAddress(c *gin.Context) {
-	id,err := handlerUtil.GetUserIdFromContext(c)
+	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -210,8 +210,8 @@ func (cr *UserHandler) ListallAddress(c *gin.Context) {
 		})
 		return
 	}
-	data,err:=cr.userUseCase.ListallAddress(id)
-	if err!=nil{
+	data, err := cr.userUseCase.ListallAddress(id)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "failed to list",
@@ -222,7 +222,7 @@ func (cr *UserHandler) ListallAddress(c *gin.Context) {
 	}
 	c.JSON(http.StatusAccepted, res.Response{
 		StatusCode: 200,
-		Message:    "address updated successfully",
+		Message:    "All Address",
 		Data:       data,
 		Errors:     nil,
 	})
