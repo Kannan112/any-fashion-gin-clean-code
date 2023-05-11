@@ -62,6 +62,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		{
 			cart.POST("add/:product_item_id", cartHandler.AddToCart)
 			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
+			cart.GET("list", cartHandler.ListCart)
+
 		}
 		order := user.Group("/order", middleware.UserAuth)
 		{
@@ -103,7 +105,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			productItem.POST("add", productHandler.AddProductItem)
 			productItem.PATCH("update/:id", productHandler.UpdateProductItem)
 			productItem.DELETE("delete/:id", productHandler.DeleteProductItem)
-
+			productItem.GET("display/:id", productHandler.DisaplyaAllProductItems)
 		}
 	}
 

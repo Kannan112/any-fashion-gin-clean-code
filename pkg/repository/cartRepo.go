@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -156,17 +157,12 @@ func (c *CartDataBase) RemoveFromCart(userId int, ProductItemId int) error {
 	return nil
 
 }
-// Lish Cart
-func(c *CartDataBase)ListCart(userId int)error{
-	tx:=c.DB.Begin()
-	var cartid int
-	query:=`SELECT id FROM carts WHERE userId=$1`
-	err:=tx.Raw(query,userId).Scan(&cartid).Error
-	if err!=nil{
-		tx.Rollback()
-		return err
-	}
-	return nil
 
-	
+// Lish Cart
+func (c *CartDataBase) ListCart(userId int) ([]domain.Cart, error) {
+	var list []domain.Cart
+
+	query := `SELECT * FROM carts WHERE users_id=$1`
+	err := c.DB.Raw(query, userId).Scan(&list).Error
+	return list, err
 }

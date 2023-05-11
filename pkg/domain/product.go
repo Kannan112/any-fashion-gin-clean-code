@@ -42,3 +42,17 @@ type Images struct {
 	ProductItem   ProductItem
 	FileName      string `json:"file_name"`
 }
+type ProductItems struct {
+	ID          uint `gorm:"primaryKey;unique;not null" json:"id"`
+	ProductID   uint `gorm:"not null" json:"product_id" validate:"required"`
+	SKU         string
+	QntyInStock int     `gorm:"not null" json:"qnty_in_stock" validate:"required"`
+	Gender      string  `gorm:"not null" json:"gender" validate:"required"`
+	Model       string  `gorm:"not null" json:"model" validate:"required"`
+	Size        int     `gorm:"not null" json:"size" validate:"required"`
+	Color       string  `gorm:"not null" json:"color" validate:"required"`
+	Material    string  `gorm:"not null" json:"material" validate:"required"`
+	Price       float64 `gorm:"not null" json:"price" validate:"required"`
+	Created_at  time.Time
+	Updated_at  time.Time
+}

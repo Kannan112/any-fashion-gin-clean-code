@@ -419,3 +419,33 @@ func (cr *ProductHandler) DeleteProductItem(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (cr *ProductHandler) DisaplyaAllProductItems(c *gin.Context) {
+	paramsId := c.Param("id")
+	id, err := strconv.Atoi(paramsId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "can't find id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	list, err := cr.productuseCase.DisaplyaAllProductItems(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed to list",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "All-Product-items",
+		Data:       list,
+		Errors:     nil,
+	})
+}

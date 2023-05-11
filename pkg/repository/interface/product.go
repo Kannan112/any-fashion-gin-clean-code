@@ -3,6 +3,7 @@ package interfaces
 import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 )
 
 type ProductRepository interface {
@@ -21,6 +22,6 @@ type ProductRepository interface {
 	//Product-item
 	AddProductItem(productItem req.ProductItem) (res.ProductItem, error)
 	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
-	DeleteProductItem(id int)error
-
+	DeleteProductItem(id int) error
+	DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error)
 }

@@ -7,6 +7,12 @@ type Carts struct {
 	Sub_total int
 	Total     int
 }
+type Cart struct {
+	Id         uint `gorm:"primeryKey;unique;not null"`
+	UsersID    uint
+	Sub_total  int
+	Total      int
+}
 type CartItem struct {
 	Id            uint `gorm:"primeryKey;unique;not null"`
 	CartsID       uint

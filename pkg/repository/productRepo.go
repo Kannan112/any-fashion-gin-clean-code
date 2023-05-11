@@ -5,6 +5,7 @@ import (
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -116,4 +117,10 @@ func (c *ProductDataBase) DeleteProductItem(id int) error {
 	delete := `DELETE FROM product_items WHERE id=$1`
 	err := c.DB.Exec(delete, id).Error
 	return err
+}
+func (c *ProductDataBase) DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error) {
+	var list []domain.ProductItems
+	quer := `SELECT * FROM product_items WHERE product_id=$1`
+	err := c.DB.Raw(quer, productId).Scan(&list).Error
+	return list, err
 }

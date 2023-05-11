@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 )
@@ -61,4 +62,8 @@ func (c ProductUseCase) UpdateProductItem(id int, productItem req.ProductItem) (
 func (c ProductUseCase) DeleteProductItem(id int) error {
 	err := c.productRepo.DeleteProductItem(id)
 	return err
+}
+func (c ProductUseCase) DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error) {
+	data, err := c.productRepo.DisaplyaAllProductItems(productId)
+	return data, err
 }

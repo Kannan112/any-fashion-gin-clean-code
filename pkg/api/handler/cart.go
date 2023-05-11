@@ -98,32 +98,31 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		Errors:     nil,
 	})
 }
-// func (cr *CartHandler) ListCart(c *gin.Context) {
-// 	userId, err := handlerUtil.GetUserIdFromContext(c)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, res.Response{
-// 			StatusCode: 400,
-// 			Message:    "Failed to Get User",
-// 			Data:       nil,
-// 			Errors:     err,
-// 		})
-// 		return
-// 	}
-// 	// Details, err := CartHandler.cartUsecase(userId)
-// 	// if err != nil {
-// 	// 	c.JSON(http.StatusBadRequest, res.Response{
-// 	// 		StatusCode: 400,
-// 	// 		Message:    "Failed",
-// 	// 		Data:       nil,
-// 	// 		Errors:     err,
-// 	// 	})
-// 	// 	return
-// 	// }
-// 	c.JSON(http.StatusOK, res.Response{
-// 		StatusCode: 200,
-// 		Message:    "Cart Details",
-// 		//Data:       Details,
-// 		Errors: nil,
-// 	})
-
-// }
+func (cr *CartHandler) ListCart(c *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get userId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	list, err := cr.cartUsecase.ListCart(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "List Cart",
+		Data:       list,
+		Errors:     nil,
+	})
+}

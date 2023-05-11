@@ -11,6 +11,13 @@ type Orders struct {
 	Address    Address
 	OrderTotal int
 }
+type Order struct {
+	Id         uint `gorm:"primaryKey;unique;not null"`
+	UsersId    uint
+	OrderTime  time.Time
+	AddressId  uint
+	OrderTotal int
+}
 type OrderItem struct {
 	Id            uint `gorm:"primaryKey;unique;not null"`
 	OrdersId      uint

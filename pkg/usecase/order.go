@@ -23,7 +23,7 @@ func (c *OrderUseCase) UserCancelOrder(orderId, userId int) error {
 	err := c.orderRepo.UserCancelOrder(orderId, userId)
 	return err
 }
-func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Orders, error) {
+func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Order, error) {
 	order, err := c.orderRepo.ListAllOrders(userId)
 	return order, err
 }

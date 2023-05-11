@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 )
@@ -27,8 +28,8 @@ func (c *CartUsecases) RemoveFromCart(userId, productId int) error {
 	err := c.cartRepo.RemoveFromCart(userId, productId)
 	return err
 }
-// func (c *CartUsecases) ListCart(userId int) res.ViewCart {
-// 	err := c.cartRepo.ListCart(userId)
-// 	return res.ViewCart{},
+func (c *CartUsecases) ListCart(userId int) ([]domain.Cart, error) {
+	list, err := c.cartRepo.ListCart(userId)
+	return list, err
 
-// }
+}
