@@ -165,6 +165,7 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 	})
 
 }
+
 func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	paramsId := c.Param("user_id")
 	id, err := strconv.Atoi(paramsId)
