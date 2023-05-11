@@ -1,8 +1,8 @@
 package res
 
 type Category struct {
-	Id           int
-	CategoryName string
+	Id   int
+	Name string
 }
 
 type Product struct {
