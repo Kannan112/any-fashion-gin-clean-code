@@ -6,5 +6,4 @@ type OrderRepository interface {
 	OrderAll(id int) (domain.Orders, error)
 	UserCancelOrder(orderId, userId int) error
 	ListAllOrders(userId int) ([]domain.Order, error)
-
 }

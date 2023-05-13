@@ -159,3 +159,10 @@ func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Order, error) {
 	return order, err
 
 }
+func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Order, error) {
+	var order []domain.Order
+	query := `SELECT * FROM orders WHERE users_id=$1 AND status=$2`
+	err := c.DB.Raw(query, userId, status).Scan(&order).Error
+	return order, err
+}
+
