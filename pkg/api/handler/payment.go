@@ -66,4 +66,10 @@ func (cr *PaymentHandler) UpdatePaymentMethod(c *gin.Context) {
 			Errors:     err.Error(),
 		})
 	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "successfully updated",
+		Data:       nil,
+		Errors:     err.Error(),
+	})
 }
