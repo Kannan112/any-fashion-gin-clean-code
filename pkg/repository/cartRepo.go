@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -14,6 +15,15 @@ type CartDataBase struct {
 
 func NewCartRepository(DB *gorm.DB) interfaces.CartRepository {
 	return &CartDataBase{DB}
+}
+
+func (c *CartDataBase) FindCart(ctx context.Context, userId int) (domain.Cart, error) {
+
+	var cart domain.Cart
+	query := `SELECT * FROM carts WHERE users_id = $1`
+	err := c.DB.Raw(query, userId).Scan(&cart).Error
+	fmt.Println("cart", cart)
+	return cart, err
 }
 
 // Create cart

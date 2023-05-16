@@ -108,11 +108,15 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	})
 }
 
+// @AdminLogout
 // @Summary Admin Logout
-// @Description Logs out the currently authenticated admin user
+// @ID AdminLogout
+// @Description Logout the currently authenticated admin user
 // @Tags admin
 // @Produce json
-// @Success 200 {object} resRespons
+// @Success 200 {object} res.Respons
+// @Failure 400 {object} res.Respons
+// @Router /admin/logout [get]
 
 func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 	c.SetCookie("AdminAuth", "", -1, "", "", false, true)

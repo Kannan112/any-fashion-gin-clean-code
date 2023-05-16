@@ -65,8 +65,19 @@ func (cr *UserHandler) UserSignUp(c *gin.Context) {
 
 }
 
-//-------------------------------UserLogin-------------------
+// -------------------------------UserLogin-------------------
 
+// LoginWithEmail
+// @Summary User Login
+// @ID UserLogin
+// @Description Login as a user to access the ecommerce site
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param   input   body     req.LoginReq{}   true  "Input Field"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/login [post]
 func (cr *UserHandler) UserLogin(c *gin.Context) {
 	var user req.LoginReq
 	err := c.Bind(&user)
@@ -100,6 +111,19 @@ func (cr *UserHandler) UserLogin(c *gin.Context) {
 	})
 
 }
+
+// -------------------------------UserLogout-------------------
+
+// Logout
+// @Summary User Logout
+// @ID UserLogout
+// @Description User logout to access the ecommerce site
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/logout [get]
 func (cr *UserHandler) UserLogout(c *gin.Context) {
 	c.SetCookie("UserAuth", "", 1, "", "", false, true)
 	c.JSON(http.StatusOK, gin.H{

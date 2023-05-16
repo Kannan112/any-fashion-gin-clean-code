@@ -11,7 +11,9 @@ type PaymentUsecase struct {
 }
 
 func NewPaymentUsecase(paymentrepo interfaces.PaymentRepo) services.PaymentUsecases {
-	return &PaymentUsecase{paymentrepo: paymentrepo}
+	return &PaymentUsecase{
+		paymentrepo: paymentrepo,
+	}
 }
 
 func (c *PaymentUsecase) SavePaymentMethod(payment req.PaymentReq) error {
@@ -19,7 +21,7 @@ func (c *PaymentUsecase) SavePaymentMethod(payment req.PaymentReq) error {
 	return err
 }
 
-func (c *PaymentUsecase) UpdatePaymentMethod(Payment req.PaymentReq) error {
-	err := c.paymentrepo.UpdatePaymentMethod(Payment)
+func (c *PaymentUsecase) UpdatePaymentMethod(id int, Payment req.PaymentReq) error {
+	err := c.paymentrepo.UpdatePaymentMethod(id, Payment)
 	return err
 }

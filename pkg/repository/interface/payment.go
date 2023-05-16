@@ -6,6 +6,5 @@ import (
 
 type PaymentRepo interface {
 	SavePaymentMethod(payment req.PaymentReq) error
-	UpdatePaymentMethod(payment req.PaymentReq)error
-	
+	UpdatePaymentMethod(id int, payment req.PaymentReq) error
 }

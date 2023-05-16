@@ -13,4 +13,5 @@ type AdminRepository interface {
 	AdminLogin(email string) (domain.Admin, error)
 	BlockUser(body req.BlockData, adminId int) error
 	UnblockUser(id int) error
+
 }

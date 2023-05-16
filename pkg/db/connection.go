@@ -20,7 +20,7 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		&domain.Users{},
 		&domain.Admin{},
 		&domain.Category{},
-		&domain.Favorite{},
+		&domain.WishList{},
 		&domain.Product{},
 		&domain.ProductItem{},
 		&domain.UserInfo{},

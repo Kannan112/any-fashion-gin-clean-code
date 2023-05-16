@@ -19,11 +19,15 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	cartHandler *handler.CartHandler,
 	productHandler *handler.ProductHandler,
 	orderHandler *handler.OrderHandler,
+	paymentHandler *handler.PaymentHandler,
+	wishlistHandler *handler.WishlistHandler,
 ) *ServerHTTP {
 	engine := gin.New()
 
 	// Use logger from Gin
 	engine.Use(gin.Logger())
+
+	engine.LoadHTMLGlob("./*.html")
 
 	// Swagger docs
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -36,9 +40,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 
 	user := engine.Group("/user")
 	{
-		user.POST("signup", userHandler.UserSignUp)
-		user.POST("login", userHandler.UserLogin)
-		user.POST("logout", userHandler.UserLogout)
+		user.POST("/signup", userHandler.UserSignUp)
+		user.POST("/login", userHandler.UserLogin)
+		user.POST("/logout", userHandler.UserLogout)
 
 		//address
 		address := user.Group("/address")
@@ -48,6 +52,11 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			address.GET("list", middleware.UserAuth, userHandler.ListallAddress)
 
 		}
+		wishlist := user.Group("/wishlist")
+		{
+			wishlist.GET("add/:product_id", middleware.UserAuth, wishlistHandler.AddToWishlist)
+		}
+
 		profile := user.Group("/profile")
 		{
 			profile.GET("view", middleware.UserAuth, userHandler.ViewProfile)
@@ -67,6 +76,10 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		order := user.Group("/order", middleware.UserAuth)
 		{
+
+			order.GET("/razorpay/checkout/:payment_id", orderHandler.RazorPayCheckout)
+			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
+
 			order.POST("orderAll", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListAllOrders)
@@ -106,6 +119,12 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			productItem.PATCH("update/:id", productHandler.UpdateProductItem)
 			productItem.DELETE("delete/:id", productHandler.DeleteProductItem)
 			productItem.GET("display/:id", productHandler.DisaplyaAllProductItems)
+		}
+		paymentMethod := admin.Group("/payment-method")
+		{
+			paymentMethod.POST("add", paymentHandler.SavePaymentMethod)
+			paymentMethod.POST("update/:id", paymentHandler.UpdatePaymentMethod)
+			paymentMethod.GET("list")
 		}
 	}
 

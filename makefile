@@ -29,7 +29,7 @@ deps: ## Install dependencies
 	# go get $(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all)
 	$(GOCMD) get -u -t -d -v ./...
 	$(GOCMD) mod tidy
-	$(GOCMD) mod vendor
+	$(GOCMD) mod 
 
 deps-cleancache: ## Clear cache in Go module
 	$(GOCMD) clean -modcache

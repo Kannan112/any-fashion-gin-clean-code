@@ -43,3 +43,4 @@ type UserInfo struct {
 	BlockedBy         uint
 	ReasonForBlocking string
 }
+

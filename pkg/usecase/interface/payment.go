@@ -6,6 +6,5 @@ import (
 
 type PaymentUsecases interface {
 	SavePaymentMethod(payment req.PaymentReq) error
-	UpdatePaymentMethod(Paymen req.PaymentReq)error
-	
+	UpdatePaymentMethod(id int, Paymen req.PaymentReq) error
 }

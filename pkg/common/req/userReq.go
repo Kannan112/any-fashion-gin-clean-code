@@ -27,3 +27,4 @@ type Address struct {
 	Pincode      int    `json:"pincode" binding:"required"`
 	IsDefault    bool   `json:"isdefault" `
 }
+

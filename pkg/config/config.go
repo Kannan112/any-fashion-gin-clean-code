@@ -11,14 +11,16 @@ type Config struct {
 	DBUser     string `mapstructure:"DB_USER"`
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBPassword string `mapstructure:"DB_PASSWORD"`
+	RazorKey   string `mapstructure:"RZOR_KEYID"`
+	RazorSec   string `mapstructure:"RAZOR_KEYSCR"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "RZOR_KEYID", "RAZOR_KEYSCR",
 }
+var config Config
 
 func LoadConfig() (Config, error) {
-	var config Config
 
 	viper.AddConfigPath("./")
 	viper.SetConfigFile(".env")
@@ -39,4 +41,8 @@ func LoadConfig() (Config, error) {
 	}
 
 	return config, nil
+}
+
+func GetConfig() Config {
+	return config
 }

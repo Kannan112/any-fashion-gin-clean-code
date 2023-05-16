@@ -88,6 +88,53 @@ paths:
       summary: Admin Login
       tags:
       - Admin
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: UserLogin
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: User Login
+      tags:
+      - Users
+  /user/logout:
+    get:
+      consumes:
+      - application/json
+      description: User logout to access the ecommerce site
+      operationId: UserLogout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: User Logout
+      tags:
+      - Users
   /user/otp/send:
     post:
       consumes:
