@@ -54,7 +54,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		wishlist := user.Group("/wishlist")
 		{
-			wishlist.GET("add/:product_id", middleware.UserAuth, wishlistHandler.AddToWishlist)
+			wishlist.POST("add/:productId", middleware.UserAuth, wishlistHandler.AddToWishlist)
+			wishlist.POST("remove/:productId", middleware.UserAuth, wishlistHandler.RemoveFromWishlist)
+
 		}
 
 		profile := user.Group("/profile")
@@ -65,7 +67,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		product := user.Group("product", middleware.UserAuth)
 		{
 			product.GET("listallcategories", productHandler.ListCategories)
-			product.GET("listspecific", productHandler.DisplayCategory)
+			product.GET("listspecific/:id", productHandler.DisplayCategory)
 		}
 		cart := user.Group("/cart", middleware.UserAuth)
 		{

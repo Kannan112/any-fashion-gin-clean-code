@@ -165,4 +165,3 @@ func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Orde
 	err := c.DB.Raw(query, userId, status).Scan(&order).Error
 	return order, err
 }
-
