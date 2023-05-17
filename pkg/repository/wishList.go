@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -83,17 +84,35 @@ func (c *WishListDataBase) RemoveFromWishlist(ctx context.Context, userid, itemI
 	return nil
 }
 
-// func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) (res.Wishlist, error) {
-// 	var check bool
-// var wishlist res.Wishlist
-// 	query := `SELECT EXISTS(SELECT 1 FROM wish_lists WHERE users_id=$1)`
-// 	err := c.DB.Exec(query, userId).Scan(&check).Error
-// 	if err != nil {
-// 		return wishlist, err
-// 	}
-// 	if !check {
-// 		return wishlist, fmt.Errorf("the item is not present in the wishlist")
-// 	}
-// 	query1 := `SELECT product_id FROM `
+func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]res.ProductItem, error) {
+	var wishlists []res.ProductItem
+	var check bool
+	query := `SELECT EXISTS (SELECT 1 FROM wish_lists)`
+	err := c.DB.Raw(query).Scan(&check).Error
+	if err != nil {
+		return nil, err
+	}
+	if !check {
+		return nil, fmt.Errorf("Your wishlist is empty")
+	}
+	query2 := `SELECT pi.id,
+	w.item_id,
+	pi.sku,
+	pi.qnty_in_stock,
+	pi.color,
+	pi.gender,
+	pi.material,
+	pi.size,
+	pi.model,
+	pi.price,
+	p.product_name,
+	p.description,
+	p.brand,
+	c.name 
+	FROM wish_lists w JOIN product_items pi ON w.item_id=pi.id
+	JOIN products p ON pi.product_id=p.id
+	JOIN categories c ON p.category_id = c.id WHERE w.users_id=$1`
 
-// }
+	err = c.DB.Raw(query2, userId).Scan(&wishlists).Error
+	return wishlists, err
+}

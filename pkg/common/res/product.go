@@ -6,23 +6,20 @@ type Category struct {
 }
 
 type Product struct {
-	Id           int `json:",omitempty"`
-	Name         string
+	Id           uint `json:",omitempty"`
+	ProductName  string
 	Description  string
 	Brand        string
 	CategoryName string
 }
 
 type ProductItem struct {
-	ID        uint
-	ProductID uint
-	Product   Product
-	Model     string
-	Size      string
-	Material  string
-	Gender    string
-	Type      string
-	SKU       string
-	Qty       int
-	Price     int
+	ItemId      uint
+	Model       string
+	Size        string
+	Material    string
+	Gender      string
+	SKU         string
+	QntyInStock int
+	Price       int
 }

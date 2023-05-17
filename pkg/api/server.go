@@ -56,6 +56,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		{
 			wishlist.POST("add/:itemId", middleware.UserAuth, wishlistHandler.AddToWishlist)
 			wishlist.POST("remove/:itemId", middleware.UserAuth, wishlistHandler.RemoveFromWishlist)
+			wishlist.GET("list", middleware.UserAuth, wishlistHandler.ListAllWishlist)
 
 		}
 

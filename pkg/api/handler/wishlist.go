@@ -99,3 +99,32 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Cant find the user",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	wishlist, err := c.WishlistUsecase.ListAllWishlist(ctx, userId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "fail to list",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusBadRequest, res.Response{
+		StatusCode: 200,
+		Message:    "Wishlist",
+		Data:       wishlist,
+		Errors:     nil,
+	})
+}
