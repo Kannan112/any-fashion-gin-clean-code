@@ -16,11 +16,11 @@ func NewWishlistUsecase(repo interfaces.WishListRepo) services.WishlistUseCases 
 		wishListRepo: repo,
 	}
 }
-func (c *WishListUseCase) AddToWishlist(productId, userId int) error {
-	err := c.wishListRepo.AddToWishlist(userId, productId)
+func (c *WishListUseCase) AddToWishlist(itemId, userId int) error {
+	err := c.wishListRepo.AddToWishlist(userId, itemId)
 	return err
 }
-func (c *WishListUseCase) RemoveFromWishlist(ctx context.Context, userid, productid int) error {
-	err := c.wishListRepo.RemoveFromWishlist(ctx, userid, productid)
+func (c *WishListUseCase) RemoveFromWishlist(ctx context.Context, userid, itemId int) error {
+	err := c.wishListRepo.RemoveFromWishlist(ctx, userid, itemId)
 	return err
 }

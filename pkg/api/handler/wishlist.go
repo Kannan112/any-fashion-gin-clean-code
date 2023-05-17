@@ -20,8 +20,8 @@ func NewWishlistHandler(wishlistusecase services.WishlistUseCases) *WishlistHand
 	}
 }
 func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
-	str := c.Param("productId")
-	productid, err := strconv.Atoi(str)
+	str := c.Param("itemId")
+	itemId, err := strconv.Atoi(str)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -42,13 +42,13 @@ func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 		return
 	}
 
-	err = cr.WishlistUsecase.AddToWishlist(productid, userId)
+	err = cr.WishlistUsecase.AddToWishlist(itemId, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "failed to add",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}
@@ -61,8 +61,8 @@ func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 }
 
 func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
-	str := c.Param("productId")
-	productid, err := strconv.Atoi(str)
+	str := c.Param("itemId")
+	itemid, err := strconv.Atoi(str)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -82,13 +82,13 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 		})
 		return
 	}
-	err = cr.WishlistUsecase.RemoveFromWishlist(c, userId, productid)
+	err = cr.WishlistUsecase.RemoveFromWishlist(c, userId, itemid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "fail to Remove",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}

@@ -54,8 +54,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		wishlist := user.Group("/wishlist")
 		{
-			wishlist.POST("add/:productId", middleware.UserAuth, wishlistHandler.AddToWishlist)
-			wishlist.POST("remove/:productId", middleware.UserAuth, wishlistHandler.RemoveFromWishlist)
+			wishlist.POST("add/:itemId", middleware.UserAuth, wishlistHandler.AddToWishlist)
+			wishlist.POST("remove/:itemId", middleware.UserAuth, wishlistHandler.RemoveFromWishlist)
 
 		}
 

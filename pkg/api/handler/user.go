@@ -261,6 +261,7 @@ func (cr *UserHandler) ViewProfile(c *gin.Context) {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
+		return
 	}
 	profile, err := cr.userUseCase.ViewProfile(id)
 	if err != nil {
@@ -270,6 +271,7 @@ func (cr *UserHandler) ViewProfile(c *gin.Context) {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusAccepted, res.Response{
 		StatusCode: 200,
