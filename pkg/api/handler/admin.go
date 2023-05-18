@@ -200,3 +200,22 @@ func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+func (cr *AdminHandler) GetDashBord(c *gin.Context) {
+	data, err := cr.adminUseCase.GetDashBord(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to show",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "success",
+		Data:       data,
+		Errors:     nil,
+	})
+}

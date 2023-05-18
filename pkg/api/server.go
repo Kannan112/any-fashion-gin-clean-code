@@ -15,6 +15,7 @@ type ServerHTTP struct {
 }
 
 func NewServerHTTP(userHandler *handler.UserHandler,
+
 	adminHandler *handler.AdminHandler,
 	cartHandler *handler.CartHandler,
 	productHandler *handler.ProductHandler,
@@ -31,18 +32,27 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 
 	// Swagger docs
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	otp := engine.Group("/otp")
-	var OtpHandler handler.OtpHandler
-	{
-		otp.POST("send", OtpHandler.SendOtp)
-		otp.POST("verify", OtpHandler.ValidateOtp)
-	}
 
 	user := engine.Group("/user")
 	{
 		user.POST("/signup", userHandler.UserSignUp)
 		user.POST("/login", userHandler.UserLogin)
 		user.POST("/logout", userHandler.UserLogout)
+
+		//otp
+		otp := engine.Group("/otp")
+		var OtpHandler handler.OtpHandler
+		{
+			otp.POST("send", OtpHandler.SendOtp)
+			otp.POST("verify", OtpHandler.ValidateOtp)
+		}
+
+		//profile
+		profile := user.Group("/profile")
+		{
+			profile.GET("view", middleware.UserAuth, userHandler.ViewProfile)
+			profile.PATCH("edit", middleware.UserAuth, userHandler.EditProfile)
+		}
 
 		//address
 		address := user.Group("/address")
@@ -52,24 +62,33 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			address.GET("list", middleware.UserAuth, userHandler.ListallAddress)
 
 		}
-		wishlist := user.Group("/wishlist")
+		//wishlist
+		wishlist := user.Group("/wishlist", middleware.UserAuth)
 		{
-			wishlist.POST("add/:itemId", middleware.UserAuth, wishlistHandler.AddToWishlist)
-			wishlist.POST("remove/:itemId", middleware.UserAuth, wishlistHandler.RemoveFromWishlist)
-			wishlist.GET("list", middleware.UserAuth, wishlistHandler.ListAllWishlist)
+			wishlist.POST("add/:itemId", wishlistHandler.AddToWishlist)
+			wishlist.POST("remove/:itemId", wishlistHandler.RemoveFromWishlist)
+			wishlist.GET("list", wishlistHandler.ListAllWishlist)
 
 		}
-
-		profile := user.Group("/profile")
+		//categories
+		categories := user.Group("categories", middleware.UserAuth)
 		{
-			profile.GET("view", middleware.UserAuth, userHandler.ViewProfile)
-			profile.PATCH("edit", middleware.UserAuth, userHandler.EditProfile)
+			categories.GET("listallcategories", productHandler.ListCategories)
+			categories.GET("listspecific/:id", productHandler.DisplayCategory)
 		}
+		//products
 		product := user.Group("product", middleware.UserAuth)
 		{
-			product.GET("listallcategories", productHandler.ListCategories)
-			product.GET("listspecific/:id", productHandler.DisplayCategory)
+			product.POST("delete", productHandler.DeleteProduct)
+			product.GET("list", productHandler.ListProducts)
+			product.GET("list/:id", productHandler.DisplayProduct)
+			product.GET("list/:id/:page", productHandler.DisplayProduct)
+			product.GET("list/:id/:page/:size", productHandler.DisplayProduct)
+			product.GET("list/:id/:page/:size/:sort", productHandler.DisplayProduct)
+			product.GET("list/:id/:page/:size/:sort/:category", productHandler.DisplayProduct)
+			product.GET("list/:id/:page/:size/:sort/:category/:price", productHandler.DisplayProduct)
 		}
+		//cart
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
 			cart.POST("add/:product_item_id", cartHandler.AddToCart)
@@ -77,12 +96,11 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			cart.GET("list", cartHandler.ListCart)
 
 		}
+		//order
 		order := user.Group("/order", middleware.UserAuth)
 		{
-
 			order.GET("/razorpay/checkout/:payment_id", orderHandler.RazorPayCheckout)
 			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
-
 			order.POST("orderAll", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListAllOrders)
@@ -95,13 +113,20 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		admin.POST("adminlogin", adminHandler.AdminLogin)
 		admin.POST("logout", adminHandler.AdminLogout)
 
+		//admin block unblock users
 		adminUse := admin.Group("/user", middleware.AdminAuth)
 		{
 			adminUse.PATCH("block", adminHandler.BlockUser)
 			adminUse.PATCH("unblock", adminHandler.UnblockUser)
 		}
 
-		//categorys
+		//admin dashbord
+		DashBord := admin.Group("/dashbord")
+		{
+			DashBord.GET("list", adminHandler.GetDashBord)
+		}
+
+		//categories
 		category := admin.Group("/category", middleware.AdminAuth)
 		{
 			category.POST("add", productHandler.CreateCategory)
@@ -123,6 +148,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			productItem.DELETE("delete/:id", productHandler.DeleteProductItem)
 			productItem.GET("display/:id", productHandler.DisaplyaAllProductItems)
 		}
+
+		//payment-method
 		paymentMethod := admin.Group("/payment-method")
 		{
 			paymentMethod.POST("add", paymentHandler.SavePaymentMethod)

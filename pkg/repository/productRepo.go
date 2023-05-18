@@ -24,29 +24,35 @@ func (c *ProductDataBase) CreateCategory(category req.Category) (res.Category, e
 	err := c.DB.Raw(query, category.Name).Scan(&newCategoery).Error
 	return newCategoery, err
 }
+
 func (c *ProductDataBase) UpdateCategory(category req.Category, id int) (res.Category, error) {
 	var updateCategory res.Category
 	query := `UPDATE categories SET name=$1 WHERE id=$2 RETURNING id,name`
 	err := c.DB.Raw(query, category.Name, id).Scan(&updateCategory).Error
 	return updateCategory, err
 }
+
 func (c *ProductDataBase) DeleteCategory(id int) error {
 	query := `DELETE FROM categories WHERE id=$1`
 	err := c.DB.Exec(query, id).Error
 	return err
 }
+
 func (c *ProductDataBase) ListCategories() ([]res.Category, error) {
 	var categories []res.Category
 	query := `SELECT * FROM categories`
 	err := c.DB.Raw(query).Scan(&categories).Error
 	return categories, err
 }
+
 func (c *ProductDataBase) DisplayCategory(id int) (res.Category, error) {
 	var category res.Category
 	query := `SELECT * FROM categories WHERE id=$1`
 	err := c.DB.Raw(query, id).Scan(&category).Error
 	return category, err
 }
+
+// PRODUCTS
 func (c *ProductDataBase) AddProduct(product req.Product) (res.Product, error) {
 	var newProduct res.Product
 	var exists bool
@@ -87,6 +93,27 @@ func (c *ProductDataBase) DeleteProduct(id int) error {
 	err := c.DB.Exec(query, id).Error
 	return err
 }
+func (c *ProductDataBase) DeleteAllProducts() error {
+	query := `DELETE FROM product`
+	err := c.DB.Exec(query).Error
+	return err
+}
+func (c *ProductDataBase) DisplayProduct(id int) (res.Product, error) {
+	var product res.Product
+	query := `SELECT id, product_name AS name, description, brand, category_id FROM products WHERE id=$1`
+	err := c.DB.Raw(query, id).Scan(&product).Error
+	return product, err
+}
+func (c *ProductDataBase) ListProducts() ([]res.Product, error) {
+	var products []res.Product
+	query := `SELECT id, product_name AS name, description,brand,
+	category_id AS category_id
+	FROM products`
+	err := c.DB.Raw(query).Scan(&products).Error
+	return products, err
+}
+
+// PRODUCT-ITEMS
 func (c *ProductDataBase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
 	var NewProductItem res.ProductItem
 	query := `INSERT INTO product_items (product_id,sku,qnty_in_stock,gender,model,size,color,material,price,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW())
@@ -113,11 +140,13 @@ func (c *ProductDataBase) UpdateProductItem(id int, productItem req.ProductItem)
 	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price, id).Scan(&UpdateProductItem).Error
 	return UpdateProductItem, err
 }
+
 func (c *ProductDataBase) DeleteProductItem(id int) error {
 	delete := `DELETE FROM product_items WHERE id=$1`
 	err := c.DB.Exec(delete, id).Error
 	return err
 }
+
 func (c *ProductDataBase) DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error) {
 	var list []domain.ProductItems
 	quer := `SELECT * FROM product_items WHERE product_id=$1`

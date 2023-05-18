@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 )
 
@@ -14,4 +15,6 @@ type AdminRepository interface {
 	BlockUser(body req.BlockData, adminId int) error
 	UnblockUser(id int) error
 
+	//DashBord
+	GetDashBord(ctx context.Context) (res.AdminDashboard, error)
 }

@@ -7,14 +7,22 @@ import (
 )
 
 type ProductUseCase interface {
+	//Category
 	CreateCategory(category req.Category) (res.Category, error)
 	UpdateCategory(category req.Category, id int) (res.Category, error)
+	DeleteCategory(id int) error
 	DisplayCategory(id int) (res.Category, error)
 	ListCategories() ([]res.Category, error)
-	DeleteCategory(id int) error
+
+	//Product
 	AddProduct(product req.Product) (res.Product, error)
 	UpdateProduct(id int, product req.Product) (res.Product, error)
 	DeleteProduct(id int) error
+	DeleteAllProducts() error
+	DisplayProduct(id int) (res.Product, error)
+	ListProducts() ([]res.Product, error)
+
+	//Product-item
 	AddProductItem(productItem req.ProductItem) (res.ProductItem, error)
 	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
 	DeleteProductItem(id int) error

@@ -43,6 +43,7 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
+
 	err = cr.cartUsecase.AddToCart(productId, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{

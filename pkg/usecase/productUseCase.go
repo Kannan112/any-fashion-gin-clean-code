@@ -18,6 +18,7 @@ func NewProductUsecase(productRepo interfaces.ProductRepository) services.Produc
 	}
 }
 
+// CATEGORY
 func (c *ProductUseCase) CreateCategory(category req.Category) (res.Category, error) {
 	newCategort, err := c.productRepo.CreateCategory(category)
 	return newCategort, err
@@ -37,8 +38,9 @@ func (c *ProductUseCase) ListCategories() ([]res.Category, error) {
 func (c *ProductUseCase) DisplayCategory(id int) (res.Category, error) {
 	category, err := c.productRepo.DisplayCategory(id)
 	return category, err
-
 }
+
+// PRODUCT
 func (c ProductUseCase) AddProduct(product req.Product) (res.Product, error) {
 	newProduct, err := c.productRepo.AddProduct(product)
 	return newProduct, err
@@ -51,6 +53,21 @@ func (c ProductUseCase) DeleteProduct(id int) error {
 	err := c.productRepo.DeleteProduct(id)
 	return err
 }
+func (c *ProductUseCase) DeleteAllProducts() error {
+	err := c.productRepo.DeleteAllProducts()
+	return err
+}
+func (c *ProductUseCase) ListProducts() ([]res.Product, error) {
+	products, err := c.productRepo.ListProducts()
+	return products, err
+}
+func (c *ProductUseCase) DisplayProduct(id int) (res.Product, error) {
+	var product res.Product
+	product, err := c.productRepo.DisplayProduct(id)
+	return product, err
+}
+
+// PRODUCT-ITEMS
 func (c ProductUseCase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
 	NewProductItem, err := c.productRepo.AddProductItem(productItem)
 	return NewProductItem, err

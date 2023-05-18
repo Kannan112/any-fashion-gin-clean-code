@@ -302,6 +302,7 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
+		return
 	}
 	productUpdate, err := cr.productuseCase.UpdateProduct(id, product)
 	if err != nil {
@@ -311,6 +312,7 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusAccepted, res.Response{
 		StatusCode: 200,
@@ -318,8 +320,86 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 		Data:       productUpdate,
 		Errors:     nil,
 	})
-
 }
+func (cr *ProductHandler) DeleteProduct(c *gin.Context) {
+	var productId string
+	productId = c.Param("id")
+	id, err := strconv.Atoi(productId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant get the id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = cr.productuseCase.DeleteProduct(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get the productDetails",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "Deleted sucessfuly",
+		Data:       nil,
+		Errors:     nil,
+	})
+}
+func (cr *ProductHandler) ListProducts(c *gin.Context) {
+	product, err := cr.productuseCase.ListProducts()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get the productDetails",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "List of product",
+		Data:       product,
+		Errors:     nil,
+	})
+}
+
+func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
+	var productId string
+	productId = c.Param("id")
+	id, err := strconv.Atoi(productId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed get productid",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	product, err := cr.productuseCase.DisplayProduct(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+	}
+	c.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "success",
+		Data:       product,
+		Errors:     nil,
+	})
+}
+
 func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 	var productItem req.ProductItem
 	err := c.Bind(&productItem)

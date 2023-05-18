@@ -5,3 +5,9 @@ type AdminData struct {
 	Name  string
 	Email string
 }
+type AdminDashboard struct {
+	TotalUsers       int
+	TotalOrders      int
+	TotalProductSold int
+	TotalRevenue     int
+}

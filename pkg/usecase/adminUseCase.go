@@ -8,6 +8,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
@@ -78,4 +79,12 @@ func (c adminUseCase) BlockUser(body req.BlockData, adminId int) error {
 func (c *adminUseCase) UnblockUser(id int) error {
 	err := c.adminRepo.UnblockUser(id)
 	return err
+}
+
+//admin dashbord
+
+func (c *adminUseCase) GetDashBord(ctx context.Context) (res.AdminDashboard, error) {
+	data, err := c.adminRepo.GetDashBord(ctx)
+	return data, err
+
 }

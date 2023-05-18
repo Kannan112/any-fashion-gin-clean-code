@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
@@ -82,4 +83,41 @@ func (c *adminDatabase) UnblockUser(id int) error {
 		return err
 	}
 	return err
+}
+
+// admin dashbord
+func (c *adminDatabase) GetDashBord(ctx context.Context) (res.AdminDashboard, error) {
+	var admindashbord res.AdminDashboard
+
+	//TotalRevenue
+	var TotalRevenue int
+	var TotalOrders int
+	var TotalProductSold int
+	var TotalUsers int
+	query := `SELECT sum(order_total)AS TotalRevenu FROM orders`
+	err := c.DB.Raw(query).Scan(&TotalRevenue).Error
+	if err != nil {
+		return admindashbord, err
+	}
+	query2 := `SELECT count(*)FROM orders`
+	err = c.DB.Raw(query2).Scan(&TotalOrders).Error
+	if err != nil {
+		return admindashbord, err
+	}
+	query3 := `SELECT sum(quantity)FROM order_items`
+	err = c.DB.Raw(query3).Scan(&TotalProductSold).Error
+	if err != nil {
+		return admindashbord, err
+	}
+	query4 := `SELECT count(DISTINCT(id))FROM users;`
+	err = c.DB.Raw(query4).Scan(&TotalUsers).Error
+	if err != nil {
+		return admindashbord, err
+	}
+	admindashbord.TotalUsers = TotalUsers
+	admindashbord.TotalRevenue = TotalRevenue
+	admindashbord.TotalOrders = TotalOrders
+	admindashbord.TotalProductSold = TotalProductSold
+	return admindashbord, err
+
 }
