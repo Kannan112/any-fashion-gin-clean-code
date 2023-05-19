@@ -87,13 +87,16 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			product.GET("list/:id/:page/:size/:sort/:category", productHandler.DisplayProduct)
 			product.GET("list/:id/:page/:size/:sort/:category/:price", productHandler.DisplayProduct)
 		}
+		productitem := user.Group("/product-item")
+		{
+			productitem.GET("display/:id", productHandler.DisaplyaAllProductItems)
+		}
 		//cart
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
 			cart.POST("add/:product_item_id", cartHandler.AddToCart)
 			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
 			cart.GET("list", cartHandler.ListCart)
-
 		}
 		//order
 		order := user.Group("/order", middleware.UserAuth)

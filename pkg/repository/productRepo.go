@@ -117,7 +117,7 @@ func (c *ProductDataBase) ListProducts() ([]res.Product, error) {
 func (c *ProductDataBase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
 	var NewProductItem res.ProductItem
 	query := `INSERT INTO product_items (product_id,sku,qnty_in_stock,gender,model,size,color,material,price,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW())
-	RETURNING product_id,qnty_in_stock,gender,model,size,color,material,price,created_at`
+	RETURNING product_id AS item_id,qnty_in_stock,gender,model,size,color,material,price,created_at`
 	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price).Scan(&NewProductItem).Error
 	return NewProductItem, err
 }
@@ -149,7 +149,7 @@ func (c *ProductDataBase) DeleteProductItem(id int) error {
 
 func (c *ProductDataBase) DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error) {
 	var list []domain.ProductItems
-	quer := `SELECT * FROM product_items WHERE product_id=$1`
+	quer := `SELECT id,product_id,sku,qnty_in_stock,gender,model, size ,color, material,price FROM product_items WHERE product_id=$1`
 	err := c.DB.Raw(quer, productId).Scan(&list).Error
 	return list, err
 }
