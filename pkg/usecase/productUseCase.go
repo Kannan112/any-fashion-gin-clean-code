@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -31,8 +33,8 @@ func (c *ProductUseCase) DeleteCategory(id int) error {
 	err := c.productRepo.DeleteCategory(id)
 	return err
 }
-func (c *ProductUseCase) ListCategories() ([]res.Category, error) {
-	categories, err := c.productRepo.ListCategories()
+func (c *ProductUseCase) ListCategories(ctx context.Context, pagenation req.Pagenation) ([]res.Category, error) {
+	categories, err := c.productRepo.ListCategories(ctx, pagenation)
 	return categories, err
 }
 func (c *ProductUseCase) DisplayCategory(id int) ([]res.Product, error) {

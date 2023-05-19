@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
@@ -38,10 +39,13 @@ func (c *ProductDataBase) DeleteCategory(id int) error {
 	return err
 }
 
-func (c *ProductDataBase) ListCategories() ([]res.Category, error) {
+func (c *ProductDataBase) ListCategories(ctx context.Context, pagenation req.Pagenation) ([]res.Category, error) {
 	var categories []res.Category
-	query := `SELECT * FROM categories`
-	err := c.DB.Raw(query).Scan(&categories).Error
+	fmt.Println("page", pagenation.Count, "count", pagenation.Count)
+	limit := pagenation.Count
+	offset := (pagenation.Page - 1) * limit
+	query := `SELECT id,name FROM categories order by id ASC limit $1 offset $2`
+	err := c.DB.Raw(query, limit, offset).Scan(&categories).Error
 	return categories, err
 }
 

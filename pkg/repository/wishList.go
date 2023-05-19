@@ -42,9 +42,10 @@ func (c *WishListDataBase) AddToWishlist(id, itemId int) error {
 		tx.Rollback()
 		return fmt.Errorf("the same product is already added to wishlist")
 	}
-	insert := `INSERT INTO wish_lists(item_id,users_id)VALUES($1,$2)`
-	err = tx.Exec(insert, itemId, id).Error
+	insert := `INSERT INTO wish_lists(users_id,item_id)VALUES($1,$2)`
+	err = tx.Exec(insert, id, itemId).Error
 	if err != nil {
+		fmt.Println("Test Me")
 		tx.Rollback()
 		return err
 	}
@@ -116,3 +117,4 @@ func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]r
 	err = c.DB.Raw(query2, userId).Scan(&wishlists).Error
 	return wishlists, err
 }
+

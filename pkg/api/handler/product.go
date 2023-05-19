@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -170,7 +171,23 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Router /admin/category/listall [get]
 
 func (cr *ProductHandler) ListCategories(c *gin.Context) {
-	categories, err := cr.productuseCase.ListCategories()
+
+	count, err1 := strconv.Atoi(c.Query("count"))
+	page, err2 := strconv.Atoi(c.Query("page"))
+	if err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant bind data",
+			Data:       nil,
+			Errors:     err1,
+		})
+		return
+	}
+	var pagenation req.Pagenation
+	pagenation.Count = count
+	pagenation.Page = page
+	fmt.Printf("count: %v,page: %v", count, page)
+	categories, err := cr.productuseCase.ListCategories(c, pagenation)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -187,7 +204,6 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 		Data:       categories,
 		Errors:     nil,
 	})
-
 }
 
 // FindCategoryByID
@@ -323,8 +339,7 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 	})
 }
 func (cr *ProductHandler) DeleteProduct(c *gin.Context) {
-	var productId string
-	productId = c.Param("id")
+	productId := c.Param("id")
 	id, err := strconv.Atoi(productId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -372,8 +387,7 @@ func (cr *ProductHandler) ListProducts(c *gin.Context) {
 }
 
 func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
-	var productId string
-	productId = c.Param("id")
+	productId := c.Param("id")
 	id, err := strconv.Atoi(productId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{

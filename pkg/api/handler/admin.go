@@ -30,7 +30,7 @@ func NewAdminSHandler(admiUseCase services.AdminUsecase) *AdminHandler {
 // @Accept json
 // @Produce json
 // @Param admin_details body req.CreateAdmin true "New Admin details"
-// @Success 201 {object} res.Response
+// @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/createadmin [post]
 
