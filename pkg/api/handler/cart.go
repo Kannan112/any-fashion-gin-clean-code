@@ -57,7 +57,6 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{
 		"Added": "successfully",
 	})
-
 }
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
