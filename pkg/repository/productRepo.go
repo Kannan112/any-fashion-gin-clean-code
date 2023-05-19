@@ -45,29 +45,29 @@ func (c *ProductDataBase) ListCategories() ([]res.Category, error) {
 	return categories, err
 }
 
-func (c *ProductDataBase) DisplayCategory(id int) (res.Category, error) {
-	var category res.Category
-	query := `SELECT * FROM categories WHERE id=$1`
-	err := c.DB.Raw(query, id).Scan(&category).Error
-	return category, err
+func (c *ProductDataBase) DisplayCategory(id int) ([]res.Product, error) {
+	var product []res.Product
+	query := `SELECT product_name,description,brand FROM products WHERE category_id=$1`
+	err := c.DB.Raw(query, id).Scan(&product).Error
+	fmt.Println(product)
+	return product, err
 }
 
 // PRODUCTS
 func (c *ProductDataBase) AddProduct(product req.Product) (res.Product, error) {
 	var newProduct res.Product
 	var exists bool
-
 	// Check if category exists
-	query1 := `SELECT EXISTS(SELECT 1 FROM categories WHERE id=?)`
+	query1 := `SELECT EXISTS(select 1 from categories where id=?)`
 	c.DB.Raw(query1, product.CategoryId).Scan(&exists)
 	if !exists {
-		return res.Product{}, fmt.Errorf("category does not exist")
+		return newProduct, fmt.Errorf("category does not exist")
 	}
 
 	// Insert new product
 	query := `INSERT INTO products (product_name, description, brand, category_id, created_at)
 			  VALUES ($1, $2, $3, $4, NOW())
-			  RETURNING id, product_name AS name, description, brand, category_id`
+			  RETURNING id, product_name, description, brand, category_id`
 	err := c.DB.Raw(query, product.Name, product.Description, product.Brand, product.CategoryId).
 		Scan(&newProduct).Error
 	return newProduct, err

@@ -204,7 +204,8 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 // @Router /admin/category/find/{id} [get]
 
 func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
-	paramsId := c.Param("id")
+	var category []res.Product
+	paramsId := c.Param("category_id")
 	id, err := strconv.Atoi(paramsId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -215,7 +216,7 @@ func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 		})
 		return
 	}
-	category, err := cr.productuseCase.DisplayCategory(id)
+	category, err = cr.productuseCase.DisplayCategory(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

@@ -35,9 +35,10 @@ func (c *ProductUseCase) ListCategories() ([]res.Category, error) {
 	categories, err := c.productRepo.ListCategories()
 	return categories, err
 }
-func (c *ProductUseCase) DisplayCategory(id int) (res.Category, error) {
-	category, err := c.productRepo.DisplayCategory(id)
-	return category, err
+func (c *ProductUseCase) DisplayCategory(id int) ([]res.Product, error) {
+	var product []res.Product
+	product, err := c.productRepo.DisplayCategory(id)
+	return product, err
 }
 
 // PRODUCT

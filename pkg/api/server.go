@@ -73,8 +73,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		//categories
 		categories := user.Group("categories", middleware.UserAuth)
 		{
-			categories.GET("listallcategories", productHandler.ListCategories)
-			categories.GET("listspecific/:id", productHandler.DisplayCategory)
+			categories.GET("listall", productHandler.ListCategories)
+			categories.GET("listspecific/:category_id", productHandler.DisplayCategory)
 		}
 		//products
 		product := user.Group("product", middleware.UserAuth)
@@ -135,6 +135,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			category.GET("listall", productHandler.ListCategories)
 			category.GET("find/:id", productHandler.DisplayCategory)
 		}
+		//product
 		product := admin.Group("/product", middleware.AdminAuth)
 		{
 			product.POST("add", productHandler.AddProduct)

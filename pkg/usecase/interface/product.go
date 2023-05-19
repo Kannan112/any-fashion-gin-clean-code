@@ -11,7 +11,7 @@ type ProductUseCase interface {
 	CreateCategory(category req.Category) (res.Category, error)
 	UpdateCategory(category req.Category, id int) (res.Category, error)
 	DeleteCategory(id int) error
-	DisplayCategory(id int) (res.Category, error)
+	DisplayCategory(id int) ([]res.Product, error)
 	ListCategories() ([]res.Category, error)
 
 	//Product
