@@ -79,7 +79,6 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		//products
 		product := user.Group("product", middleware.UserAuth)
 		{
-			product.POST("delete", productHandler.DeleteProduct)
 			product.GET("list", productHandler.ListProducts)
 			product.GET("list/:id", productHandler.DisplayProduct)
 			product.GET("list/:id/:page", productHandler.DisplayProduct)
