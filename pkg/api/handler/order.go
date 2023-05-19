@@ -20,6 +20,7 @@ func NewOrderHandler(orderUseCase services.OrderUseCase) *OrderHandler {
 		orderUsecase: orderUseCase,
 	}
 }
+
 func (cr *OrderHandler) OrderAll(c *gin.Context) {
 
 	userId, err := handlerUtil.GetUserIdFromContext(c)
