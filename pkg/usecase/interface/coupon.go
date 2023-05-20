@@ -8,4 +8,5 @@ import (
 
 type CouponUseCase interface {
 	AddCoupon(ctx context.Context, coupon req.Coupon) error
+	DeleteCoupon(ctx context.Context, couponId int) error
 }

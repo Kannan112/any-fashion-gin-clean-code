@@ -5,7 +5,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-
-type CouponRepository interface{
-	AddCoupon(ctx context.Context,coupon req.Coupon)error
+type CouponRepository interface {
+	AddCoupon(ctx context.Context, coupon req.Coupon) error
+	DeleteCoupon(ctx context.Context, Couponid int) error
 }

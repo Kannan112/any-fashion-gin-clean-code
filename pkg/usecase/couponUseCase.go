@@ -19,3 +19,7 @@ func (c *CouponUseCase) AddCoupon(ctx context.Context, coupon req.Coupon) error 
 	err := c.coupoRepo.AddCoupon(ctx, coupon)
 	return err
 }
+func (c *CouponUseCase) DeleteCoupon(ctx context.Context, couponId int) error {
+	err := c.coupoRepo.DeleteCoupon(ctx, couponId)
+	return err
+}

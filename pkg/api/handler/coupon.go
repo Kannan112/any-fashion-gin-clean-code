@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
@@ -43,6 +44,35 @@ func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 	c.JSON(http.StatusAccepted, res.Response{
 		StatusCode: 200,
 		Message:    "created coupon",
+		Data:       nil,
+		Errors:     err,
+	})
+}
+func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
+	strId := ctx.Param("couponId")
+	couponId, err := strconv.Atoi(strId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "fail to get id",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	err = c.CouponUseCase.DeleteCoupon(ctx, couponId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to create coupon",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusBadRequest, res.Response{
+		StatusCode: 200,
+		Message:    "Coupon deleted",
 		Data:       nil,
 		Errors:     err,
 	})

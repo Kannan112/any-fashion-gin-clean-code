@@ -21,3 +21,9 @@ func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupon) error
 	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercentage, coupon.MaximumDiscount, coupon.MinimumPurchaseAmount, coupon.Expire).Error
 	return err
 }
+
+func (c *CouponDatabase)DeleteCoupon(ctx context.Context, couponId int) error {
+	query:=`DELETE FROM coupons WHERE id $1`
+	err:=c.DB.Exec(query,couponId).Error
+	return err
+}
