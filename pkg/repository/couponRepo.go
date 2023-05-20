@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -25,11 +26,15 @@ func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupon, Co
 	query := `UPDATE coupons SET (code=$1,discount_percentage=$2,maximum_discount=$3,minimum_purchase_amount=$4,expire=$5) WHERE id=$6`
 	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercentage, coupon.MaximumDiscount, coupon.MinimumPurchaseAmount, coupon.Expire, CouponId).Error
 	return err
-
 }
-
 func (c *CouponDatabase) DeleteCoupon(ctx context.Context, couponId int) error {
 	query := `DELETE FROM coupons WHERE id $1`
 	err := c.DB.Exec(query, couponId).Error
 	return err
+}
+func (c *CouponDatabase) ViewCoupon(ctx context.Context) ([]domain.Coupon, error) {
+	var coupon []domain.Coupon
+	query := `SELECT * FROM coupons`
+	err := c.DB.Raw(query).Scan(&coupon).Error
+	return coupon, err
 }

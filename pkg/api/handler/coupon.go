@@ -111,3 +111,22 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 	}
 
 }
+func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
+	coupon, err := c.CouponUseCase.ViewCoupon(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to display",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "List of copons",
+		Data:       coupon,
+		Errors:     nil,
+	})
+
+}
