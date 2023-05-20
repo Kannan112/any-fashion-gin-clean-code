@@ -131,13 +131,13 @@ func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 
 func (cr *AdminHandler) BlockUser(c *gin.Context) {
 	var body req.BlockData
-	err := gin.Bind(&body)
+	err := c.Bind(&body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "binding fail",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}
@@ -147,7 +147,7 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 			StatusCode: 400,
 			Message:    "failed to find admin_id",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}
