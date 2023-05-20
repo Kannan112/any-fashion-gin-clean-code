@@ -29,7 +29,7 @@ func NewAdminSHandler(admiUseCase services.AdminUsecase) *AdminHandler {
 // @Tags Admin
 // @Accept json
 // @Produce json
-// @Param admin_details body req.CreateAdmin true "New Admin details"
+// @Param admin body req.CreateAdmin true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/createadmin [post]
@@ -69,8 +69,8 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 // @Summary Admin Login
 // @Description Logs in an admin user and returns an authentication token
 // @Tags Admin
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param admin body req.LoginReq true "Admin login details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response

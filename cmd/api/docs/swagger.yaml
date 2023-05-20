@@ -1,4 +1,30 @@
 definitions:
+  req.Address:
+    properties:
+      city:
+        type: string
+      district:
+        type: string
+      house_number:
+        type: string
+      id:
+        type: integer
+      isdefault:
+        type: boolean
+      landmark:
+        type: string
+      pincode:
+        type: integer
+      street:
+        type: string
+    required:
+    - city
+    - district
+    - house_number
+    - landmark
+    - pincode
+    - street
+    type: object
   req.LoginReq:
     properties:
       email:
@@ -13,6 +39,21 @@ definitions:
     properties:
       phoneNumber:
         type: string
+    type: object
+  req.UserReq:
+    properties:
+      email:
+        type: string
+      mobile:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - mobile
+    - name
     type: object
   req.VerifyOtp:
     properties:
@@ -88,6 +129,80 @@ paths:
       summary: Admin Login
       tags:
       - Admin
+  /user/address/add:
+    post:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: AddAddress
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Add Address
+      tags:
+      - Address
+  /user/address/listall:
+    get:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: ListallAddres
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: List Address
+      tags:
+      - Address
+  /user/address/update:
+    patch:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: UpdateAddress
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Update Address
+      tags:
+      - Address
   /user/login:
     post:
       consumes:
@@ -189,4 +304,77 @@ paths:
       summary: Validate the OTP to user's mobile
       tags:
       - Otp
+  /user/profile/edit:
+    patch:
+      consumes:
+      - application/json
+      description: Edit user prodile ecommerce site
+      operationId: EditProfile
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Edit Profile
+      tags:
+      - Profile
+  /user/profile/view:
+    get:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: ViewProfile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: View Profile
+      tags:
+      - Profile
+  /user/wishlist/add/:itemId:
+    post:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: AddToWishlist
+      parameters:
+      - description: itemId
+        in: path
+        name: itemId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Add Wishlist
+      tags:
+      - Wishlist
 swagger: "2.0"

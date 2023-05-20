@@ -95,6 +95,118 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/address/add": {
+            "post": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Add Address",
+                "operationId": "AddAddress",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Address"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/address/listall": {
+            "get": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "List Address",
+                "operationId": "ListallAddres",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/address/update": {
+            "patch": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Update Address",
+                "operationId": "UpdateAddress",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Address"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "description": "Login as a user to access the ecommerce site",
@@ -247,9 +359,156 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/profile/edit": {
+            "patch": {
+                "description": "Edit user prodile ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Edit Profile",
+                "operationId": "EditProfile",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/view": {
+            "get": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "View Profile",
+                "operationId": "ViewProfile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/wishlist/add/:itemId": {
+            "post": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Add Wishlist",
+                "operationId": "AddToWishlist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "itemId",
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "req.Address": {
+            "type": "object",
+            "required": [
+                "city",
+                "district",
+                "house_number",
+                "landmark",
+                "pincode",
+                "street"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "house_number": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isdefault": {
+                    "type": "boolean"
+                },
+                "landmark": {
+                    "type": "string"
+                },
+                "pincode": {
+                    "type": "integer"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
         "req.LoginReq": {
             "type": "object",
             "required": [
@@ -269,6 +528,28 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "phoneNumber": {
+                    "type": "string"
+                }
+            }
+        },
+        "req.UserReq": {
+            "type": "object",
+            "required": [
+                "email",
+                "mobile",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

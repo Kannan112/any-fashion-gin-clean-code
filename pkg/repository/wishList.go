@@ -117,4 +117,3 @@ func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]r
 	err = c.DB.Raw(query2, userId).Scan(&wishlists).Error
 	return wishlists, err
 }
-

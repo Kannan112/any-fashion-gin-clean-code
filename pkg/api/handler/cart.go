@@ -98,6 +98,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
 func (cr *CartHandler) ListCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {

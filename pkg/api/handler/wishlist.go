@@ -19,6 +19,18 @@ func NewWishlistHandler(wishlistusecase services.WishlistUseCases) *WishlistHand
 		WishlistUsecase: wishlistusecase,
 	}
 }
+
+// Wishlist
+// @Summary Add Wishlist
+// @ID AddToWishlist
+// @Description Login as a user to access the ecommerce site
+// @Tags Wishlist
+// @Accept json
+// @Produce json
+// @Param itemId path string true "itemId"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wishlist/add/:itemId [post]
 func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 	str := c.Param("itemId")
 	itemId, err := strconv.Atoi(str)
@@ -59,6 +71,18 @@ func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// Wishlist
+// @Summary Remove Item
+// @ID RemoveFromWishlis
+// @Description Remove item from wishlist
+// @Tags Wishlist
+// @Accept json
+// @Produce json
+// @Param itemId path string true "itemId"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wishlist/remove/:itemId [DELETE]
 
 func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 	str := c.Param("itemId")

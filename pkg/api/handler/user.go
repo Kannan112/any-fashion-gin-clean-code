@@ -22,22 +22,35 @@ func NewUserHandler(usecase services.UserUseCase) *UserHandler {
 	}
 }
 
-//---------------------------------_UserSignUp-----------------------------
+//---------------------------------UserSignUp-----------------------------
 
-func (cr *UserHandler) UserSignUp(c *gin.Context) {
+// CreateAccount
+// @Summary User Signup
+// @ID UserSignUp
+// @Description Login as a user to access the ecommerce site
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param   input   body     req.UserReq{}   true  "Input Field"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/signup [post]
+
+func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 	var user req.UserReq
-	err := c.Bind(&user)
+	err := ctx.Bind(&user)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, res.Response{
+		ctx.JSON(http.StatusUnprocessableEntity, res.Response{
 			StatusCode: 422,
 			Message:    "can't bind",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
+		return
 	}
-	userData, err := cr.userUseCase.UserSignUp(c.Request.Context(), user)
+	userData, err := cr.userUseCase.UserSignUp(ctx, user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
+		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "unable signup",
 			Data:       nil,
@@ -48,7 +61,7 @@ func (cr *UserHandler) UserSignUp(c *gin.Context) {
 	err = cr.cartUseCase.CreateCart(userData.Id)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
+		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "unable create cart",
 			Data:       nil,
@@ -56,8 +69,8 @@ func (cr *UserHandler) UserSignUp(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusCreated, res.Response{
-		StatusCode: 201,
+	ctx.JSON(http.StatusCreated, res.Response{
+		StatusCode: 200,
 		Message:    "user signup Scart_itemsuccessfully",
 		Data:       userData,
 		Errors:     nil,
@@ -130,6 +143,17 @@ func (cr *UserHandler) UserLogout(c *gin.Context) {
 		"message": "UserLogouted",
 	})
 }
+// AddAddress
+// @Summary Add Address
+// @ID AddAddress
+// @Description Login as a user to access the ecommerce site
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param   input   body     req.Address{}   true  "Input Field"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/address/add [post]
 func (cr *UserHandler) AddAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -171,6 +195,18 @@ func (cr *UserHandler) AddAddress(c *gin.Context) {
 	})
 
 }
+
+// AddAddress
+// @Summary Update Address
+// @ID UpdateAddress
+// @Description Login as a user to access the ecommerce site
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param   input   body     req.Address{}   true  "Input Field"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/address/update [patch]
 func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	paramsId := c.Param("addressId")
 	addressId, err := strconv.Atoi(paramsId)
@@ -222,7 +258,16 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	})
 }
 
-// list all addresses of user
+// AddAddress
+// @Summary List Address
+// @ID ListallAddres
+// @Description Login as a user to access the ecommerce site
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/address/listall [get]
 func (cr *UserHandler) ListallAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -252,6 +297,16 @@ func (cr *UserHandler) ListallAddress(c *gin.Context) {
 	})
 }
 
+// ViewProfile
+// @Summary View Profile
+// @ID ViewProfile
+// @Description Login as a user to access the ecommerce site
+// @Tags Profile
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/profile/view [get]
 func (cr *UserHandler) ViewProfile(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -280,6 +335,18 @@ func (cr *UserHandler) ViewProfile(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// EditProfile
+// @Summary Edit Profile
+// @ID EditProfile
+// @Description Edit user prodile ecommerce site
+// @Tags Profile
+// @Accept json
+// @Produce json
+// @Param   input   body     req.UserReq{}   true  "Input Field"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/profile/edit [patch]
 func (cr *UserHandler) EditProfile(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {

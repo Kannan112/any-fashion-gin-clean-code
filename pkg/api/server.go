@@ -66,7 +66,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		wishlist := user.Group("/wishlist", middleware.UserAuth)
 		{
 			wishlist.POST("add/:itemId", wishlistHandler.AddToWishlist)
-			wishlist.POST("remove/:itemId", wishlistHandler.RemoveFromWishlist)
+			wishlist.DELETE("remove/:itemId", wishlistHandler.RemoveFromWishlist)
 			wishlist.GET("list", wishlistHandler.ListAllWishlist)
 
 		}
@@ -108,7 +108,6 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			order.GET("listall", orderHandler.ListAllOrders)
 		}
 	}
-
 	admin := engine.Group("/admin")
 	{
 		admin.POST("createadmin", adminHandler.CreateAdmin)

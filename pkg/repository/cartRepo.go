@@ -28,7 +28,7 @@ func (c *CartDataBase) FindCart(ctx context.Context, userId int) (domain.Cart, e
 
 // Create cart
 func (c *CartDataBase) CreateCart(id int) error {
-	query := `INSERT INTO carts(user_id,sub_total,total)VALUES($1,0,0)`
+	query := `INSERT INTO carts(users_id,sub_total,total)VALUES($1,0,0)`
 	err := c.DB.Exec(query, id).Error
 	return err
 }
