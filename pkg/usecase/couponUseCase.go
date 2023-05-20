@@ -23,3 +23,7 @@ func (c *CouponUseCase) DeleteCoupon(ctx context.Context, couponId int) error {
 	err := c.coupoRepo.DeleteCoupon(ctx, couponId)
 	return err
 }
+func (c *CouponUseCase) UpdateCoupon(ctx context.Context, coupon req.Coupon, CouponId int) error {
+	err := c.coupoRepo.UpdateCoupon(ctx, coupon, CouponId)
+	return err
+}

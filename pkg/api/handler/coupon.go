@@ -77,3 +77,37 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 		Errors:     err,
 	})
 }
+func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
+	strId := ctx.Param("couponId")
+	couponId, err := strconv.Atoi(strId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "fail to get id",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	var coupon req.Coupon
+	err = ctx.Bind(&coupon)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to bind coupon data",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = c.CouponUseCase.UpdateCoupon(ctx, coupon, couponId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 200,
+			Message:    "Coupon Updated",
+			Data:       nil,
+			Errors:     nil,
+		})
+	}
+
+}
