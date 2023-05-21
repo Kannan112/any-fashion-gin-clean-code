@@ -7,8 +7,8 @@ import (
 )
 
 type CouponRepository interface {
-	AddCoupon(ctx context.Context, coupon req.Coupon) error
-	UpdateCoupon(ctx context.Context, coupon req.Coupon, CouponId int) error
+	AddCoupon(ctx context.Context, coupon req.Coupons) error
+	UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error
 	DeleteCoupon(ctx context.Context, Couponid int) error
 	ViewCoupon(ctx context.Context) ([]domain.Coupon, error)
 }

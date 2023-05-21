@@ -43,6 +43,157 @@
                 }
             }
         },
+        "/admin/coupon": {
+            "get": {
+                "description": "admin view all coupon",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "view coupons",
+                "operationId": "ViewCoupon",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupon/add": {
+            "post": {
+                "description": "Admin can create new coupons",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "Admin can create new coupon",
+                "operationId": "create-coupon",
+                "parameters": [
+                    {
+                        "description": "details of new coupon to be created",
+                        "name": "new_coupon_details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Coupons"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupon/delete/:couponId": {
+            "delete": {
+                "description": "Delete coupon",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "Delete a coupon",
+                "operationId": "DeleteCoupon",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "New Admin details",
+                        "name": "couponId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupon/update": {
+            "patch": {
+                "description": "admin coupon update",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "Update a existing coupon",
+                "operationId": "UpdateCoupon",
+                "parameters": [
+                    {
+                        "description": "New Admin details",
+                        "name": "admin",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Coupons"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/login": {
             "post": {
                 "description": "Logs in an admin user and returns an authentication token",
@@ -494,6 +645,26 @@
                 },
                 "street": {
                     "type": "string"
+                }
+            }
+        },
+        "req.Coupons": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "discountmaximumamount": {
+                    "type": "number"
+                },
+                "discountpercent": {
+                    "type": "number"
+                },
+                "expirationdate": {
+                    "type": "string"
+                },
+                "minimumpurchaseamount": {
+                    "type": "number"
                 }
             }
         },

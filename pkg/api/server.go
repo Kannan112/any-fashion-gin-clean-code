@@ -22,6 +22,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	orderHandler *handler.OrderHandler,
 	paymentHandler *handler.PaymentHandler,
 	wishlistHandler *handler.WishlistHandler,
+	couponHandler *handler.CouponHandler,
 ) *ServerHTTP {
 	engine := gin.New()
 
@@ -158,6 +159,17 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			paymentMethod.POST("update/:id", paymentHandler.UpdatePaymentMethod)
 			paymentMethod.GET("list")
 		}
+
+		//coupon
+		coupon := admin.Group("/coupon", middleware.AdminAuth)
+		{
+			coupon.GET("", couponHandler.ViewCoupon)
+			coupon.POST("add", couponHandler.AddCoupon)
+			coupon.PATCH("update", couponHandler.UpdateCoupon)
+			coupon.DELETE("delete/:couponId", couponHandler.DeleteCoupon)
+
+		}
+
 	}
 
 	return &ServerHTTP{engine: engine}

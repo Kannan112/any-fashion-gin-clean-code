@@ -16,7 +16,7 @@ type CouponUseCase struct {
 func NewCouponUseCase(couponRepo interfaces.CouponRepository) services.CouponUseCase {
 	return &CouponUseCase{couponRepo}
 }
-func (c *CouponUseCase) AddCoupon(ctx context.Context, coupon req.Coupon) error {
+func (c *CouponUseCase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
 	err := c.coupoRepo.AddCoupon(ctx, coupon)
 	return err
 }
@@ -24,7 +24,7 @@ func (c *CouponUseCase) DeleteCoupon(ctx context.Context, couponId int) error {
 	err := c.coupoRepo.DeleteCoupon(ctx, couponId)
 	return err
 }
-func (c *CouponUseCase) UpdateCoupon(ctx context.Context, coupon req.Coupon, CouponId int) error {
+func (c *CouponUseCase) UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error {
 	err := c.coupoRepo.UpdateCoupon(ctx, coupon, CouponId)
 	return err
 }

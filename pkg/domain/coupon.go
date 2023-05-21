@@ -3,10 +3,10 @@ package domain
 import "time"
 
 type Coupon struct {
-	Id                    uint `gorm:"primeryKey;not null"`
-	Code                  string
-	DiscountPercentage    float64
-	MaximumDiscount       float64
-	MinimumPurchaseAmount float64
-	Expire                time.Time
+	Id                    uint      `gorm:"primeryKey;not null"`
+	Code                  string    `json:"code"`
+	DiscountPercent       float64   `json:"discountpercent"`
+	DiscountMaximumAmount float64   `json:"discountmaximumamount"`
+	MinimumPurchaseAmount float64   `json:"minimumpurchaseamount"`
+	ExpirationDate        time.Time `json:"expirationdate"`
 }

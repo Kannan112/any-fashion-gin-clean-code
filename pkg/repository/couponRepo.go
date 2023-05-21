@@ -17,14 +17,14 @@ func NewCouponRepository(DB *gorm.DB) interfaces.CouponRepository {
 	return &CouponDatabase{DB}
 }
 
-func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupon) error {
+func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
 	query := `INSERT INTO coupons (code,discount_percentage,maximum_discount,minimum_purchase_amount,expire)VALUES($1,$2,$3,$4,$5)`
-	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercentage, coupon.MaximumDiscount, coupon.MinimumPurchaseAmount, coupon.Expire).Error
+	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
 	return err
 }
-func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupon, CouponId int) error {
+func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error {
 	query := `UPDATE coupons SET (code=$1,discount_percentage=$2,maximum_discount=$3,minimum_purchase_amount=$4,expire=$5) WHERE id=$6`
-	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercentage, coupon.MaximumDiscount, coupon.MinimumPurchaseAmount, coupon.Expire, CouponId).Error
+	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
 	return err
 }
 func (c *CouponDatabase) DeleteCoupon(ctx context.Context, couponId int) error {

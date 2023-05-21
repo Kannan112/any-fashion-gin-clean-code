@@ -25,6 +25,19 @@ definitions:
     - pincode
     - street
     type: object
+  req.Coupons:
+    properties:
+      code:
+        type: string
+      discountmaximumamount:
+        type: number
+      discountpercent:
+        type: number
+      expirationdate:
+        type: string
+      minimumpurchaseamount:
+        type: number
+    type: object
   req.LoginReq:
     properties:
       email:
@@ -103,6 +116,106 @@ paths:
       summary: Admin can delete a category
       tags:
       - Product Category
+  /admin/coupon:
+    get:
+      consumes:
+      - application/json
+      description: admin view all coupon
+      operationId: ViewCoupon
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: view coupons
+      tags:
+      - Coupon
+  /admin/coupon/add:
+    post:
+      consumes:
+      - application/json
+      description: Admin can create new coupons
+      operationId: create-coupon
+      parameters:
+      - description: details of new coupon to be created
+        in: body
+        name: new_coupon_details
+        required: true
+        schema:
+          $ref: '#/definitions/req.Coupons'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin can create new coupon
+      tags:
+      - Coupon
+  /admin/coupon/delete/:couponId:
+    delete:
+      consumes:
+      - application/json
+      description: Delete coupon
+      operationId: DeleteCoupon
+      parameters:
+      - description: New Admin details
+        in: path
+        name: couponId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Delete a coupon
+      tags:
+      - Coupon
+  /admin/coupon/update:
+    patch:
+      consumes:
+      - application/json
+      description: admin coupon update
+      operationId: UpdateCoupon
+      parameters:
+      - description: New Admin details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/req.Coupons'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Update a existing coupon
+      tags:
+      - Coupon
   /admin/login:
     post:
       consumes:
