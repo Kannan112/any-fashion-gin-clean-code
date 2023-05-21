@@ -38,37 +38,43 @@ func (c *adminDatabase) CreateAdmin(ctx context.Context, admin domain.Admin) err
 	}
 	return nil
 }
+
 func (c *adminDatabase) AdminLogin(email string) (domain.Admin, error) {
 
 	var adminData domain.Admin
 	err := c.DB.Raw("SELECT * FROM admins WHERE email=$1", email).Scan(&adminData).Error
 	return adminData, err
 }
+
 func (c *adminDatabase) BlockUser(body req.BlockData, adminId int) error {
 	tx := c.DB.Begin()
 	var exist bool
-	query := `SELECT EXIST(SELECT 1 FROM users WHERE id=$1)`
+	query := `SELECT EXISTS(SELECT 1 FROM users WHERE id=$1)`
 	if err := tx.Raw(query, body.UserId).Scan(&exist).Error; err != nil {
+		fmt.Println("testBlockUse")
 		tx.Rollback()
-
 		return err
 	}
 	if !exist {
 		tx.Rollback()
 		return fmt.Errorf("no such user")
 	}
-	if err := tx.Exec("SELECT users SET is_blocked=true WHERE id=?", body.UserId).Error; err != nil {
+	if err := tx.Exec("UPDATE users SET is_blocked=true WHERE id=?", body.UserId).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	return fmt.Errorf("")
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 
 }
 func (c *adminDatabase) UnblockUser(id int) error {
 	tx := c.DB.Begin()
 	var IsExist bool
-	query := `SELECT EXIST(SELECT * FROM users WHERE id=$1 AND is_blocked=true)`
-	err := c.DB.Raw(query, id).Scan(IsExist).Error
+	query := `SELECT EXISTS(SELECT 1 FROM users WHERE id=$1 AND is_blocked=true)`
+	err := c.DB.Raw(query, id).Scan(&IsExist).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -77,12 +83,16 @@ func (c *adminDatabase) UnblockUser(id int) error {
 		tx.Rollback()
 		return fmt.Errorf("no such user to unblock")
 	}
-	err = tx.Exec(`UPDATE user SET is_blocked=false WHERE id=$1`, id).Error
+	err = tx.Exec(`UPDATE users SET is_blocked=false WHERE id=$1`, id).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-	return err
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 }
 
 // admin dashbord

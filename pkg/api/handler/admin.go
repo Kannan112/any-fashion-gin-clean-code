@@ -171,7 +171,7 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 }
 
 func (cr *AdminHandler) UnblockUser(c *gin.Context) {
-	paramsId := c.Param("user_id")
+	paramsId := c.Param("userId")
 	id, err := strconv.Atoi(paramsId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{

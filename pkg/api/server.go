@@ -119,7 +119,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		adminUse := admin.Group("/user", middleware.AdminAuth)
 		{
 			adminUse.PATCH("block", adminHandler.BlockUser)
-			adminUse.PATCH("unblock", adminHandler.UnblockUser)
+			adminUse.PATCH("unblock/:userId", adminHandler.UnblockUser)
 		}
 
 		//admin dashbord
