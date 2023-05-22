@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -20,6 +19,18 @@ func NewCartHandler(cartUsecases services.CartUseCases) *CartHandler {
 		cartUsecase: cartUsecases,
 	}
 }
+
+// AddToCart
+// @Summary User add product-item to cart
+// @ID add-to-cart
+// @Description User can add product item to the cart
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Param product-items-id path string true "product_item_id"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/cart/add/:product_item_id [post]
 func (cr *CartHandler) AddToCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -31,8 +42,7 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		})
 		return
 	}
-	paramsid := c.Param("product_item_id")
-	fmt.Println("par_id", paramsid)
+	paramsid := c.Param("product_items_id")
 	productId, err := strconv.Atoi(paramsid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{

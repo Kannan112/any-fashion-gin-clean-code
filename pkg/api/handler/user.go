@@ -16,9 +16,10 @@ type UserHandler struct {
 	cartUseCase services.CartUseCases
 }
 
-func NewUserHandler(usecase services.UserUseCase) *UserHandler {
+func NewUserHandler(usecase services.UserUseCase, cartcase services.CartUseCases) *UserHandler {
 	return &UserHandler{
 		userUseCase: usecase,
+		cartUseCase: cartcase,
 	}
 }
 
@@ -143,6 +144,7 @@ func (cr *UserHandler) UserLogout(c *gin.Context) {
 		"message": "UserLogouted",
 	})
 }
+
 // AddAddress
 // @Summary Add Address
 // @ID AddAddress

@@ -17,9 +17,9 @@ func NewCartRepository(DB *gorm.DB) interfaces.CartRepository {
 	return &CartDataBase{DB}
 }
 
-func (c *CartDataBase) FindCart(ctx context.Context, userId int) (domain.Cart, error) {
+func (c *CartDataBase) FindCart(ctx context.Context, userId int) (domain.Carts, error) {
 
-	var cart domain.Cart
+	var cart domain.Carts
 	query := `SELECT * FROM carts WHERE users_id = $1`
 	err := c.DB.Raw(query, userId).Scan(&cart).Error
 	fmt.Println("cart", cart)
@@ -42,13 +42,13 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 		tx.Rollback()
 		return err
 	}
-	if cartId == 0 {
-		createCart := `INSERT INTO carts (users_id,sub_total,total) VALUES ($1,0,0) RETURNING id`
-		err = c.DB.Raw(createCart, userId).Scan(&cartId).Error
-		if err != nil {
-			return err
-		}
-	}
+	// if cartId == 0 {
+	// 	createCart := `INSERT INTO carts (users_id,sub_total,total) VALUES ($1,0,0) RETURNING id`
+	// 	err = c.DB.Raw(createCart, userId).Scan(&cartId).Error
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 	//check the product exist in the cart_item
 	var CartitemID int
 	cartItemCheck := `SELECT id FROM cart_items WHERE carts_id=$1 AND product_item_id=$2 LIMIT 1`
@@ -82,7 +82,7 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 	}
 	//update subtotal in cart table
 	var subtotal int
-	updateTotal := `UPDATE carts SET sub_total=sub_total+$1,users_id=$2 RETURNING sub_total`
+	updateTotal := `UPDATE carts SET sub_total=sub_total+$1 where users_id=$2 RETURNING sub_total`
 	err = tx.Raw(updateTotal, Price, userId).Scan(&subtotal).Error
 	if err != nil {
 		tx.Rollback()

@@ -316,6 +316,32 @@ paths:
       summary: Update Address
       tags:
       - Address
+  /user/cart/add/:product_items_id:
+    post:
+      consumes:
+      - application/json
+      description: Admin can delete a category
+      operationId: add-to-cart
+      parameters:
+      - description: product_item_id
+        in: path
+        name: product-items-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: User add product-item to cart
+      tags:
+      - Cart
   /user/login:
     post:
       consumes:

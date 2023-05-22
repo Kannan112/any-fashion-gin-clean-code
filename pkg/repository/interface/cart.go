@@ -7,7 +7,7 @@ import (
 )
 
 type CartRepository interface {
-	FindCart(ctx context.Context, userId int) (domain.Cart, error)
+	FindCart(ctx context.Context, userId int) (domain.Carts, error)
 	CreateCart(id int) error
 	AddToCart(productId, userId int) error
 	RemoveFromCart(produtId, userId int) error

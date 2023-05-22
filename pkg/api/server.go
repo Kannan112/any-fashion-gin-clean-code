@@ -95,7 +95,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		//cart
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
-			cart.POST("add/:product_item_id", cartHandler.AddToCart)
+			cart.POST("add/:product_items_id", cartHandler.AddToCart)
 			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
 			cart.GET("list", cartHandler.ListCart)
 		}
