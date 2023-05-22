@@ -56,11 +56,12 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 
 		//address
-		address := user.Group("/address")
+		address := user.Group("/address", middleware.UserAuth)
 		{
-			address.POST("add", middleware.UserAuth, userHandler.AddAddress)
-			address.PATCH("update/:addressId", middleware.UserAuth, userHandler.UpdateAddress)
-			address.GET("list", middleware.UserAuth, userHandler.ListallAddress)
+			address.POST("add", userHandler.AddAddress)
+			address.PATCH("update/:addressId", userHandler.UpdateAddress)
+			address.GET("list", userHandler.ListallAddress)
+			address.DELETE("delete/:addressId",userHandler.DeleteAddress)
 
 		}
 		//wishlist
@@ -153,7 +154,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 
 		//payment-method
-		paymentMethod := admin.Group("/payment-method")
+		paymentMethod := admin.Group("/payment-method", middleware.AdminAuth)
 		{
 			paymentMethod.POST("add", paymentHandler.SavePaymentMethod)
 			paymentMethod.POST("update/:id", paymentHandler.UpdatePaymentMethod)
@@ -167,9 +168,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			coupon.POST("add", couponHandler.AddCoupon)
 			coupon.PATCH("update", couponHandler.UpdateCoupon)
 			coupon.DELETE("delete/:couponId", couponHandler.DeleteCoupon)
-
 		}
-
 	}
 
 	return &ServerHTTP{engine: engine}

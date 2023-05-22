@@ -378,3 +378,44 @@ func (cr *UserHandler) EditProfile(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+func (cr *UserHandler) DeleteAddress(ctx *gin.Context) {
+	addressStr := ctx.Param("addressId")
+	addressId, err := strconv.Atoi(addressStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to catch id",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "User not login",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	domain, err := cr.userUseCase.DeleteAddress(ctx, userId, addressId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "Address Deleted",
+		Data:       domain,
+		Errors:     nil,
+	})
+
+}

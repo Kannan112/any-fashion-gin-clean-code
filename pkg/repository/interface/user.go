@@ -16,6 +16,7 @@ type UserRepository interface {
 	AddAddress(id int, address req.Address) error
 	UpdateAddress(id int, addressId int, address req.Address) error
 	ListallAddress(id int) ([]domain.Addresss, error)
+	DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)
 	EditProfile(id int, profile req.UserReq) (res.UserData, error)
 }

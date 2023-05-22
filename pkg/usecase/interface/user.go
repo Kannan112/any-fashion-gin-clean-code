@@ -16,6 +16,7 @@ type UserUseCase interface {
 	AddAddress(id int, body req.Address) error
 	UpdateAddress(id int, addressId int, address req.Address) error
 	ListallAddress(id int) ([]domain.Addresss, error)
+	DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)
 	EditProfile(id int, UpdateProfile req.UserReq) (res.UserData, error)
 }

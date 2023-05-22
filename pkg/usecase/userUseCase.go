@@ -104,6 +104,12 @@ func (c *userUseCase) ListallAddress(id int) ([]domain.Addresss, error) {
 	return list, err
 }
 
+// -------------------DeletAddresses----------------
+func (c *userUseCase) DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error) {
+	list, err := c.userRepo.DeleteAddress(ctx, userId, AddressesId)
+	return list, err
+}
+
 // -------------------otp----------------------
 func (c *userUseCase) IsSignIn(phone string) (bool, error) {
 	signIn, err := c.userRepo.IsSignIn(phone)

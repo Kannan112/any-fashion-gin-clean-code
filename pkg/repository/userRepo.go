@@ -100,3 +100,30 @@ func (c *userDatabase) ListallAddress(id int) ([]domain.Addresss, error) {
 	return list, err
 
 }
+func (c *userDatabase) DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error) {
+	var domain []domain.Addresss
+	var check bool
+	tx := c.DB.Begin()
+	Exists := `SELECT EXISTS(SELECT id FROM addresses WHERE id=$1)`
+	err := tx.Raw(Exists, AddressesId).Scan(&check).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if !check {
+		tx.Rollback()
+		return nil, fmt.Errorf("please enter a valide address id")
+	}
+	deleteQuery := `DELETE FROM addresses WHERE users_id = $1 AND id = $2`
+	err = tx.Exec(deleteQuery, userId, AddressesId).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	return domain, err
+
+}
