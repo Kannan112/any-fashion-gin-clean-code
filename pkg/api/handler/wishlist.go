@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 )
@@ -125,6 +126,21 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 }
 
 func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
+	count, err1 := strconv.Atoi(ctx.Query("count"))
+	page, err2 := strconv.Atoi(ctx.Query("page"))
+	if err1 != nil || err2 != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "page not found",
+			Data:       nil,
+			Errors:     err1,
+		})
+		return
+	}
+	var pagenation req.Pagenation
+	pagenation.Count = count
+	pagenation.Page = page
+
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
@@ -135,7 +151,7 @@ func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
 		})
 		return
 	}
-	wishlist, err := c.WishlistUsecase.ListAllWishlist(ctx, userId)
+	wishlist, err := c.WishlistUsecase.ListAllWishlist(ctx, userId,pagenation)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

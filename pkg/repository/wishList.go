@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
@@ -85,8 +86,10 @@ func (c *WishListDataBase) RemoveFromWishlist(ctx context.Context, userid, itemI
 	return nil
 }
 
-func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]res.ProductItem, error) {
+func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int, pagenation req.Pagenation) ([]res.ProductItem, error) {
 	var wishlists []res.ProductItem
+	limit := pagenation.Count
+	offset := (pagenation.Page - 1) * limit
 	var check bool
 	query := `SELECT EXISTS (SELECT 1 FROM wish_lists)`
 	err := c.DB.Raw(query).Scan(&check).Error
@@ -110,10 +113,15 @@ func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]r
 	p.description,
 	p.brand,
 	c.name 
-	FROM wish_lists w JOIN product_items pi ON w.item_id=pi.id
-	JOIN products p ON pi.product_id=p.id
-	JOIN categories c ON p.category_id = c.id WHERE w.users_id=$1`
+FROM wish_lists w
+JOIN product_items pi ON w.item_id=pi.id
+JOIN products p ON pi.product_id=p.id
+JOIN categories c ON p.category_id = c.id
+WHERE w.users_id=$1
+OFFSET $2
+LIMIT $3;
+`
 
-	err = c.DB.Raw(query2, userId).Scan(&wishlists).Error
+	err = c.DB.Raw(query2, userId, offset, limit).Scan(&wishlists).Error
 	return wishlists, err
 }

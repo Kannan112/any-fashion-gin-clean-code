@@ -177,7 +177,7 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 	if err1 != nil || err2 != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "cant bind data",
+			Message:    "page not found",
 			Data:       nil,
 			Errors:     err1,
 		})
