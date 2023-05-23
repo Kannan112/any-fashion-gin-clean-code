@@ -11,6 +11,7 @@ import (
 type AdminUsecase interface {
 	CreateAdmin(ctx context.Context, admin domain.Admin) error
 	AdminLogin(admin req.LoginReq) (string, error)
+	ListUsers(ctx context.Context) ([]domain.UsersData, error) 
 	BlockUser(body req.BlockData, adminId int) error
 	UnblockUser(id int) error
 	GetDashBord(ctx context.Context) (res.AdminDashboard, error)

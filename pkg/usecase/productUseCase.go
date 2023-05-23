@@ -64,8 +64,8 @@ func (c *ProductUseCase) ListProducts() ([]res.Product, error) {
 	products, err := c.productRepo.ListProducts()
 	return products, err
 }
-func (c *ProductUseCase) DisplayProduct(id int) (res.Product, error) {
-	var product res.Product
+func (c *ProductUseCase) DisplayProduct(id int) ([]res.Product, error) {
+	var product []res.Product
 	product, err := c.productRepo.DisplayProduct(id)
 	return product, err
 }

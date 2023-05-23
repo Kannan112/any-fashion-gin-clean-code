@@ -88,3 +88,7 @@ func (c *adminUseCase) GetDashBord(ctx context.Context) (res.AdminDashboard, err
 	return data, err
 
 }
+func (c *adminUseCase) ListUsers(ctx context.Context) ([]domain.UsersData, error) {
+	data, err := c.adminRepo.ListUsers(ctx)
+	return data, err
+}

@@ -94,7 +94,7 @@ func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int) ([]r
 		return nil, err
 	}
 	if !check {
-		return nil, fmt.Errorf("Your wishlist is empty")
+		return nil, fmt.Errorf("wish list is empty")
 	}
 	query2 := `SELECT pi.id,
 	w.item_id,

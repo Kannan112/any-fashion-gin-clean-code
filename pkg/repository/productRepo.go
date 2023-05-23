@@ -51,7 +51,7 @@ func (c *ProductDataBase) ListCategories(ctx context.Context, pagenation req.Pag
 
 func (c *ProductDataBase) DisplayCategory(id int) ([]res.Product, error) {
 	var product []res.Product
-	query := `SELECT product_name,description,brand FROM products WHERE category_id=$1`
+	query := `SELECT id,product_name,description,brand FROM products WHERE category_id=$1`
 	err := c.DB.Raw(query, id).Scan(&product).Error
 	fmt.Println(product)
 	return product, err
@@ -102,8 +102,8 @@ func (c *ProductDataBase) DeleteAllProducts() error {
 	err := c.DB.Exec(query).Error
 	return err
 }
-func (c *ProductDataBase) DisplayProduct(id int) (res.Product, error) {
-	var product res.Product
+func (c *ProductDataBase) DisplayProduct(id int) ([]res.Product, error) {
+	var product []res.Product
 	query := `SELECT id, product_name AS name, description, brand, category_id FROM products WHERE id=$1`
 	err := c.DB.Raw(query, id).Scan(&product).Error
 	return product, err

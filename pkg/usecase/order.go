@@ -30,8 +30,8 @@ func NewOrderUseCase(orderRepo interfaces.OrderRepository, cartRepo interfaces.C
 	}
 }
 func (c *OrderUseCase) OrderAll(id int) (domain.Orders, error) {
-	order, err := c.orderRepo.OrderAll(id)
-	return order, err
+	data, err := c.orderRepo.OrderAll(id)
+	return data, err
 }
 func (c *OrderUseCase) UserCancelOrder(orderId, userId int) error {
 	err := c.orderRepo.UserCancelOrder(orderId, userId)

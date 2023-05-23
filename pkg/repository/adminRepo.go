@@ -131,3 +131,24 @@ func (c *adminDatabase) GetDashBord(ctx context.Context) (res.AdminDashboard, er
 	return admindashbord, err
 
 }
+func (c *adminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, error) {
+	tx := c.DB.Begin()
+	var user []domain.UsersData
+	var check bool
+	checking := `SELECT EXISTS(SELECT * FROM users)`
+	err := tx.Raw(checking).Scan(&check).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if !check {
+		tx.Rollback()
+		return nil, fmt.Errorf("No user found")
+	}
+	query := `select * from users`
+	err = c.DB.Raw(query).Scan(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, err
+}

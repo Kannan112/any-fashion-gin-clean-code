@@ -19,13 +19,14 @@ func NewOrderRepository(DB *gorm.DB) interfaces.OrderRepository {
 
 func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	//get the cartid and userid and total of the cart
+	var dom domain.Orders
 	tx := c.DB.Begin()
 	var cart domain.Carts
 	query := `SELECT * FROM carts WHERE users_id=$1`
 	err := tx.Raw(query, id).Scan(&cart).Error
 	if err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
 	fmt.Println("cartid", cart.Id)
 	if cart.Total == 0 {
@@ -33,13 +34,13 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 		err := tx.Exec(setTotal).Error
 		if err != nil {
 			tx.Rollback()
-			return domain.Orders{}, err
+			return dom, err
 		}
 		cart.Total = cart.Sub_total
 	}
 	if cart.Sub_total == 0 {
 		tx.Rollback()
-		return domain.Orders{}, fmt.Errorf("NO ITEM IN CART")
+		return dom, fmt.Errorf("NO ITEM IN CART")
 	}
 	//FIND THE DEFAULT ADDRESS OF THE USER
 	var addressId int
@@ -47,11 +48,11 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	err = tx.Raw(address, id).Scan(&addressId).Error
 	if err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
 	if addressId == 0 {
 		tx.Rollback()
-		return domain.Orders{}, fmt.Errorf("Add address")
+		return dom, fmt.Errorf("Add address")
 	}
 	var order domain.Orders
 	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total)
@@ -59,7 +60,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	err = tx.Raw(insetOrder, id, addressId, cart.Total).Scan(&order).Error
 	if err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
 	//GET CART ITEMS details of the user
 	var cartItems []req.CartItems
@@ -67,21 +68,21 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	err = tx.Raw(cartDetails, cart.Id).Scan(&cartItems).Error
 	if err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
 	//Add the items in the cart into the orderitems one by one
 	for _, items := range cartItems {
 		fmt.Println("quantity", items)
 		//check whether the item is available
 		if items.Quantity > items.QntyInStock {
-			return domain.Orders{}, fmt.Errorf("out of stock")
+			return dom, fmt.Errorf("out of stock")
 		}
 		insetOrderItems := `INSERT INTO order_items (orders_id,product_item_id,quantity,price) VALUES($1,$2,$3,$4)`
 		err = tx.Exec(insetOrderItems, order.Id, items.ProductItemId, items.Quantity, items.Price).Error
 
 		if err != nil {
 			tx.Rollback()
-			return domain.Orders{}, err
+			return dom, err
 		}
 	}
 	//Update the cart total
@@ -89,7 +90,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	err = tx.Exec(updateCart, id).Error
 	if err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
 	//Remove the items from the cart_items
 	for _, items := range cartItems {
@@ -97,7 +98,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 		err = tx.Exec(removeCartItems, cart.Id, items.ProductItemId).Error
 		if err != nil {
 			tx.Rollback()
-			return domain.Orders{}, err
+			return dom, err
 		}
 	}
 	//Reduce the product qty in stock details
@@ -106,14 +107,14 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 		err = tx.Exec(updateQty, items.Quantity, items.ProductItemId).Error
 		if err != nil {
 			tx.Rollback()
-			return domain.Orders{}, err
+			return dom, err
 		}
 	}
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()
-		return domain.Orders{}, err
+		return dom, err
 	}
-	return domain.Orders{}, nil
+	return dom, nil
 
 }
 func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {

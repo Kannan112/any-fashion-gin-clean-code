@@ -219,3 +219,21 @@ func (cr *AdminHandler) GetDashBord(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (c *AdminHandler) ListUsers(ctx *gin.Context) {
+	data, err := c.adminUseCase.ListUsers(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to list",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusAccepted, res.Response{
+		StatusCode: 200,
+		Message:    "List of users",
+		Data:       data,
+		Errors:     nil,
+	})
+}

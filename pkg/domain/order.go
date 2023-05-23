@@ -27,3 +27,7 @@ type OrderItem struct {
 	Quantity      int
 	Price         int
 }
+type OrderStatus struct {
+	Id     uint `gorma:"primaryKey;unique;not null"`
+	Status string
+}

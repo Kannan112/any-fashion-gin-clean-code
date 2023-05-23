@@ -21,7 +21,7 @@ type ProductRepository interface {
 	UpdateProduct(id int, product req.Product) (res.Product, error)
 	DeleteProduct(id int) error
 	DeleteAllProducts() error
-	DisplayProduct(id int) (res.Product, error)
+	DisplayProduct(id int) ([]res.Product, error)
 	ListProducts() ([]res.Product, error)
 
 	//Product-item

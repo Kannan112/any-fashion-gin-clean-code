@@ -12,9 +12,10 @@ type AdminRepository interface {
 	FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error)
 	CreateAdmin(ctx context.Context, admin domain.Admin) error
 	AdminLogin(email string) (domain.Admin, error)
-	BlockUser(body req.BlockData, adminId int) error
-	UnblockUser(id int) error
 
 	//DashBord
 	GetDashBord(ctx context.Context) (res.AdminDashboard, error)
+	BlockUser(body req.BlockData, adminId int) error
+	UnblockUser(id int) error
+	ListUsers(ctx context.Context) ([]domain.UsersData, error)
 }

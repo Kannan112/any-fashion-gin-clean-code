@@ -129,3 +129,4 @@ func (c *userUseCase) EditProfile(id int, UpdateProfile req.UserReq) (res.UserDa
 	userdata, err := c.userRepo.EditProfile(id, UpdateProfile)
 	return userdata, err
 }
+

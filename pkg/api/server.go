@@ -61,7 +61,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			address.POST("add", userHandler.AddAddress)
 			address.PATCH("update/:addressId", userHandler.UpdateAddress)
 			address.GET("list", userHandler.ListallAddress)
-			address.DELETE("delete/:addressId",userHandler.DeleteAddress)
+			address.DELETE("delete/:id", userHandler.DeleteAddress)
 
 		}
 		//wishlist
@@ -83,11 +83,6 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		{
 			product.GET("list", productHandler.ListProducts)
 			product.GET("list/:id", productHandler.DisplayProduct)
-			product.GET("list/:id/:page", productHandler.DisplayProduct)
-			product.GET("list/:id/:page/:size", productHandler.DisplayProduct)
-			product.GET("list/:id/:page/:size/:sort", productHandler.DisplayProduct)
-			product.GET("list/:id/:page/:size/:sort/:category", productHandler.DisplayProduct)
-			product.GET("list/:id/:page/:size/:sort/:category/:price", productHandler.DisplayProduct)
 		}
 		productitem := user.Group("/product-item")
 		{
@@ -119,6 +114,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		//admin block unblock users
 		adminUse := admin.Group("/user", middleware.AdminAuth)
 		{
+			adminUse.GET("all", adminHandler.ListUsers)
 			adminUse.PATCH("block", adminHandler.BlockUser)
 			adminUse.PATCH("unblock/:userId", adminHandler.UnblockUser)
 		}
@@ -136,13 +132,13 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			category.PATCH("update/:id", productHandler.UpdatCategory)
 			category.DELETE("delete/:category_id")
 			category.GET("listall", productHandler.ListCategories)
-			category.GET("find/:id", productHandler.DisplayCategory)
+			category.GET("/:category_id", productHandler.DisplayCategory)
 		}
 		//product
 		product := admin.Group("/product", middleware.AdminAuth)
 		{
 			product.POST("add", productHandler.AddProduct)
-			product.PATCH("update", productHandler.UpdateProduct)
+			product.PATCH("update/:id", productHandler.UpdateProduct)
 		}
 		//product item
 		productItem := admin.Group("/product-item", middleware.AdminAuth)

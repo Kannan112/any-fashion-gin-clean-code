@@ -245,7 +245,7 @@ func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
-		Message:    "Category is",
+		Message:    "Products in Category",
 		Data:       category,
 		Errors:     nil,
 	})
