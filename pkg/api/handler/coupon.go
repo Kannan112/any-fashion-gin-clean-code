@@ -142,12 +142,19 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 	err = c.CouponUseCase.UpdateCoupon(ctx, coupon, couponId)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 200,
-			Message:    "Coupon Updated",
+			StatusCode: 400,
+			Message:    "failed to update",
 			Data:       nil,
-			Errors:     nil,
+			Errors:     err.Error(),
 		})
+		return
 	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "Coupon updated",
+		Data:       nil,
+		Errors:     err,
+	})
 
 }
 

@@ -162,7 +162,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		{
 			coupon.GET("", couponHandler.ViewCoupon)
 			coupon.POST("add", couponHandler.AddCoupon)
-			coupon.PATCH("update", couponHandler.UpdateCoupon)
+			coupon.PATCH("update/:couponId", couponHandler.UpdateCoupon)
 			coupon.DELETE("delete/:couponId", couponHandler.DeleteCoupon)
 		}
 	}
