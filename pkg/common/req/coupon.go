@@ -11,3 +11,4 @@ type Coupons struct {
 	MinimumPurchaseAmount float64   `json:"minimumpurchaseamount"`
 	ExpirationDate        time.Time `json:"expirationdate"`
 }
+	

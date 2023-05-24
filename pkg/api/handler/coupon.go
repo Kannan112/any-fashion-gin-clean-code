@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -32,8 +33,9 @@ func NewCouponHandler(CouponUsecase services.CouponUseCase) *CouponHandler {
 // @Failure 400 {object} res.Response
 // @Router /admin/coupon/add [post]
 func (cr *CouponHandler) AddCoupon(c *gin.Context) {
+
 	var newCoupon req.Coupons
-	err := c.Bind(&newCoupon)
+	err := c.ShouldBindJSON(&newCoupon)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -43,6 +45,7 @@ func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 		})
 		return
 	}
+	fmt.Println("Add Coupon", newCoupon.DiscountMaximumAmount)
 	err = cr.CouponUseCase.AddCoupon(c, newCoupon)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
