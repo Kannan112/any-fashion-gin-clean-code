@@ -88,8 +88,19 @@ func (c *userDatabase) ViewProfile(id int) (res.UserData, error) {
 }
 func (c *userDatabase) EditProfile(id int, updatingDetails req.UserReq) (res.UserData, error) {
 	var profile res.UserData
+	tx := c.DB.Begin()
+	fmt.Println("update Test in Edit profile :---", updatingDetails.Name)
 	UpdatedQuery := `UPDATE users SET name=$1,email=$2,mobile=$3 WHERE id=$4 RETURNING name,email,mobile`
-	err := c.DB.Raw(UpdatedQuery, updatingDetails.Name, updatingDetails.Email, updatingDetails.Mobile, id).Scan(&profile).Error
+	err := tx.Raw(UpdatedQuery, updatingDetails.Name, updatingDetails.Email, updatingDetails.Mobile, id).Scan(&profile).Error
+	if err != nil {
+		tx.Rollback()
+		return profile, err
+	}
+	fmt.Println("EditProfile test 1")
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return profile, err
+	}
 	return profile, err
 }
 

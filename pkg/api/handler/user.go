@@ -354,13 +354,23 @@ func (cr *UserHandler) EditProfile(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusAccepted, res.Response{
 			StatusCode: 400,
-			Message:    "failed to find the id",
+			Message:    "User not login",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
 		return
 	}
 	var update req.UserReq
+	err = c.Bind(&update)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed binding",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
 	profile, err := cr.userUseCase.EditProfile(id, update)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{

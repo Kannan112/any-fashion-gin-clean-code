@@ -125,3 +125,18 @@ LIMIT $3;
 	err = c.DB.Raw(query2, userId, offset, limit).Scan(&wishlists).Error
 	return wishlists, err
 }
+
+// func (c *WishListDataBase) OrderWishlist(ctx context.Context, userId int) error {
+// 	var check bool
+// 	tx := c.DB.Begin()
+// 	checkingWishlist := `SELECT EXISTS(SELECT * FROM wishlist where users_id=$1)`
+// 	err := tx.Raw(checkingWishlist, userId).Scan(&check).Error
+// 	if err != nil {
+// 		tx.Rollback()
+// 		return err
+// 	}
+// 	if !check{
+// 		tx.Rollback()
+// 		return fmt.Errorf("Your wishlist is empty")
+// 	}
+// }

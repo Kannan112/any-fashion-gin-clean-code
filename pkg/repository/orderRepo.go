@@ -17,13 +17,13 @@ func NewOrderRepository(DB *gorm.DB) interfaces.OrderRepository {
 	return &OrderDatabase{DB}
 }
 
-func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
+func (c *OrderDatabase) OrderAll(userId int) (domain.Orders, error) {
 	//get the cartid and userid and total of the cart
 	var dom domain.Orders
 	tx := c.DB.Begin()
 	var cart domain.Carts
 	query := `SELECT * FROM carts WHERE users_id=$1`
-	err := tx.Raw(query, id).Scan(&cart).Error
+	err := tx.Raw(query, userId).Scan(&cart).Error
 	if err != nil {
 		tx.Rollback()
 		return dom, err
@@ -45,7 +45,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	//FIND THE DEFAULT ADDRESS OF THE USER
 	var addressId int
 	address := `SELECT id FROM addresses WHERE users_id=$1 AND is_default=true`
-	err = tx.Raw(address, id).Scan(&addressId).Error
+	err = tx.Raw(address, userId).Scan(&addressId).Error
 	if err != nil {
 		tx.Rollback()
 		return dom, err
@@ -57,7 +57,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	var order domain.Orders
 	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total)
 		VALUES($1,NOW(),$2,$3) RETURNING *`
-	err = tx.Raw(insetOrder, id, addressId, cart.Total).Scan(&order).Error
+	err = tx.Raw(insetOrder, userId, addressId, cart.Total).Scan(&order).Error
 	if err != nil {
 		tx.Rollback()
 		return dom, err
@@ -87,7 +87,7 @@ func (c *OrderDatabase) OrderAll(id int) (domain.Orders, error) {
 	}
 	//Update the cart total
 	updateCart := `UPDATE carts SET total=0,sub_total=0 WHERE users_id=?`
-	err = tx.Exec(updateCart, id).Error
+	err = tx.Exec(updateCart, userId).Error
 	if err != nil {
 		tx.Rollback()
 		return dom, err

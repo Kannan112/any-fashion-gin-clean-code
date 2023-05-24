@@ -15,10 +15,10 @@ type UserDetails struct {
 	BlockedBy         uint   `json:",omitempty"`
 	ReasonForBlocking string `json:",omitempty"`
 }
-type UserAddresses struct{
-	Id int 
-	UsersId int
+type UserAddresses struct {
+	Id          int
+	UsersId     int
 	HouseNumber string
-	Street string
-	City string
+	Street      string
+	City        string
 }
