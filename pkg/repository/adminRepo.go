@@ -152,3 +152,9 @@ func (c *adminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, erro
 	}
 	return user, err
 }
+func (c *adminDatabase) FindUserByEmail(ctx context.Context, name string) (domain.UsersData, error) {
+	var data domain.UsersData
+	query := `SELECT * FROM users WHERE name=$1`
+	err := c.DB.Raw(query, name).Scan(&data).Error
+	return data, err
+}

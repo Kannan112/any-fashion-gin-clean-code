@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -236,4 +237,36 @@ func (c *AdminHandler) ListUsers(ctx *gin.Context) {
 		Data:       data,
 		Errors:     nil,
 	})
+}
+func (c *AdminHandler) FindUserByEmail(ctx *gin.Context) {
+	var userEmail req.UserEmail
+	err := ctx.Bind(&userEmail)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed to bind",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	fmt.Println("EmailFind", userEmail.Email)
+	data, err := c.adminUseCase.FindUserByEmail(ctx, userEmail.Email)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed find user",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "user found",
+		Data:       data,
+		Errors:     nil,
+	})
+
 }

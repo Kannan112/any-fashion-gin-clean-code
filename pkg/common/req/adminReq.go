@@ -10,3 +10,6 @@ type BlockData struct {
 	UserId uint   ` json:"userid" validate:"required"`
 	Reason string ` json:"reason" validate:"required"`
 }
+type UserEmail struct {
+	Email string `json:"email"`
+}

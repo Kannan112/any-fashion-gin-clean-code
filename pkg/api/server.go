@@ -115,6 +115,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		adminUse := admin.Group("/user", middleware.AdminAuth)
 		{
 			adminUse.GET("all", adminHandler.ListUsers)
+			adminUse.GET("email", adminHandler.FindUserByEmail)
 			adminUse.PATCH("block", adminHandler.BlockUser)
 			adminUse.PATCH("unblock/:userId", adminHandler.UnblockUser)
 		}
