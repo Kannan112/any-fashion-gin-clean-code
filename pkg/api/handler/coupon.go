@@ -91,9 +91,9 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "failed to create coupon",
+			Message:    "failed to delete coupon",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}
@@ -101,7 +101,7 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 		StatusCode: 200,
 		Message:    "Coupon deleted",
 		Data:       nil,
-		Errors:     err,
+		Errors:     nil,
 	})
 }
 

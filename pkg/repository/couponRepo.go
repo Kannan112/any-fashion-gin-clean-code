@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -36,8 +37,18 @@ func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, C
 	return err
 }
 func (c *CouponDatabase) DeleteCoupon(ctx context.Context, couponId int) error {
-	query := `DELETE FROM coupons WHERE id $1`
-	err := c.DB.Exec(query, couponId).Error
+	fmt.Println("couponId,", couponId)
+	var check bool
+	Querycheck := `SELECT EXISTS(SELECT 1 FROM coupons WHERE id=$1)`
+	err := c.DB.Raw(Querycheck, couponId).Scan(&check).Error
+	if err != nil {
+		return err
+	}
+	if !check {
+		return fmt.Errorf("Coupon with id not exists")
+	}
+	query := `DELETE FROM coupons WHERE id=$1`
+	err = c.DB.Exec(query, couponId).Error
 	return err
 }
 func (c *CouponDatabase) ViewCoupon(ctx context.Context) ([]domain.Coupon, error) {
