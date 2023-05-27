@@ -19,11 +19,35 @@ func NewCouponRepository(DB *gorm.DB) interfaces.CouponRepository {
 }
 
 func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
+	var check bool
+	tx := c.DB.Begin()
+	Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE code=$1)`
+	err := c.DB.Raw(Querycheck, coupon.Code).Scan(&check).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if check {
+		tx.Rollback()
+		return fmt.Errorf("Coupon code already exists")
+	}
 	query := `INSERT INTO coupons (code,discount_percent,discount_maximum_amount,minimum_purchase_amount, expiration_date)VALUES($1,$2,$3,$4,$5)`
-	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
+	err = c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
 	return err
 }
 func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error {
+	var check bool
+	tx := c.DB.Begin()
+	Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE code=$1)`
+	err := c.DB.Raw(Querycheck, coupon.Code).Scan(&check).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if check {
+		tx.Rollback()
+		return fmt.Errorf("Coupon code already exists")
+	}
 
 	query := `UPDATE coupons 
 	SET code=$1, 
@@ -33,7 +57,11 @@ func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, C
 		expiration_date=$5 
 	WHERE id=$6;
 	`
-	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
+	err = c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
 	return err
 }
 func (c *CouponDatabase) DeleteCoupon(ctx context.Context, couponId int) error {
