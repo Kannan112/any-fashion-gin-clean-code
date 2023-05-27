@@ -11,7 +11,7 @@ import (
 type OrderUseCase interface {
 	OrderAll(id int) (domain.Orders, error)
 	UserCancelOrder(orderId, userId int) error
-	ListAllOrders(userId int) ([]domain.Order, error)
+	ListAllOrders(userId int) ([]domain.Orders, error)
 	RazorPayCheckout(ctx context.Context, userId int, paymentId int) (res.RazorPayResponse, error)
 	VerifyRazorPay(ctx context.Context, body req.RazorPayRequest) error
 }

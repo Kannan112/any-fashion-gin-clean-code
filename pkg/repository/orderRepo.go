@@ -153,9 +153,13 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
 	}
 	return nil
 }
-func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Order, error) {
-	var order []domain.Order
-	query := `SELECT * FROM orders WHERE users_id=$1`
+func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Orders, error) {
+	var order []domain.Orders
+	query := `SELECT *
+	FROM orders
+	JOIN users ON orders.users_id = users.id
+	WHERE users.id = $1;
+	`
 	err := c.DB.Raw(query, userId).Scan(&order).Error
 	return order, err
 

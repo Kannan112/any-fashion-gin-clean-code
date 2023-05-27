@@ -7,6 +7,6 @@ import (
 type OrderRepository interface {
 	OrderAll(userId int) (domain.Orders, error)
 	UserCancelOrder(orderId, userId int) error
-	ListAllOrders(userId int) ([]domain.Order, error)
+	ListAllOrders(userId int) ([]domain.Orders, error)
 	//AdminCancelOrder(ctx context.Context, userId, orderId int) error
 }
