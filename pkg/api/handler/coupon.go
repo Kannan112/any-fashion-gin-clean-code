@@ -52,7 +52,7 @@ func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 			StatusCode: 400,
 			Message:    "failed to create coupon",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 	}
