@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
@@ -186,4 +187,36 @@ func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 		Errors:     nil,
 	})
 
+}
+
+//--------------------------------Users Side-----------------------------------------
+
+func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find user",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	couponCode := ctx.Query("code")
+	discountRate, err := c.CouponUseCase.ApplyCoupon(ctx, userId, couponCode)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to applay",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "coupon added successfully",
+		Data:       []interface{}{"rate after coupon applay is %v", discountRate},
+		Errors:     nil,
+	})
 }

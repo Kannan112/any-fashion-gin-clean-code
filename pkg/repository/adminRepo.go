@@ -143,7 +143,7 @@ func (c *adminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, erro
 	}
 	if !check {
 		tx.Rollback()
-		return nil, fmt.Errorf("No user found")
+		return nil, fmt.Errorf("no user found")
 	}
 	query := `select * from users`
 	err = c.DB.Raw(query).Scan(&user).Error

@@ -32,3 +32,7 @@ func (c *CouponUseCase) ViewCoupon(ctx context.Context) ([]domain.Coupon, error)
 	coupon, err := c.coupoRepo.ViewCoupon(ctx)
 	return coupon, err
 }
+func (c *CouponUseCase) ApplyCoupon(ctx context.Context, userId int, couponCode string) (int, error) {
+	total, err := c.coupoRepo.ApplyCoupon(ctx, userId, couponCode)
+	return total, err
+}

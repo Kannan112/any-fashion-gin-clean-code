@@ -9,6 +9,7 @@ type Orders struct {
 	OrderTime  time.Time
 	AddressId  uint
 	Address    Address
+	CouponCode string
 	OrderTotal int
 }
 type Order struct {

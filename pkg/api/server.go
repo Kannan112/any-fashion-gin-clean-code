@@ -104,6 +104,11 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListAllOrders)
 		}
+		//coupon
+		coupon:=user.Group("/coupon")
+		{
+			coupon.PATCH("applay/:code",couponHandler.ApplyCoupon)
+		}
 	}
 	admin := engine.Group("/admin")
 	{

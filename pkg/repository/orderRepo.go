@@ -52,7 +52,7 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Orders, error) {
 	}
 	if addressId == 0 {
 		tx.Rollback()
-		return dom, fmt.Errorf("Add address")
+		return dom, fmt.Errorf("add address")
 	}
 	var order domain.Orders
 	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total)
