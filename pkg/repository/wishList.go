@@ -30,7 +30,7 @@ func (c *WishListDataBase) AddToWishlist(id, itemId int) error {
 		return err
 	}
 	if !Exists {
-		return fmt.Errorf("Item not found")
+		return fmt.Errorf("item not found")
 	}
 
 	query := `SELECT EXISTS (SELECT 1 FROM wish_lists WHERE users_id = $1 AND item_id = $2);`
