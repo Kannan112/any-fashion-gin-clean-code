@@ -32,9 +32,9 @@ func (c *CartDataBase) CreateCart(id int) error {
 	err := c.DB.Exec(query, id).Error
 	return err
 }
+
 func (c *CartDataBase) AddToCart(productId, userId int) error {
 	tx := c.DB.Begin()
-
 	var cartId int
 	findcart := `SELECT id FROM carts WHERE users_id=$1`
 	err := c.DB.Raw(findcart, userId).Scan(&cartId).Error
@@ -42,13 +42,6 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 		tx.Rollback()
 		return err
 	}
-	// if cartId == 0 {
-	// 	createCart := `INSERT INTO carts (users_id,sub_total,total) VALUES ($1,0,0) RETURNING id`
-	// 	err = c.DB.Raw(createCart, userId).Scan(&cartId).Error
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
 	//check the product exist in the cart_item
 	var CartitemID int
 	cartItemCheck := `SELECT id FROM cart_items WHERE carts_id=$1 AND product_item_id=$2 LIMIT 1`
@@ -87,9 +80,38 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 	if err != nil {
 		tx.Rollback()
 		return err
+	}
+	//check any coupon is present in the cart
+	var couponId int
+	CheckCouponId := `SELECT coupon_id FROM carts WHERE users_id=$1`
+	err = tx.Raw(CheckCouponId, userId).Scan(&couponId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if couponId != 0 {
+		//find coupon details
+		var couponDetails domain.Coupon
+		CouponTable := `SELECT * FROM coupons WHERE id=$1`
+		err := tx.Raw(CouponTable, couponId).Scan(&couponDetails).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		//apply the coupon to the total
+		discountAmount := (subtotal / 100) * int(couponDetails.DiscountPercent)
+		if discountAmount > int(couponDetails.DiscountMaximumAmount) {
+			discountAmount = int(couponDetails.DiscountMaximumAmount)
+		}
+		updateCart := `UPDATE carts SET total=$1 WHERE id =$2`
+		err = tx.Exec(updateCart, subtotal-discountAmount, cartId).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
 	} else {
 		updateTotal := `UPDATE carts SET total=$1 where id=$2`
-		err := tx.Exec(updateTotal, subtotal, userId).Error
+		err := tx.Exec(updateTotal, subtotal, cartId).Error
 		if err != nil {
 			tx.Rollback()
 			return err
