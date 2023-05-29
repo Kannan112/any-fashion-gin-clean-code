@@ -90,7 +90,7 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 	tx := c.DB.Begin()
 	var check bool
 	//Check coupon exists
-	CouponExists := `SELECT EXISTS(SELECT * FROM coupons WHERE code$1)`
+	CouponExists := `SELECT EXISTS(SELECT * FROM coupons WHERE code=$1)`
 	err := tx.Raw(CouponExists, couponCode).Scan(&check).Error
 	if err != nil {
 		return 0, err
@@ -107,17 +107,17 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 		tx.Rollback()
 		return 0, err
 	}
+
 	//Check coupon is expire
-	currentTime := time.Now()
-	couponExpire := coupon.ExpirationDate
-	if currentTime.After(couponExpire) {
-		// Coupon has expired, handle the case accordingly
-		return 0, fmt.Errorf("coupon has expired")
+
+	if coupon.ExpirationDate.Before(time.Now()) {
+		tx.Rollback()
+		return 0, fmt.Errorf("coupon expired")
 	}
-	// Coupon is still valid, continue
 	// Check the coupon is used
+
 	var couponUsed bool
-	QueryCoupon := `SELECT EXISTS(SELECT * FROM orders WHERE coupon_code=$1)`
+	QueryCoupon := `SELECT EXISTS(SELECT 1 FROM orders WHERE coupon_code=$1)`
 	err = tx.Raw(QueryCoupon, couponCode).Scan(&couponUsed).Error
 	if err != nil {
 		tx.Rollback()
@@ -127,19 +127,20 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 		tx.Rollback()
 		return 0, fmt.Errorf("coupon has expired")
 	}
-	// check whether the coupen is alresy added to the cart
+	// check whether the coupen is already added to the cart
 	var cartDetails domain.Carts
 	getCartDetails := `SELECT * FROM carts WHERE users_id=$1`
 	err = tx.Raw(getCartDetails, userId).Scan(&cartDetails).Error
 	if err != nil {
 		tx.Rollback()
-		return 0, nil
+		return 0, err
 	}
+	fmt.Printf("couponTest cartDetails.ID= %v couponID=%v", cartDetails.CouponId, coupon.Id)
 	if cartDetails.CouponId == coupon.Id {
 		tx.Rollback()
-		return 0, fmt.Errorf("coupon added to cart")
+		return 0, fmt.Errorf("coupen is applied to cart")
 	}
-	//check something inside the cart
+	//check cart is empty
 	if cartDetails.Sub_total == 0 {
 		tx.Rollback()
 		return 0, fmt.Errorf("cart is empty")
@@ -156,8 +157,8 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 	}
 	//update the cart total with cart.sub_total minuse discount amount
 
-	updateCart := `UPDATE carts SET total=$1,coupon_id=$2 WHERE users_id=$3`
-	err = tx.Exec(updateCart, cartDetails.Sub_total-discountAmount, userId).Error
+	updateCart := `UPDATE carts SET total=$1,coupon_id=$2 WHERE id=$3`
+	err = tx.Exec(updateCart, cartDetails.Sub_total-discountAmount, coupon.Id, cartDetails.Id).Error
 	if err != nil {
 		tx.Rollback()
 		return 0, err

@@ -207,7 +207,7 @@ func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "failed to applay",
+			Message:    "failed to apply",
 			Data:       nil,
 			Errors:     err.Error(),
 		})

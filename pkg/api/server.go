@@ -105,9 +105,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			order.GET("listall", orderHandler.ListAllOrders)
 		}
 		//coupon
-		coupon:=user.Group("/coupon")
+		coupon := user.Group("/coupon", middleware.UserAuth)
 		{
-			coupon.PATCH("applay/:code",couponHandler.ApplyCoupon)
+			coupon.GET("apply", couponHandler.ApplyCoupon)
 		}
 	}
 	admin := engine.Group("/admin")
