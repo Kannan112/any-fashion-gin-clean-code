@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -66,7 +67,7 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 		}
 	}
 
-	var Price int
+	var Price float32
 	findPrice := `SELECT price FROM product_items WHERE id=$1`
 	err = tx.Raw(findPrice, productId).Scan(&Price).Error
 	if err != nil {
@@ -82,14 +83,15 @@ func (c *CartDataBase) AddToCart(productId, userId int) error {
 		return err
 	}
 	//check any coupon is present in the cart
-	var couponId int
+	var couponId sql.NullInt64
 	CheckCouponId := `SELECT coupon_id FROM carts WHERE users_id=$1`
 	err = tx.Raw(CheckCouponId, userId).Scan(&couponId).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-	if couponId != 0 {
+
+	if couponId.Valid {
 		//find coupon details
 		var couponDetails domain.Coupon
 		CouponTable := `SELECT * FROM coupons WHERE id=$1`

@@ -19,21 +19,31 @@ func NewCouponRepository(DB *gorm.DB) interfaces.CouponRepository {
 	return &CouponDatabase{DB}
 }
 
-func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
+func (c *CouponDatabase) FindCouponByName(ctx context.Context, couponCode string) (bool, error) {
 	var check bool
-	tx := c.DB.Begin()
 	Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE code=$1)`
-	err := c.DB.Raw(Querycheck, coupon.Code).Scan(&check).Error
+	err := c.DB.Raw(Querycheck, couponCode).Scan(&check).Error
 	if err != nil {
-		tx.Rollback()
-		return err
+		return false, err
 	}
-	if check {
-		tx.Rollback()
-		return fmt.Errorf("coupon code already exists")
-	}
+	return check, err
+}
+
+func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
+	// var check bool
+	// tx := c.DB.Begin()
+	// Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE code=$1)`
+	// err := c.DB.Raw(Querycheck, coupon.Code).Scan(&check).Error
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
+	// if check {
+	// 	tx.Rollback()
+	// 	return fmt.Errorf("coupon code already exists")
+	// }
 	query := `INSERT INTO coupons (code,discount_percent,discount_maximum_amount,minimum_purchase_amount, expiration_date)VALUES($1,$2,$3,$4,$5)`
-	err = c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
+	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
 	return err
 }
 func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error {
@@ -59,11 +69,11 @@ func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, C
 	WHERE id=$6;
 	`
 	err = c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
-	// if err != nil {
-	// 	tx.Rollback()
-	// 	return err
-	// }
-	return err
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 }
 func (c *CouponDatabase) DeleteCoupon(ctx context.Context, couponId int) error {
 	fmt.Println("couponId,", couponId)
@@ -167,5 +177,5 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 		tx.Rollback()
 		return 0, err
 	}
-	return cartDetails.Total, nil
+	return cartDetails.Total - cartDetails.Sub_total, nil
 }

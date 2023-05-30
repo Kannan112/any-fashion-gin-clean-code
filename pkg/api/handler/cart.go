@@ -68,6 +68,8 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 		"Added": "successfully",
 	})
 }
+
+// remove from cart
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -109,6 +111,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	})
 }
 
+// Llist cart
 func (cr *CartHandler) ListCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {

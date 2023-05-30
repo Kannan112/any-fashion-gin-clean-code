@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -17,7 +19,17 @@ func NewCouponUseCase(couponRepo interfaces.CouponRepository) services.CouponUse
 	return &CouponUseCase{couponRepo}
 }
 func (c *CouponUseCase) AddCoupon(ctx context.Context, coupon req.Coupons) error {
-	err := c.coupoRepo.AddCoupon(ctx, coupon)
+	checkCoupon, err := c.coupoRepo.FindCouponByName(ctx, coupon.Code)
+	if err != nil {
+		return err
+	} else if checkCoupon {
+		return fmt.Errorf("there already a coupon exist with coupon_name %v", coupon.Code)
+	}
+	// validate the coupn expire date
+	if time.Since(coupon.ExpirationDate) > 0 {
+		return fmt.Errorf("given coupon expire date already exceeded %v", coupon.ExpirationDate)
+	}
+	err = c.coupoRepo.AddCoupon(ctx, coupon)
 	return err
 }
 func (c *CouponUseCase) DeleteCoupon(ctx context.Context, couponId int) error {
