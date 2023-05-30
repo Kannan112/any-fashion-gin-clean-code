@@ -17,9 +17,9 @@ func NewOrderRepository(DB *gorm.DB) interfaces.OrderRepository {
 	return &OrderDatabase{DB}
 }
 
-func (c *OrderDatabase) OrderAll(userId int) (domain.Orders, error) {
+func (c *OrderDatabase) OrderAll(userId int) (domain.Order, error) {
 	//get the cartid and userid and total of the cart
-	var dom domain.Orders
+	var dom domain.Order
 	tx := c.DB.Begin()
 	var cart domain.Carts
 	query := `SELECT * FROM carts WHERE users_id=$1`
@@ -55,8 +55,8 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Orders, error) {
 		return dom, fmt.Errorf("add address")
 	}
 	var order domain.Orders
-	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total)
-		VALUES($1,NOW(),$2,$3) RETURNING *`
+	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total,order_status)
+		VALUES($1,NOW(),$2,$3,'order placed') RETURNING *`
 	err = tx.Raw(insetOrder, userId, addressId, cart.Total).Scan(&order).Error
 	if err != nil {
 		tx.Rollback()
@@ -119,34 +119,38 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Orders, error) {
 }
 func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
 	tx := c.DB.Begin()
-
-	//find the orderd product and qty and update the product_items with those
-	var items []req.CartItems
-	findProducts := `SELECT product_item_id,quantity FROM order_items WHERE orders_id=?`
-	err := tx.Raw(findProducts, orderId).Scan(&items).Error
+	//collect order details
+	var OrderDetails []req.CartItems
+	CollectDetails := `SELECT product_item_id,quantity,price from order_items where orders_id=$1`
+	err := tx.Raw(CollectDetails, orderId).Scan(&OrderDetails).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-	if len(items) == 0 {
+	if len(OrderDetails) == 0 {
 		return fmt.Errorf("no order found with this id")
 	}
-	for _, item := range items {
-		updateProductItem := `UPDATE product_items SET qnty_in_stock=qnty_in_stock+$1 WHERE id=$2`
-		err = tx.Exec(updateProductItem, item.Quantity, item.ProductItemId).Error
+	for _, items := range OrderDetails {
+		updateProductItems := `UPDATE product_items SET qnty_in_stock=qnty_in_stock+$1 WHERE id=$2`
+		err := tx.Exec(updateProductItems, items.Quantity, items.ProductItemId).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		//remove order from order_items
+		Remove := `DELETE from order_items WHERE orders_id=$1`
+		err = tx.Exec(Remove, orderId).Error
 		if err != nil {
 			tx.Rollback()
 			return err
 		}
 	}
-	//Remove the items from order_items
-	removeItems := `DELETE FROM order_items WHERE orders_id=$1`
-	err = tx.Exec(removeItems, orderId).Error
+	updateOrder := `UPDATE orders SET order_status='order canceled' WHERE id=$1`
+	err = tx.Exec(updateOrder, orderId).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()
 		return err
@@ -166,7 +170,7 @@ func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Orders, error) {
 }
 func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Order, error) {
 	var order []domain.Order
-	query := `SELECT * FROM orders WHERE users_id=$1 AND status=$2`
-	err := c.DB.Raw(query, userId, status).Scan(&order).Error
+	query := `SELECT * FROM orders WHERE users_id=$1`
+	err := c.DB.Raw(query, userId).Scan(&order).Error
 	return order, err
 }

@@ -29,7 +29,7 @@ func NewOrderUseCase(orderRepo interfaces.OrderRepository, cartRepo interfaces.C
 		cartRepo:  cartRepo,
 	}
 }
-func (c *OrderUseCase) OrderAll(id int) (domain.Orders, error) {
+func (c *OrderUseCase) OrderAll(id int) (domain.Order, error) {
 	data, err := c.orderRepo.OrderAll(id)
 	return data, err
 }

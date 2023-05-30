@@ -171,6 +171,10 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			coupon.PATCH("update/:couponId", couponHandler.UpdateCoupon)
 			coupon.DELETE("delete/:couponId", couponHandler.DeleteCoupon)
 		}
+		order := admin.Group("/order", middleware.AdminAuth)
+		{
+			order.GET("", orderHandler.ListAllOrders)
+		}
 	}
 
 	return &ServerHTTP{engine: engine}
