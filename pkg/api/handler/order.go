@@ -12,12 +12,14 @@ import (
 )
 
 type OrderHandler struct {
-	orderUsecase services.OrderUseCase
+	orderUsecase  services.OrderUseCase
+	walletUseCase services.WalletUseCase
 }
 
-func NewOrderHandler(orderUseCase services.OrderUseCase) *OrderHandler {
+func NewOrderHandler(orderUseCase services.OrderUseCase, walletUseCase services.WalletUseCase) *OrderHandler {
 	return &OrderHandler{
-		orderUsecase: orderUseCase,
+		orderUsecase:  orderUseCase,
+		walletUseCase: walletUseCase,
 	}
 }
 
@@ -74,11 +76,21 @@ func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 		})
 		return
 	}
-	err = cr.orderUsecase.UserCancelOrder(orderId, userId)
+	price, err := cr.orderUsecase.UserCancelOrder(orderId, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "can't cancel order",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = cr.walletUseCase.AddCoinToWallet(c, price, uint(userId))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to add money",
 			Data:       nil,
 			Errors:     err.Error(),
 		})

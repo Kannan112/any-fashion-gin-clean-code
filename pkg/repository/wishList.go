@@ -14,7 +14,7 @@ type WishListDataBase struct {
 	DB *gorm.DB
 }
 
-func NewWhishlistRepository(DB *gorm.DB) interfaces.WishListRepo {
+func NewWishlistRepository(DB *gorm.DB) interfaces.WishListRepo {
 	return &WishListDataBase{
 		DB: DB,
 	}

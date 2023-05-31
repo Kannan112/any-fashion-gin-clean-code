@@ -22,3 +22,8 @@ type UserAddresses struct {
 	Street      string
 	City        string
 }
+
+type Wallet struct {
+	UsersId uint
+	Coins   float32
+}

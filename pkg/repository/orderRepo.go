@@ -117,7 +117,7 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Order, error) {
 	return dom, nil
 
 }
-func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
+func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 	tx := c.DB.Begin()
 	//collect order details
 	var OrderDetails []req.CartItems
@@ -125,37 +125,44 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) error {
 	err := tx.Raw(CollectDetails, orderId).Scan(&OrderDetails).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
 	}
 	if len(OrderDetails) == 0 {
-		return fmt.Errorf("no order found with this id")
+		return 0, fmt.Errorf("no order found with this id")
 	}
 	for _, items := range OrderDetails {
 		updateProductItems := `UPDATE product_items SET qnty_in_stock=qnty_in_stock+$1 WHERE id=$2`
 		err := tx.Exec(updateProductItems, items.Quantity, items.ProductItemId).Error
 		if err != nil {
 			tx.Rollback()
-			return err
+			return 0, err
 		}
 		//remove order from order_items
 		Remove := `DELETE from order_items WHERE orders_id=$1`
 		err = tx.Exec(Remove, orderId).Error
 		if err != nil {
 			tx.Rollback()
-			return err
+			return 0, err
 		}
 	}
 	updateOrder := `UPDATE orders SET order_status='order canceled' WHERE id=$1`
 	err = tx.Exec(updateOrder, orderId).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
+	}
+	var price float32
+	RefundAmount := `SELECT order_total FROM orders WHERE id=$1`
+	err = tx.Raw(RefundAmount, orderId).Scan(&price).Error
+	if err != nil {
+		tx.Rollback()
+		return 0, err
 	}
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
 	}
-	return nil
+	return price, err
 }
 func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Orders, error) {
 	var order []domain.Orders

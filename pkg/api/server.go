@@ -23,6 +23,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	paymentHandler *handler.PaymentHandler,
 	wishlistHandler *handler.WishlistHandler,
 	couponHandler *handler.CouponHandler,
+	walletHandler *handler.WalletHandler,
 ) *ServerHTTP {
 	engine := gin.New()
 
@@ -108,6 +109,10 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		coupon := user.Group("/coupon", middleware.UserAuth)
 		{
 			coupon.GET("apply", couponHandler.ApplyCoupon)
+		}
+		wallet := user.Group("/wallet", middleware.UserAuth)
+		{
+			wallet.GET("", walletHandler.WallerProfile)
 		}
 	}
 	admin := engine.Group("/admin")

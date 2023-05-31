@@ -33,9 +33,9 @@ func (c *OrderUseCase) OrderAll(id int) (domain.Order, error) {
 	data, err := c.orderRepo.OrderAll(id)
 	return data, err
 }
-func (c *OrderUseCase) UserCancelOrder(orderId, userId int) error {
-	err := c.orderRepo.UserCancelOrder(orderId, userId)
-	return err
+func (c *OrderUseCase) UserCancelOrder(orderId, userId int) (float32, error) {
+	price, err := c.orderRepo.UserCancelOrder(orderId, userId)
+	return price, err
 }
 func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Orders, error) {
 	order, err := c.orderRepo.ListAllOrders(userId)
