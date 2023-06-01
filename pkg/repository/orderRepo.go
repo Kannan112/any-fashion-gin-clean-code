@@ -184,7 +184,7 @@ func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Orde
 
 func (c *OrderDatabase) OrderDetails(ctx context.Context, orderId uint, userId uint) ([]res.UserOrder, error) {
 	var UserOrderDetails []res.UserOrder
-	query := `select * from orders JOIN order_items ON order_items.orders_id=$1 JOIN addresses ON addresses.id=orders.address_id where orders.users_id=$2 AND orders.id=$3`
-	err := c.DB.Raw(query, orderId, userId, orderId).Scan(&UserOrderDetails).Error
+	query := ` select * from orders JOIN users on orders.users_id=users.Id JOIN addresses on addresses.users_id=users.Id JOIN order_items on order_items.orders_id=orders.id WHERE orders.id=$1 AND users.id=$2`
+	err := c.DB.Raw(query, orderId, userId).Scan(&UserOrderDetails).Error
 	return UserOrderDetails, err
 }

@@ -14,15 +14,16 @@ type OrderDetails struct {
 }
 
 type UserOrder struct {
-	Name        string
-	Mobile      string
-	AddressId   uint
-	HouseNumber int
-	Street      string
-	City        string
-	District    string
-	Landmark    string
-	Pincode     int
-	OrderTime   string
-	OrderStatus string
+	Name          string
+	Mobile        string
+	ProductItemId uint
+	AddressId     uint
+	HouseNumber   int
+	Street        string
+	City          string
+	District      string
+	Landmark      string
+	Pincode       int
+	OrderTime     string
+	OrderStatus   string
 }
