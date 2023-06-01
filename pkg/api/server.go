@@ -104,6 +104,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			order.POST("orderAll", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListAllOrders)
+			order.GET("/:orderId", orderHandler.OrderDetails)
 		}
 		//coupon
 		coupon := user.Group("/coupon", middleware.UserAuth)
@@ -178,7 +179,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		}
 		order := admin.Group("/order", middleware.AdminAuth)
 		{
-			order.GET("", orderHandler.ListAllOrders)
+			order.GET("/:orderid", orderHandler.ListAllOrders)
 		}
 	}
 

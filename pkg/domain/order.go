@@ -31,7 +31,4 @@ type OrderItem struct {
 	Price         int
 }
 
-// type OrderStatus struct {
-// 	Id     uint `gorma:"primaryKey;unique;not null"`
-// 	Status string
-// }
+

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -229,4 +230,47 @@ func (cr *OrderHandler) RazorPayVerify(ctx *gin.Context) {
 		Data:       order,
 		Errors:     nil,
 	})
+}
+func (cr *OrderHandler) OrderDetails(ctx *gin.Context) {
+	paramsId := ctx.Param("orderId")
+	orderId, err := strconv.Atoi(paramsId)
+	fmt.Println(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find orderId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	UserId, err := handlerUtil.GetUserIdFromContext(ctx)
+	//var data []res.OrderDetails
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find userId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	data, err := cr.orderUsecase.OrderDetails(ctx, uint(orderId), uint(UserId))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "Order Details",
+		Data:       data,
+		Errors:     nil,
+	})
+
 }

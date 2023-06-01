@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
@@ -145,7 +147,7 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 			return 0, err
 		}
 	}
-	updateOrder := `UPDATE orders SET order_status='order canceled' WHERE id=$1`
+	updateOrder := `UPDATE orders SET order_status='order cancelled' WHERE id=$1`
 	err = tx.Exec(updateOrder, orderId).Error
 	if err != nil {
 		tx.Rollback()
@@ -164,12 +166,10 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 	}
 	return price, err
 }
-func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Orders, error) {
-	var order []domain.Orders
+func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Order, error) {
+	var order []domain.Order
 	query := `SELECT *
-	FROM orders
-	JOIN users ON orders.users_id = users.id
-	WHERE users.id = $1;
+	FROM orders	WHERE users_id = $1;
 	`
 	err := c.DB.Raw(query, userId).Scan(&order).Error
 	return order, err
@@ -180,4 +180,11 @@ func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Orde
 	query := `SELECT * FROM orders WHERE users_id=$1`
 	err := c.DB.Raw(query, userId).Scan(&order).Error
 	return order, err
+}
+
+func (c *OrderDatabase) OrderDetails(ctx context.Context, orderId uint, userId uint) ([]res.UserOrder, error) {
+	var UserOrderDetails []res.UserOrder
+	query := `select * from orders JOIN order_items ON order_items.orders_id=$1 JOIN addresses ON addresses.id=orders.address_id where orders.users_id=$2 AND orders.id=$3`
+	err := c.DB.Raw(query, orderId, userId, orderId).Scan(&UserOrderDetails).Error
+	return UserOrderDetails, err
 }
