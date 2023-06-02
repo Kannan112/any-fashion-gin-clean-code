@@ -24,6 +24,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	wishlistHandler *handler.WishlistHandler,
 	couponHandler *handler.CouponHandler,
 	walletHandler *handler.WalletHandler,
+	OtpHandler *handler.OtpHandler,
 ) *ServerHTTP {
 	engine := gin.New()
 
@@ -40,14 +41,6 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 		user.POST("/signup", userHandler.UserSignUp)
 		user.POST("/login", userHandler.UserLogin)
 		user.POST("/logout", userHandler.UserLogout)
-
-		//otp
-		otp := engine.Group("/otp")
-		var OtpHandler handler.OtpHandler
-		{
-			otp.POST("send", OtpHandler.SendOtp)
-			otp.POST("verify", OtpHandler.ValidateOtp)
-		}
 
 		//profile
 		profile := user.Group("/profile")
@@ -116,6 +109,13 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 			wallet.GET("", walletHandler.WallerProfile)
 		}
 	}
+	otp := engine.Group("/otp")
+
+	{
+		otp.POST("/send", OtpHandler.SendOtp)
+		otp.POST("/verify", OtpHandler.ValidateOtp)
+	}
+
 	admin := engine.Group("/admin")
 	{
 		admin.POST("createadmin", adminHandler.CreateAdmin)

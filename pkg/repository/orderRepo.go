@@ -147,8 +147,8 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 			return 0, err
 		}
 	}
-	updateOrder := `UPDATE orders SET order_status='order cancelled' WHERE id=$1`
-	err = tx.Exec(updateOrder, orderId).Error
+	updateOrder := `UPDATE orders SET order_status='order cancelled' WHERE id=$1 AND users_id=$2`
+	err = tx.Exec(updateOrder, orderId, userId).Error
 	if err != nil {
 		tx.Rollback()
 		return 0, err
@@ -184,7 +184,7 @@ func (c *OrderDatabase) ListAllOrdersByStatus(userId, status int) ([]domain.Orde
 
 func (c *OrderDatabase) OrderDetails(ctx context.Context, orderId uint, userId uint) ([]res.UserOrder, error) {
 	var UserOrderDetails []res.UserOrder
-	query := ` select * from orders JOIN users on orders.users_id=users.Id JOIN addresses on addresses.users_id=users.Id JOIN order_items on order_items.orders_id=orders.id WHERE orders.id=$1 AND users.id=$2`
+	query := `  select * from orders JOIN users on orders.users_id=users.Id JOIN addresses on addresses.users_id=users.Id WHERE orders.id=$1 AND users.id=$2`
 	err := c.DB.Raw(query, orderId, userId).Scan(&UserOrderDetails).Error
 	return UserOrderDetails, err
 }

@@ -37,7 +37,7 @@ func (c *userDatabase) UserLogin(ctx context.Context, email string) (domain.User
 	return userData, err
 }
 func (c *userDatabase) IsSignIn(phone string) (bool, error) {
-	query := "select exists(select 1 from users where mobie=?)"
+	query := "select exists(select 1 from users where mobile=?)"
 	var IsSignIn bool
 	err := c.DB.Raw(query, phone).Scan(&IsSignIn).Error
 	return IsSignIn, err
