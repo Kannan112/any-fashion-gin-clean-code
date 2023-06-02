@@ -49,6 +49,8 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	couponUseCase := usecase.NewCouponUseCase(couponRepository)
 	couponHandler := handler.NewCouponHandler(couponUseCase)
 	walletHandler := handler.NewWalletHandler(walletUseCase)
-	serverHTTP := http.NewServerHTTP(userHandler, adminHandler, cartHandler, productHandler, orderHandler, paymentHandler, wishlistHandler, couponHandler, walletHandler)
+	otpUseCase := usecase.NewOtpUseCase(cfg)
+	otpHandler := handler.NewOtpHandler(cfg, otpUseCase, userUseCase)
+	serverHTTP := http.NewServerHTTP(userHandler, adminHandler, cartHandler, productHandler, orderHandler, paymentHandler, wishlistHandler, couponHandler, walletHandler, otpHandler)
 	return serverHTTP, nil
 }
