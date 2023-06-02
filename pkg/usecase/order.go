@@ -35,6 +35,9 @@ func (c *OrderUseCase) OrderAll(id int) (domain.Order, error) {
 }
 func (c *OrderUseCase) UserCancelOrder(orderId, userId int) (float32, error) {
 	price, err := c.orderRepo.UserCancelOrder(orderId, userId)
+	if err != nil {
+		return 0, err
+	}
 	return price, err
 }
 func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Order, error) {
@@ -114,6 +117,10 @@ func (c *OrderUseCase) VerifyRazorPay(ctx context.Context, body req.RazorPayRequ
 }
 
 func (c *OrderUseCase) OrderDetails(ctx context.Context, orderId uint, userId uint) ([]res.UserOrder, error) {
+	var OrderDetails []res.UserOrder
 	OrderDetails, err := c.orderRepo.OrderDetails(ctx, orderId, userId)
+	if err!=nil{
+		return OrderDetails,err
+	}
 	return OrderDetails, err
 }
