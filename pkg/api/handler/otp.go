@@ -75,8 +75,8 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 		fmt.Println("login err2")
 		return
 	}
-
-	err = cr.otpUseCase.SendOtp(c.Request.Context(), phno)
+	fmt.Println(phno.PhoneNumber)
+	sid, err := cr.otpUseCase.SendOtp(c, phno)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -91,7 +91,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 201,
 		Message:    "otp send",
-		Data:       nil,
+		Data:       sid,
 		Errors:     nil,
 	})
 }
