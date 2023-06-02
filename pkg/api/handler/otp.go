@@ -41,7 +41,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 	err := c.Bind(&phno)
 	if err != nil {
 		fmt.Println("e1")
-		c.JSON(http.StatusUnprocessableEntity, res.Response{
+		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 422,
 			Message:    "unable to process the request",
 			Data:       nil,
