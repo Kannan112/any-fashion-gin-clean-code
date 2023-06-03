@@ -19,4 +19,5 @@ type AdminRepository interface {
 	UnblockUser(id int) error
 	ListUsers(ctx context.Context) ([]domain.UsersData, error)
 	FindUserByEmail(ctx context.Context, name string) (domain.UsersData, error)
+	
 }

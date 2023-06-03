@@ -29,4 +29,7 @@ type ProductUseCase interface {
 	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
 	DeleteProductItem(id int) error
 	DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error)
+
+	//Offer
+	SaveOffer(ctx context.Context, offer req.OfferTable) error
 }

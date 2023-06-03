@@ -8,6 +8,6 @@ import (
 )
 
 type OtpUseCase interface {
-	SendOtp(ctx context.Context, phone req.OTPData) error
+	SendOtp(ctx context.Context, phone req.OTPData) (string, error)
 	ValidateOtp(otpDetails req.VerifyOtp) (*openapi.VerifyV2VerificationCheck, error)
 }

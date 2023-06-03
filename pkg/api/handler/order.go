@@ -274,3 +274,61 @@ func (cr *OrderHandler) OrderDetails(ctx *gin.Context) {
 	})
 
 }
+
+func (c *OrderHandler) ListOrderByPlaced(ctx *gin.Context) {
+	data, err := c.orderUsecase.ListOrderByPlaced(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to collect data",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "order placed details",
+		Data:       data,
+		Errors:     nil,
+	})
+
+}
+func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
+	data, err := c.orderUsecase.ListOrderByCancelled(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to cancel",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "order canceled details",
+		Data:       data,
+		Errors:     nil,
+	})
+}
+
+func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
+	viewOrder, err := c.orderUsecase.ViewOrder(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to collect data",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "order details",
+		Data:       viewOrder,
+		Errors:     nil,
+	})
+
+}

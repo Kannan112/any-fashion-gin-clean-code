@@ -29,4 +29,7 @@ type ProductRepository interface {
 	UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error)
 	DeleteProductItem(id int) error
 	DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error)
+
+	//Offer-side
+	SaveOffer(ctx context.Context, offerdetails req.OfferTable) error
 }

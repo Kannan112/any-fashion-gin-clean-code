@@ -96,3 +96,4 @@ func (c *adminUseCase) FindUserByEmail(ctx context.Context, name string) (domain
 	data, err := c.adminRepo.FindUserByEmail(ctx, name)
 	return data, err
 }
+

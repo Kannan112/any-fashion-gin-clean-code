@@ -67,7 +67,16 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		// Order
 		order := admin.Group("/order", middleware.AdminAuth)
 		{
+			order.GET("", orderHandler.ViewOrder)
 			order.GET("/:orderid", orderHandler.ListAllOrders)
+			order.GET("/placed", orderHandler.ListOrderByPlaced)
+			order.GET("/cancelled", orderHandler.ListOrderByCancelled)
+		}
+
+		// offer side
+		offer := admin.Group("offer", middleware.AdminAuth)
+		{
+			offer.POST("/", productHandler.SaveOffer)
 		}
 	}
 }

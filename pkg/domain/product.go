@@ -20,6 +20,7 @@ type Product struct {
 	Updated_at  time.Time
 }
 
+// demo of product_items
 type ProductItem struct {
 	ID          uint `gorm:"primaryKey;unique;not null" json:"id"`
 	ProductID   uint `gorm:"not null" json:"product_id" validate:"required"`
@@ -53,6 +54,18 @@ type ProductItems struct {
 	Color       string  `gorm:"not null" json:"color" validate:"required"`
 	Material    string  `gorm:"not null" json:"material" validate:"required"`
 	Price       float64 `gorm:"not null" json:"price" validate:"required"`
+	OfferPrice  float32
+	Discout     float32
 	Created_at  time.Time
 	Updated_at  time.Time
+}
+
+type OfferTable struct {
+	ID          uint `gorm:"primaryKey;unique;not null"`
+	ProductId   uint `gorm:"not null" json:"product_id" validate:"required"`
+	Product     Product
+	Discount    float32
+	StartDate   string
+	EndDate     string
+	Discription string
 }

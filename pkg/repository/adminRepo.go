@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -102,7 +103,7 @@ func (c *adminDatabase) GetDashBord(ctx context.Context) (res.AdminDashboard, er
 	//TotalRevenue
 	var TotalRevenue int
 	var TotalOrders int
-	var TotalProductSold int
+	var TotalProductSold sql.NullInt64
 	var TotalUsers int
 	query := `SELECT sum(order_total)AS TotalRevenu FROM orders`
 	err := c.DB.Raw(query).Scan(&TotalRevenue).Error
@@ -129,7 +130,6 @@ func (c *adminDatabase) GetDashBord(ctx context.Context) (res.AdminDashboard, er
 	admindashbord.TotalOrders = TotalOrders
 	admindashbord.TotalProductSold = TotalProductSold
 	return admindashbord, err
-
 }
 func (c *adminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, error) {
 	tx := c.DB.Begin()

@@ -58,7 +58,7 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Order, error) {
 	}
 	var order domain.Orders
 	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total,order_status)
-		VALUES($1,NOW(),$2,$3,'order placed') RETURNING *`
+		VALUES($1,NOW(),$2,$3,'placed') RETURNING *`
 	err = tx.Raw(insetOrder, userId, addressId, cart.Total).Scan(&order).Error
 	if err != nil {
 		tx.Rollback()
@@ -147,7 +147,7 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 			return 0, err
 		}
 	}
-	updateOrder := `UPDATE orders SET order_status='order cancelled' WHERE id=$1 AND users_id=$2`
+	updateOrder := `UPDATE orders SET order_status='cancelled' WHERE id=$1 AND users_id=$2`
 	err = tx.Exec(updateOrder, orderId, userId).Error
 	if err != nil {
 		tx.Rollback()
@@ -166,6 +166,7 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 	}
 	return price, err
 }
+
 func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Order, error) {
 	var order []domain.Order
 	query := `SELECT *
@@ -187,4 +188,31 @@ func (c *OrderDatabase) OrderDetails(ctx context.Context, orderId uint, userId u
 	query := `  select * from orders JOIN users on orders.users_id=users.Id JOIN addresses on addresses.users_id=users.Id WHERE orders.id=$1 AND users.id=$2`
 	err := c.DB.Raw(query, orderId, userId).Scan(&UserOrderDetails).Error
 	return UserOrderDetails, err
+}
+
+func (c *OrderDatabase) ListOrderByPlaced(ctx context.Context) ([]domain.Order, error) {
+	var data []domain.Order
+	orderStatus := `SELECT * FROM orders WHERE order_status='placed'`
+	err := c.DB.Raw(orderStatus).Scan(&data).Error
+	return data, err
+}
+
+//	func (c *adminDatabase) ListOrderByDelivered(ctx context.Context) ([]domain.Order, error) {
+//		var data []domain.Order
+//		orderStatus := `SELECT * FROM orders WHERE order_status='order delivered'`
+//		err := c.DB.Raw(orderStatus).Scan(&data).Error
+//		return data, err
+//	}
+func (c *OrderDatabase) ListOrderByCancelled(ctx context.Context) ([]domain.Order, error) {
+	var data []domain.Order
+	orderStatus := `SELECT * FROM orders WHERE order_status='cancelled'`
+	err := c.DB.Raw(orderStatus).Scan(&data).Error
+	return data, err
+}
+
+func (c *OrderDatabase) ViewOrder(ctx context.Context) ([]domain.Order, error) {
+	var data []domain.Order
+	orderStatus := `SELECT * FROM orders`
+	err := c.DB.Raw(orderStatus).Scan(&data).Error
+	return data, err
 }

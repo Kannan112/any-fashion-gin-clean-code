@@ -119,8 +119,35 @@ func (c *OrderUseCase) VerifyRazorPay(ctx context.Context, body req.RazorPayRequ
 func (c *OrderUseCase) OrderDetails(ctx context.Context, orderId uint, userId uint) ([]res.UserOrder, error) {
 	var OrderDetails []res.UserOrder
 	OrderDetails, err := c.orderRepo.OrderDetails(ctx, orderId, userId)
-	if err!=nil{
-		return OrderDetails,err
+	if err != nil {
+		return OrderDetails, err
+	}
+	return OrderDetails, err
+
+}
+func (c *OrderUseCase) ListOrderByPlaced(ctx context.Context) ([]domain.Order, error) {
+	var OrderDetails []domain.Order
+	OrderDetails, err := c.orderRepo.ListOrderByPlaced(ctx)
+	if err != nil {
+		return OrderDetails, err
+	}
+	return OrderDetails, err
+}
+
+func (c *OrderUseCase) ListOrderByCancelled(ctx context.Context) ([]domain.Order, error) {
+	var OrderDetails []domain.Order
+	OrderDetails, err := c.orderRepo.ListOrderByCancelled(ctx)
+	if err != nil {
+		return OrderDetails, err
+	}
+	return OrderDetails, err
+}
+
+func (c *OrderUseCase) ViewOrder(ctx context.Context) ([]domain.Order, error) {
+	var OrderDetails []domain.Order
+	OrderDetails, err := c.orderRepo.ViewOrder(ctx)
+	if err != nil {
+		return OrderDetails, err
 	}
 	return OrderDetails, err
 }

@@ -1,5 +1,7 @@
 package res
 
+import "database/sql"
+
 type AdminData struct {
 	Id    int
 	Name  string
@@ -8,6 +10,6 @@ type AdminData struct {
 type AdminDashboard struct {
 	TotalUsers       int
 	TotalOrders      int
-	TotalProductSold int
+	TotalProductSold sql.NullInt64
 	TotalRevenue     int
 }

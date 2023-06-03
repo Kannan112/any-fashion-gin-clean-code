@@ -25,3 +25,11 @@ type ProductItem struct {
 	Image     []string
 	Price     int
 }
+
+type OfferTable struct {
+	ProductId   uint `gorm:"not null" json:"product_id" validate:"required"`
+	Discount    float32
+	StartDate   string
+	EndDate     string
+	Discription string
+}

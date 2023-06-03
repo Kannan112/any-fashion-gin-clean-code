@@ -13,11 +13,13 @@ import (
 
 type ProductHandler struct {
 	productuseCase services.ProductUseCase
+	
 }
 
 func NewProductHandler(productUseCase services.ProductUseCase) *ProductHandler {
 	return &ProductHandler{
 		productuseCase: productUseCase,
+		
 	}
 }
 
