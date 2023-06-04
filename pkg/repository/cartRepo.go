@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
@@ -184,6 +185,13 @@ func (c *CartDataBase) RemoveFromCart(userId int, ProductItemId int) error {
 		tx.Rollback()
 		return err
 	}
+	updateTotal := `UPDATE carts SET total=sub_total where users_id=$1`
+	err = tx.Exec(updateTotal, userId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
 		return err
@@ -199,4 +207,28 @@ func (c *CartDataBase) ListCart(userId int) ([]domain.Cart, error) {
 	query := `SELECT * FROM carts WHERE users_id=$1`
 	err := c.DB.Raw(query, userId).Scan(&list).Error
 	return list, err
+}
+
+// List Cartitems
+func (c *CartDataBase) ListCartItems(ctx context.Context, userId int) ([]res.Display, error) {
+	var cartId uint
+	var CartItemPQ []uint
+	query := `SELECT id FROM carts WHERE users_id=$1`
+	err := c.DB.Raw(query, userId).Scan(&cartId).Error
+	if err != nil {
+		return nil, err
+	}
+	//IMP
+	//select product_name,gender,brand,color,size,material,price from product_items pi JOIN products p ON pi.product_id=p.id  WHERE p.id=1;
+	query2 := `SELECT product_item_id from cart_items WHERE carts_id=$1`
+	err = c.DB.Raw(query2, cartId).Scan(&CartItemPQ).Error
+	if err != nil {
+		return nil, err
+	}
+	//join := `select product_name,gender,brand,color,size,material,price from product_items pi JOIN products p ON pi.product_id=p.id  WHERE p.id=$1`
+	// err = c.DB.Raw(join)
+
+	// var list []res.Display
+	return nil, err
+
 }

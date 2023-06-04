@@ -37,12 +37,6 @@ type ProductItem struct {
 	Updated_at  time.Time
 }
 
-type Images struct {
-	Id            uint `gorm:"primaryKey;unique;not null"`
-	ProductItemID uint `gorm:"not null" json:"product_item_id" validate:"required"`
-	ProductItem   ProductItem
-	FileName      string `json:"file_name"`
-}
 type ProductItems struct {
 	ID          uint `gorm:"primaryKey;unique;not null" json:"id"`
 	ProductID   uint `gorm:"not null" json:"product_id" validate:"required"`
@@ -56,6 +50,7 @@ type ProductItems struct {
 	Price       float64 `gorm:"not null" json:"price" validate:"required"`
 	OfferPrice  float32
 	Discout     float32
+	ImagesId    uint
 	Created_at  time.Time
 	Updated_at  time.Time
 }
@@ -68,4 +63,11 @@ type OfferTable struct {
 	StartDate   string
 	EndDate     string
 	Discription string
+}
+
+type Images struct {
+	Id            uint
+	ProductItemID uint
+	ProductItem   ProductItem
+	FileName      string
 }

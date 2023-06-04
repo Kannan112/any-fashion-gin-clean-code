@@ -220,3 +220,31 @@ func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (c *CouponHandler) RemoveCoupon(ctx *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to find user",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = c.CouponUseCase.RemoveCoupon(ctx, userId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to remove coupon",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "coupon removed successfully",
+		Data:       nil,
+		Errors:     nil,
+	})
+}

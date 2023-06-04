@@ -48,3 +48,7 @@ func (c *CouponUseCase) ApplyCoupon(ctx context.Context, userId int, couponCode 
 	total, err := c.coupoRepo.ApplyCoupon(ctx, userId, couponCode)
 	return total, err
 }
+func (c *CouponUseCase) RemoveCoupon(ctx context.Context, userId int) error {
+	err := c.coupoRepo.RemoveCoupon(ctx, userId)
+	return err
+}

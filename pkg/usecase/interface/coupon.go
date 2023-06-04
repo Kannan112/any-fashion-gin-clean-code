@@ -13,4 +13,5 @@ type CouponUseCase interface {
 	DeleteCoupon(ctx context.Context, couponId int) error
 	ViewCoupon(ctx context.Context) ([]domain.Coupon, error)
 	ApplyCoupon(ctx context.Context, userId int, couponCode string) (int, error)
+	RemoveCoupon(ctx context.Context, userId int) error
 }

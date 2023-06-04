@@ -65,6 +65,13 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 			cart.GET("list", cartHandler.ListCart)
 		}
 
+		// Cart Items
+		cartitem := user.Group("/cart-item", middleware.UserAuth)
+		{
+			cartitem.GET("list", cartHandler.ListCartItems)
+			// 	cartitem.GET("list/:id", cartHandler.DisplayCartItem)
+		}
+
 		// Order
 		order := user.Group("/order", middleware.UserAuth)
 		{
@@ -80,110 +87,14 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		coupon := user.Group("/coupon", middleware.UserAuth)
 		{
 			coupon.GET("apply", couponHandler.ApplyCoupon)
+			coupon.PATCH("remove", couponHandler.RemoveCoupon)
 		}
 
 		// Wallet
 		wallet := user.Group("/wallet", middleware.UserAuth)
 		{
 			wallet.GET("", walletHandler.WallerProfile)
+			//wallet apply while purchasing{reduce the amount in wallet}
 		}
 	}
 }
-
-// 	// User routes that don't require authentication
-// 	api.POST("/signup", userHandler.UserSignUp)
-// 	// api.POST("/login/email", userHandler.LoginWithEmail)
-// 	// api.POST("/login/phone", userHandler.)
-// 	// api.POST("/send-otp", otpHandler.SendOtp)
-// 	api.POST("/verify-otp", otpHandler.ValidateOtp)
-
-// 	// Category routes
-// 	category := api.Group("/categories")
-// 	{
-// 		category.GET("", productHandler.ListCategories)
-// 		category.GET("/:id", productHandler.DisplayCategory)
-// 	}
-
-// 	// Brand routes
-// 	// brand := api.Group("/brands")
-// 	// {
-// 	// 	brand.GET("", productHandler)
-// 	// 	brand.GET("/:id", productHandler.ViewBrandByID)
-// 	// }
-
-// 	// Product routes
-// 	product := api.Group("/products")
-// 	{
-// 		product.GET("", productHandler.ListProducts)
-// 		product.GET("/:id", productHandler.DisplayProduct)
-// 	}
-
-// 	// Product item routes
-// 	productItem := api.Group("/product-items")
-// 	{
-// 		productItem.GET("", productHandler.DisaplyaAllProductItems)
-// 		//productItem.GET("/:id", productHandler.)
-// 	}
-
-// 	// User routes that require authentication
-// 	api.Use(middleware.UserAuth)
-// 	{
-// 		api.GET("/profile", userHandler.ViewProfile)
-// 		api.PATCH("/profile/edit", userHandler.EditProfile)
-// 		api.GET("/logout", userHandler.UserLogout)
-
-// 		// Address routes
-// 		address := api.Group("/addresses")
-// 		{
-// 			address.POST("/", userHandler.AddAddress)
-// 			address.PUT("/", userHandler.UpdateAddress)
-// 			address.DELETE("/:id",userHandler.DeleteAddress)
-// 			address.GET("")
-// 		}
-
-// 		// Cart routes
-// 		cart := api.Group("/cart")
-// 		{
-// 			cart.POST("/add/:product_item_id", cartHandler.AddToCart)
-// 			cart.DELETE("/remove/:product_item_id", cartHandler.RemoveFromCart)
-// 			cart.POST("/coupon/:coupon_id", cartHandler.AddCouponToCart)
-// 			cart.GET("", cartHandler.ViewCart)
-// 			cart.DELETE("", cartHandler.EmptyCart)
-// 		}
-
-// 		// Coupon routes
-// 		coupon := api.Group("/coupons")
-// 		{
-// 			coupon.GET("", productHandler.ViewAllCoupons)
-// 			coupon.GET("/:id", productHandler.ViewCouponByID)
-// 		}
-
-// 		// Order routes
-// 		order := api.Group("/orders")
-// 		{
-// 			order.POST("", orderHandler.BuyProductItem)
-// 			order.POST("/buy-all", orderHandler.BuyAll)
-// 			order.GET("/:id", orderHandler.ViewOrderByID)
-// 			order.GET("", orderHandler.ViewAllOrders)
-// 			order.PUT("/cancel/:id", orderHandler.CancelOrder)
-// 			order.POST("/return", orderHandler.ReturnRequest)
-// 		}
-
-// 		// Payment routes
-// 		payment := api.Group("/payments")
-// 		{
-// 			payment.GET("/razorpay/:order_id", paymentHandler.CreateRazorpayPayment)
-// 			payment.GET("/success", paymentHandler.PaymentSuccess)
-// 		}
-
-// 		//wishlist routes
-// 		wishlist := api.Group("/wishlist")
-// 		{
-// 			wishlist.GET("/", wishlistHandler.ViewWishlist)
-// 			wishlist.POST("/:id", wishlistHandler.AddToWishlist)
-// 			wishlist.DELETE("/:id", wishlistHandler.RemoveFromWishlist)
-// 			wishlist.DELETE("/", wishlistHandler.EmptyWishlist)
-// 		}
-// 	}
-
-// }

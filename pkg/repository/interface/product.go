@@ -30,6 +30,9 @@ type ProductRepository interface {
 	DeleteProductItem(id int) error
 	DisaplyaAllProductItems(productId int) ([]domain.ProductItems, error)
 
+	//image
+	UploadImage(ctx context.Context, filepath string, productId uint) error
+
 	//Offer-side
 	SaveOffer(ctx context.Context, offerdetails req.OfferTable) error
 }

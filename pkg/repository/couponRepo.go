@@ -179,3 +179,47 @@ func (c *CouponDatabase) ApplyCoupon(ctx context.Context, userId int, couponCode
 	}
 	return cartDetails.Total - cartDetails.Sub_total, nil
 }
+
+func (c *CouponDatabase) RemoveCoupon(ctx context.Context, userId int) error {
+	//check if the coupon is used
+	tx := c.DB.Begin()
+	var cartDetails domain.Carts
+	var CouponDetails domain.Coupon
+	getCartDetails := `SELECT * FROM carts WHERE users_id=$1`
+	err := tx.Raw(getCartDetails, userId).Scan(&cartDetails).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if cartDetails.CouponId == 0 {
+		return fmt.Errorf("coupon is not used")
+	}
+	//coupon Details
+	details := `select * from coupons where id=$1`
+	err = tx.Raw(details, cartDetails.CouponId).Scan(&CouponDetails).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	//check if the coupon is expired
+	if CouponDetails.ExpirationDate.Before(time.Now()) {
+		return fmt.Errorf("coupon is expired")
+	}
+	//update the cart total with cart.sub_total minuse discount amount
+	discountAmount := (cartDetails.Sub_total / 100) * int(CouponDetails.DiscountPercent)
+	if discountAmount > int(CouponDetails.DiscountMaximumAmount) {
+		discountAmount = int(CouponDetails.DiscountMaximumAmount)
+	}
+	//update the cart
+	update := `UPDATE carts SET coupon_id=$1,total=$2 WHERE id=$3`
+	err = tx.Exec(update, nil, discountAmount+cartDetails.Total, cartDetails.Id).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}

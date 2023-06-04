@@ -157,3 +157,9 @@ func (c *ProductDataBase) DisaplyaAllProductItems(productId int) ([]domain.Produ
 	err := c.DB.Raw(quer, productId).Scan(&list).Error
 	return list, err
 }
+
+func (c *ProductDataBase) UploadImage(ctx context.Context, filepath string, productId uint) error {
+	uploadImage := `INSERT INTO images (product_item_id,file_name)VALUES($1,$2)`
+	err := c.DB.Exec(uploadImage, productId, filepath).Error
+	return err
+}

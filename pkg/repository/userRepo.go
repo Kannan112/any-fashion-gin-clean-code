@@ -33,7 +33,17 @@ func (c *userDatabase) UserSignUp(ctx context.Context, user req.UserReq) (res.Us
 
 func (c *userDatabase) UserLogin(ctx context.Context, email string) (domain.Users, error) {
 	var userData domain.Users
-	err := c.DB.Raw("SELECT * FROM users WHERE email=?", email).Scan(&userData).Error
+	//check user is blocked by admin
+	var userblock bool
+	query := `SELECT EXISTS(SELECT * FROM users where email=$1 AND is_blocked=true)`
+	err := c.DB.Raw(query, email).Scan(&userblock).Error
+	if err != nil {
+		return userData, err
+	}
+	if userblock {
+		return userData, fmt.Errorf("user is blocked")
+	}
+	err = c.DB.Raw("SELECT * FROM users WHERE email=?", email).Scan(&userData).Error
 	return userData, err
 }
 func (c *userDatabase) IsSignIn(phone string) (bool, error) {
@@ -136,5 +146,14 @@ func (c *userDatabase) DeleteAddress(ctx context.Context, userId, AddressesId in
 		return nil, err
 	}
 	return domain, err
+}
 
+func (c *userDatabase) FindAddress(ctx context.Context, userId int) (bool, error) {
+	var exists bool
+	checkAddress := `SELECT EXISTS(SELECT * FROM addresses WHERE users_id=$1 AND is_default=true)`
+	err := c.DB.Raw(checkAddress, userId).Scan(&exists).Error
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }

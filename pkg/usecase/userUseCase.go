@@ -98,6 +98,12 @@ func (c *userUseCase) UpdateAddress(id int, addressId int, address req.Address) 
 	return err
 }
 
+// --------------------AddressesFind
+func (c *userUseCase) FindAddress(ctx context.Context, userId int) (bool, error) {
+	checkbool, err := c.userRepo.FindAddress(ctx, userId)
+	return checkbool, err
+}
+
 // --------------------ListAddress------------------
 func (c *userUseCase) ListallAddress(id int) ([]domain.Addresss, error) {
 	list, err := c.userRepo.ListallAddress(id)
@@ -129,4 +135,3 @@ func (c *userUseCase) EditProfile(id int, UpdateProfile req.UserReq) (res.UserDa
 	userdata, err := c.userRepo.EditProfile(id, UpdateProfile)
 	return userdata, err
 }
-

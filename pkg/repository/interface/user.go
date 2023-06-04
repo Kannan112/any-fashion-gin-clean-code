@@ -13,6 +13,7 @@ type UserRepository interface {
 	UserLogin(ctx context.Context, email string) (domain.Users, error)
 	IsSignIn(phno string) (bool, error)
 	OtpLogin(phone string) (int, error)
+	FindAddress(ctx context.Context, userId int) (bool, error)
 	AddAddress(id int, address req.Address) error
 	UpdateAddress(id int, addressId int, address req.Address) error
 	ListallAddress(id int) ([]domain.Addresss, error)

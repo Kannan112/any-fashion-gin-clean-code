@@ -140,3 +140,30 @@ func (cr *CartHandler) ListCart(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+func (c *CartHandler) ListCartItems(ctx *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get userId",
+			Data:       nil,
+		})
+		return
+	}
+	list, err := c.cartUsecase.ListCartItems(ctx, userId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "cart product details",
+		Data:       list,
+		Errors:     nil,
+	})
+}

@@ -13,4 +13,5 @@ type CouponRepository interface {
 	DeleteCoupon(ctx context.Context, Couponid int) error
 	ViewCoupon(ctx context.Context) ([]domain.Coupon, error)
 	ApplyCoupon(ctx context.Context, userId int, couponCode string) (int, error)
+	RemoveCoupon(ctx context.Context,userId int)error
 }
