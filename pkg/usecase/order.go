@@ -24,10 +24,11 @@ type OrderUseCase struct {
 	userRepo  interfaces.UserRepository
 }
 
-func NewOrderUseCase(orderRepo interfaces.OrderRepository, cartRepo interfaces.CartRepository) services.OrderUseCase {
+func NewOrderUseCase(orderRepo interfaces.OrderRepository, cartRepo interfaces.CartRepository, userRepo interfaces.UserRepository) services.OrderUseCase {
 	return &OrderUseCase{
 		orderRepo: orderRepo,
 		cartRepo:  cartRepo,
+		userRepo:  userRepo,
 	}
 }
 func (c *OrderUseCase) OrderAll(id int) (domain.Order, error) {
@@ -49,14 +50,17 @@ func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Order, error) {
 func (c *OrderUseCase) RazorPayCheckout(ctx context.Context, userId int, paymentId int) (res.RazorPayResponse, error) {
 
 	cart, err := c.cartRepo.FindCart(ctx, userId)
-	// if err != nil {
-	// 	return res.RazorPayResponse{}, err
-	// }
+	if err != nil {
+		return res.RazorPayResponse{}, err
+	}
 	if cart.Sub_total == 0 {
 		return res.RazorPayResponse{}, fmt.Errorf("there is no products in your list")
 	}
 	//check the addresses move to user repo as FIND addres
 	checkbool, err := c.userRepo.FindAddress(ctx, userId)
+	if err != nil {
+		return res.RazorPayResponse{}, err
+	}
 	if !checkbool {
 		return res.RazorPayResponse{}, fmt.Errorf("add addresses")
 	}
