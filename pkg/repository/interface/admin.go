@@ -14,7 +14,7 @@ type AdminRepository interface {
 	AdminLogin(email string) (domain.Admin, error)
 
 	//DashBord
-	GetDashBord(ctx context.Context) (res.AdminDashboard, error)
+	GetDashboard(ctx context.Context) (res.AdminDashboard, error)
 	BlockUser(body req.BlockData, adminId int) error
 	UnblockUser(id int) error
 	ListUsers(ctx context.Context) ([]domain.UsersData, error)
