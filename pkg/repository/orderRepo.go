@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
@@ -183,12 +184,12 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 	return price, err
 }
 
-func (c *OrderDatabase) ListAllOrders(userId int) ([]domain.Order, error) {
+func (c *OrderDatabase) ListAllOrders(userId int, startDate, endDate time.Time) ([]domain.Order, error) {
 	var order []domain.Order
 	query := `SELECT *
-	FROM orders	WHERE users_id = $1;
+	FROM orders	WHERE users_id = $1 AND order_time>=$2 AND order_time<=$3;
 	`
-	err := c.DB.Raw(query, userId).Scan(&order).Error
+	err := c.DB.Raw(query, userId, startDate, endDate).Scan(&order).Error
 	return order, err
 
 }
@@ -226,9 +227,24 @@ func (c *OrderDatabase) ListOrderByCancelled(ctx context.Context) ([]domain.Orde
 	return data, err
 }
 
-func (c *OrderDatabase) ViewOrder(ctx context.Context) ([]domain.Order, error) {
+func (c *OrderDatabase) ViewOrder(ctx context.Context, startDate, endDate time.Time) ([]domain.Order, error) {
 	var data []domain.Order
 	orderStatus := `SELECT * FROM orders`
-	err := c.DB.Raw(orderStatus).Scan(&data).Error
-	return data, err
+
+	// Check if startDate and endDate are provided
+	if !startDate.IsZero() && !endDate.IsZero() {
+		orderStatus += ` WHERE order_time BETWEEN $1 AND $2`
+		err := c.DB.Raw(orderStatus, startDate, endDate).Scan(&data).Error
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := c.DB.Raw(orderStatus).Scan(&data).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return data, nil
 }
+
