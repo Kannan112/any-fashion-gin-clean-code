@@ -240,7 +240,7 @@ func (c *AdminHandler) ListUsers(ctx *gin.Context) {
 }
 func (c *AdminHandler) FindUserByEmail(ctx *gin.Context) {
 	var userEmail req.UserEmail
-	err := ctx.Bind(&userEmail)
+	err := ctx.BindJSON(&userEmail)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

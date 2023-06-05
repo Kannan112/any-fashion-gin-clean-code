@@ -46,3 +46,45 @@ func (c *WalletDataBase) WallerProfile(ctx context.Context, userID uint) (res.Wa
 	err := c.DB.Raw(walletProfile, userID).Scan(&profile).Error
 	return profile, err
 }
+
+func (c *WalletDataBase) ApplyWallet(ctx context.Context, userId uint) error {
+	tx := c.DB.Begin()
+	var walletCoin float32
+	query1 := `select coins from wallets where users_id=$1`
+	err := tx.Raw(query1, userId).Scan(&walletCoin).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	//collect cart total
+	var cartTotal float32
+	query2 := `select total from carts where users_id=$1`
+	err = tx.Raw(query2, userId).Scan(&cartTotal).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	//50rs is fixed min charge
+	if walletCoin >= cartTotal {
+		walletCoin = cartTotal - 50
+	}
+	update := `UPDATE carts SET total=total-$1,coin=$2 where users_id=$3`
+	err = tx.Exec(update, walletCoin, walletCoin, userId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	//update wallet
+	query3 := `update wallets set coins=coins-$1 where users_id=$2`
+	err = tx.Exec(query3, walletCoin, userId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+
+}

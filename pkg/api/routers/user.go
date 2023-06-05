@@ -1,4 +1,4 @@
-package routes
+package http
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,8 +7,14 @@ import (
 )
 
 func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartHandler *handler.CartHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler, walletHandler *handler.WalletHandler, otpHandler *handler.OtpHandler) {
+
 	user := engine.Group("/user")
 	{
+		//otp
+		otp := user.Group("/otp")
+		{
+			otp.POST("send", otpHandler.SendOtp)
+		}
 		// User routes
 		user.POST("/signup", userHandler.UserSignUp)
 		user.POST("/login", userHandler.UserLogin)
@@ -94,6 +100,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		wallet := user.Group("/wallet", middleware.UserAuth)
 		{
 			wallet.GET("", walletHandler.WallerProfile)
+			wallet.POST("/apply", walletHandler.ApplyWallet)
 			//wallet apply while purchasing{reduce the amount in wallet}
 		}
 	}

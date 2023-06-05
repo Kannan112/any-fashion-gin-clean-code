@@ -47,3 +47,31 @@ func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 	})
 
 }
+func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
+	userid, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "please login",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = c.walletUseCase.ApplyWallet(ctx, uint(userid))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to apply wallet",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "coin added",
+		Data:       nil,
+		Errors:     nil,
+	})
+}

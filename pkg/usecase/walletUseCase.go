@@ -30,3 +30,7 @@ func (c *WalletUseCase) AddCoinToWallet(ctx context.Context, price float32, user
 	err := c.WalletRepo.AddCoinToWallet(ctx, price, usersId)
 	return err
 }
+func (c *WalletUseCase) ApplyWallet(ctx context.Context, userId uint) error {
+	err := c.WalletRepo.ApplyWallet(ctx, userId)
+	return err
+}

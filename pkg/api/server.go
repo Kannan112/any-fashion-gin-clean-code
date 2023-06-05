@@ -25,6 +25,7 @@ func NewServerHTTP(
 	couponHandler *handler.CouponHandler,
 	walletHandler *handler.WalletHandler,
 	OtpHandler *handler.OtpHandler,
+	
 ) *ServerHTTP {
 	engine := gin.New()
 

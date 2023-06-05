@@ -10,6 +10,7 @@ type Orders struct {
 	AddressId   uint
 	Address     Address
 	CouponCode  string
+	Coins       float64
 	OrderTotal  float64
 	OrderStatus string
 }
@@ -30,5 +31,3 @@ type OrderItem struct {
 	Quantity      int
 	Price         int
 }
-
-

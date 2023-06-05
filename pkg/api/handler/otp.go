@@ -75,7 +75,6 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 		fmt.Println("login err2")
 		return
 	}
-	fmt.Println(phno.PhoneNumber)
 	sid, err := cr.otpUseCase.SendOtp(c, phno)
 
 	if err != nil {

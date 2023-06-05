@@ -57,9 +57,9 @@ func (c *OrderDatabase) OrderAll(userId int) (domain.Order, error) {
 		return dom, fmt.Errorf("add address")
 	}
 	var order domain.Orders
-	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total,order_status)
-		VALUES($1,NOW(),$2,$3,'placed') RETURNING *`
-	err = tx.Raw(insetOrder, userId, addressId, cart.Total).Scan(&order).Error
+	insetOrder := `INSERT INTO orders (users_id,order_time,address_id,order_total,order_status,coins)
+		VALUES($1,NOW(),$2,$3,'placed',$4) RETURNING *`
+	err = tx.Raw(insetOrder, userId, addressId, cart.Total, cart.Coin).Scan(&order).Error
 	if err != nil {
 		tx.Rollback()
 		return dom, err
@@ -147,6 +147,22 @@ func (c *OrderDatabase) UserCancelOrder(orderId, userId int) (float32, error) {
 			return 0, err
 		}
 	}
+	// check any coins were added
+	var coins float32
+	FindCoin := `SELECT coins FROM orders WHERE id=$1`
+	err = tx.Raw(FindCoin, orderId).Scan(&coins).Error
+	if err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+	//update wallet
+	wallet := `update wallets set coins=coins+$1 where users_id=$2`
+	err = tx.Exec(wallet, coins, userId).Error
+	if err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+
 	updateOrder := `UPDATE orders SET order_status='cancelled' WHERE id=$1 AND users_id=$2`
 	err = tx.Exec(updateOrder, orderId, userId).Error
 	if err != nil {

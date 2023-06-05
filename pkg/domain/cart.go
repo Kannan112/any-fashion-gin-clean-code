@@ -6,6 +6,7 @@ type Carts struct {
 	Users     Users
 	CouponId  uint
 	Sub_total int
+	Coin      float32
 	Total     int
 }
 type Cart struct {
