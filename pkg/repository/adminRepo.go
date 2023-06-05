@@ -13,148 +13,159 @@ import (
 	"gorm.io/gorm"
 )
 
-type adminDatabase struct {
+type AdminDatabase struct {
 	DB *gorm.DB
 }
 
 func NewAdminRepository(DB *gorm.DB) interfaces.AdminRepository {
-	return &adminDatabase{DB}
+	return &AdminDatabase{DB}
 }
-func (c *adminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error) {
 
-	if c.DB.Raw("SELECT * FROM admins WHERE email=? OR user_name=?", admin.Email, admin.UserName).Scan(&admin).Error != nil {
-		return admin, errors.New("faild to find admin")
+// Find Admin FOR super admin 
+func (a *AdminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error) {
+	if err := a.DB.Where("email = ? OR user_name = ?", admin.Email, admin.UserName).First(&admin).Error; err != nil {
+		return admin, errors.New("failed to find admin")
 	}
 
 	return admin, nil
 }
 
-func (c *adminDatabase) CreateAdmin(ctx context.Context, admin domain.Admin) error {
-
-	query := `INSERT INTO admins (user_name,email,password)
-								  VALUES($1,$2,$3)`
-
-	if c.DB.Exec(query, admin.UserName, admin.Email, admin.Password).Error != nil {
-		return errors.New("faild to save admin")
+// Create admin
+func (a *AdminDatabase) CreateAdmin(ctx context.Context, admin domain.Admin) error {
+	if err := a.DB.Create(&admin).Error; err != nil {
+		return errors.New("failed to save admin")
 	}
+
 	return nil
 }
 
-func (c *adminDatabase) AdminLogin(email string) (domain.Admin, error) {
-
+// Admin login
+func (a *AdminDatabase) AdminLogin(email string) (domain.Admin, error) {
 	var adminData domain.Admin
-	err := c.DB.Raw("SELECT * FROM admins WHERE email=$1", email).Scan(&adminData).Error
+	err := a.DB.Where("email = ?", email).First(&adminData).Error
 	return adminData, err
 }
 
-func (c *adminDatabase) BlockUser(body req.BlockData, adminId int) error {
-	tx := c.DB.Begin()
+// Admin block user
+func (a *AdminDatabase) BlockUser(body req.BlockData, adminID int) error {
+	tx := a.DB.Begin()
+
 	var exist bool
-	query := `SELECT EXISTS(SELECT 1 FROM users WHERE id=$1)`
-	if err := tx.Raw(query, body.UserId).Scan(&exist).Error; err != nil {
-		fmt.Println("testBlockUse")
+	if err := tx.Raw("SELECT EXISTS(SELECT 1 FROM users WHERE id = ?)", body.UserId).Scan(&exist).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
+
 	if !exist {
 		tx.Rollback()
 		return fmt.Errorf("no such user")
 	}
-	if err := tx.Exec("UPDATE users SET is_blocked=true WHERE id=?", body.UserId).Error; err != nil {
+
+	if err := tx.Exec("UPDATE users SET is_blocked = true WHERE id = ?", body.UserId).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
+
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	return nil
 
+	return nil
 }
-func (c *adminDatabase) UnblockUser(id int) error {
-	tx := c.DB.Begin()
-	var IsExist bool
-	query := `SELECT EXISTS(SELECT 1 FROM users WHERE id=$1 AND is_blocked=true)`
-	err := c.DB.Raw(query, id).Scan(&IsExist).Error
+
+// Unblock user by admin
+func (a *AdminDatabase) UnblockUser(id int) error {
+	tx := a.DB.Begin()
+
+	var isExist bool
+	err := tx.Raw("SELECT EXISTS(SELECT 1 FROM users WHERE id = ? AND is_blocked = true)", id).Scan(&isExist).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-	if !IsExist {
+
+	if !isExist {
 		tx.Rollback()
 		return fmt.Errorf("no such user to unblock")
 	}
-	err = tx.Exec(`UPDATE users SET is_blocked=false WHERE id=$1`, id).Error
+
+	err = tx.Exec("UPDATE users SET is_blocked = false WHERE id = ?", id).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
+
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
 		return err
 	}
+
 	return nil
 }
 
-// admin dashbord
-func (c *adminDatabase) GetDashBord(ctx context.Context) (res.AdminDashboard, error) {
-	var admindashbord res.AdminDashboard
+// Admin dashboard { Showing : TOTAL SALES,TOTAL REVENUE,TOTAL ORDERS,TOTAL PRODUCT SOLD }
+func (a *AdminDatabase) GetDashboard(ctx context.Context) (res.AdminDashboard, error) {
+	var adminDashboard res.AdminDashboard
+	var totalRevenue int
+	var totalOrders int
+	var totalProductSold sql.NullInt64
+	var totalUsers int
 
-	//TotalRevenue
-	var TotalRevenue int
-	var TotalOrders int
-	var TotalProductSold sql.NullInt64
-	var TotalUsers int
-	query := `SELECT sum(order_total)AS TotalRevenu FROM orders`
-	err := c.DB.Raw(query).Scan(&TotalRevenue).Error
-	if err != nil {
-		return admindashbord, err
+	if err := a.DB.Raw("SELECT SUM(order_total) AS TotalRevenue FROM orders").Scan(&totalRevenue).Error; err != nil {
+		return adminDashboard, err
 	}
-	query2 := `SELECT count(*)FROM orders`
-	err = c.DB.Raw(query2).Scan(&TotalOrders).Error
-	if err != nil {
-		return admindashbord, err
+
+	if err := a.DB.Raw("SELECT COUNT(*) FROM orders").Scan(&totalOrders).Error; err != nil {
+		return adminDashboard, err
 	}
-	query3 := `SELECT sum(quantity)FROM order_items`
-	err = c.DB.Raw(query3).Scan(&TotalProductSold).Error
-	if err != nil {
-		return admindashbord, err
+
+	if err := a.DB.Raw("SELECT SUM(quantity) FROM order_items").Scan(&totalProductSold).Error; err != nil {
+		return adminDashboard, err
 	}
-	query4 := `SELECT count(DISTINCT(id))FROM users;`
-	err = c.DB.Raw(query4).Scan(&TotalUsers).Error
-	if err != nil {
-		return admindashbord, err
+
+	if err := a.DB.Raw("SELECT COUNT(DISTINCT id) FROM users").Scan(&totalUsers).Error; err != nil {
+		return adminDashboard, err
 	}
-	admindashbord.TotalUsers = TotalUsers
-	admindashbord.TotalRevenue = TotalRevenue
-	admindashbord.TotalOrders = TotalOrders
-	admindashbord.TotalProductSold = TotalProductSold
-	return admindashbord, err
+
+	adminDashboard.TotalUsers = totalUsers
+	adminDashboard.TotalRevenue = totalRevenue
+	adminDashboard.TotalOrders = totalOrders
+	adminDashboard.TotalProductSold = totalProductSold
+
+	return adminDashboard, nil
 }
-func (c *adminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, error) {
-	tx := c.DB.Begin()
-	var user []domain.UsersData
+
+// List all users by admin
+func (a *AdminDatabase) ListUsers(ctx context.Context) ([]domain.UsersData, error) {
+	tx := a.DB.Begin()
+
+	var users []domain.UsersData
 	var check bool
-	checking := `SELECT EXISTS(SELECT * FROM users)`
-	err := tx.Raw(checking).Scan(&check).Error
-	if err != nil {
+
+	if err := tx.Raw("SELECT EXISTS(SELECT * FROM users)").Scan(&check).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
+
 	if !check {
 		tx.Rollback()
 		return nil, fmt.Errorf("no user found")
 	}
-	query := `select * from users`
-	err = c.DB.Raw(query).Scan(&user).Error
-	if err != nil {
-		return user, err
+
+	if err := a.DB.Raw("SELECT * FROM users").Scan(&users).Error; err != nil {
+		return users, err
 	}
-	return user, err
+
+	return users, nil
 }
-func (c *adminDatabase) FindUserByEmail(ctx context.Context, name string) (domain.UsersData, error) {
+
+// Search a specific user by email or name or phone number
+func (a *AdminDatabase) FindUserByEmail(ctx context.Context, email string) (domain.UsersData, error) {
 	var data domain.UsersData
-	query := `SELECT * FROM users WHERE name=$1`
-	err := c.DB.Raw(query, name).Scan(&data).Error
-	return data, err
+	if err := a.DB.Where("email = ?", email).First(&data).Error; err != nil {
+		return data, err
+	}
+
+	return data, nil
 }
