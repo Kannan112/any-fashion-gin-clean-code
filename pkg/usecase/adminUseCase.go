@@ -84,7 +84,7 @@ func (c *adminUseCase) UnblockUser(id int) error {
 //admin dashbord
 
 func (c *adminUseCase) GetDashBord(ctx context.Context) (res.AdminDashboard, error) {
-	data, err := c.adminRepo.GetDashBord(ctx)
+	data, err := c.adminRepo.GetDashboard(ctx)
 	return data, err
 
 }
@@ -96,4 +96,3 @@ func (c *adminUseCase) FindUserByEmail(ctx context.Context, name string) (domain
 	data, err := c.adminRepo.FindUserByEmail(ctx, name)
 	return data, err
 }
-
