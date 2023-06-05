@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
@@ -105,17 +106,40 @@ func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 	})
 }
 func (ch *OrderHandler) ListAllOrders(c *gin.Context) {
-	userId, err := handlerUtil.GetUserIdFromContext(c)
+	StartDateStr := c.Query("start")
+	EndDateStr := c.Query("end")
+	startDate, err := time.Parse("2006-7-5", StartDateStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "cant find userid",
+			Message:    "failed to parse start date",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
 		return
 	}
-	Details, err := ch.orderUsecase.ListAllOrders(userId)
+	endDate, err := time.Parse("2006-7-5", EndDateStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to parse end date",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	userId, err := handlerUtil.GetUserIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "user login",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	Details, err := ch.orderUsecase.ListAllOrders(userId, startDate, endDate)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -314,7 +338,50 @@ func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
 }
 
 func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
-	viewOrder, err := c.orderUsecase.ViewOrder(ctx)
+	startDateStr := ctx.Query("start")
+	endDateStr := ctx.Query("end")
+
+	var startDate, endDate time.Time
+	var err error
+
+	if startDateStr != "" {
+		startDate, err = time.Parse("2006-1-2", startDateStr)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, res.Response{
+				StatusCode: 400,
+				Message:    "failed to parse start date",
+				Data:       nil,
+				Errors:     err.Error(),
+			})
+			return
+		}
+	}
+
+	if endDateStr != "" {
+		endDate, err = time.Parse("2006-1-2", endDateStr)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, res.Response{
+				StatusCode: 400,
+				Message:    "failed to parse end date",
+				Data:       nil,
+				Errors:     err.Error(),
+			})
+			return
+		}
+	}
+
+	// var filter req.FilterByDate
+	// err := ctx.Bind(&filter)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, res.Response{
+	// 		StatusCode: 400,
+	// 		Message:    "failed to bind",
+	// 		Data:       nil,
+	// 		Errors:     err.Error(),
+	// 	})
+	// 	return
+	// }
+	viewOrder, err := c.orderUsecase.ViewOrder(ctx, startDate, endDate)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
