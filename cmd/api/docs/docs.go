@@ -16,6 +16,87 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/adminlogin": {
+            "post": {
+                "description": "Logs in an admin user and returns an authentication token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Login",
+                "parameters": [
+                    {
+                        "description": "Admin login details",
+                        "name": "admin",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/category/add": {
+            "post": {
+                "description": "Admin can create new category from admin panel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Category"
+                ],
+                "summary": "Create new product category",
+                "operationId": "create-category",
+                "parameters": [
+                    {
+                        "description": "New category name",
+                        "name": "category_name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/category/delete/{category_id}": {
             "delete": {
                 "description": "Admin can delete a category",
@@ -57,7 +138,7 @@ const docTemplate = `{
         },
         "/admin/coupon": {
             "get": {
-                "description": "admin view all coupon",
+                "description": "Admins and users can see all available coupons",
                 "consumes": [
                     "application/json"
                 ],
@@ -67,8 +148,8 @@ const docTemplate = `{
                 "tags": [
                     "Coupon"
                 ],
-                "summary": "view coupons",
-                "operationId": "ViewCoupon",
+                "summary": "Admins and users can see all available coupons",
+                "operationId": "view-coupons",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -126,7 +207,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/coupon/delete/:couponId": {
+        "/admin/coupon/delete/{couponId}": {
             "delete": {
                 "description": "Delete coupon",
                 "consumes": [
@@ -165,7 +246,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/coupon/update": {
+        "/admin/coupon/update/{couponId}": {
             "patch": {
                 "description": "admin coupon update",
                 "consumes": [
@@ -181,12 +262,19 @@ const docTemplate = `{
                 "operationId": "UpdateCoupon",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Coupon ID",
+                        "name": "couponId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "New Admin details",
                         "name": "admin",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/req.Coupons"
+                            "$ref": "#/definitions/req.UpdateCoupon"
                         }
                     }
                 ],
@@ -206,9 +294,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/login": {
-            "post": {
-                "description": "Logs in an admin user and returns an authentication token",
+        "/admin/dashbord/list": {
+            "get": {
+                "description": "Admin can access dashboard and view details regarding orders, products, etc.",
                 "consumes": [
                     "application/json"
                 ],
@@ -218,16 +306,85 @@ const docTemplate = `{
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Admin Login",
+                "summary": "Admin Dashboard",
+                "operationId": "admin-dashboard",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user/block": {
+            "patch": {
+                "description": "admin block user access to the store",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin BlockUser",
                 "parameters": [
                     {
-                        "description": "Admin login details",
-                        "name": "admin",
+                        "description": "User bolocking details",
+                        "name": "blocking_details",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/req.LoginReq"
+                            "$ref": "#/definitions/req.BlockData"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user/unblock/{user_id}": {
+            "patch": {
+                "description": "Admins can block users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin can unbolock a blocked user",
+                "operationId": "unblock-users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the user to be blocked",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -358,9 +515,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/cart/add/:product_items_id": {
+        "/user/cart/add/:product_item_id": {
             "post": {
-                "description": "Admin can delete a category",
+                "description": "User can add product item to the cart",
                 "consumes": [
                     "application/json"
                 ],
@@ -530,7 +687,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/req.VerifyOtp"
+                            "$ref": "#/definitions/req.Otpverifier"
                         }
                     }
                 ],
@@ -621,7 +778,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/wishlist/add/:itemId": {
+        "/user/wishlist/add/{itemId}": {
             "post": {
                 "description": "Login as a user to access the ecommerce site",
                 "consumes": [
@@ -635,6 +792,45 @@ const docTemplate = `{
                 ],
                 "summary": "Add Wishlist",
                 "operationId": "AddToWishlist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "itemId",
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/wishlist/remove/:itemId": {
+            "delete": {
+                "description": "Remove item from wishlist",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Remove Item",
+                "operationId": "RemoveFromWishlis",
                 "parameters": [
                     {
                         "type": "string",
@@ -699,6 +895,32 @@ const docTemplate = `{
                 }
             }
         },
+        "req.BlockData": {
+            "type": "object",
+            "required": [
+                "reason",
+                "userid"
+            ],
+            "properties": {
+                "reason": {
+                    "type": "string"
+                },
+                "userid": {
+                    "type": "integer"
+                }
+            }
+        },
+        "req.Category": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "req.Coupons": {
             "type": "object",
             "properties": {
@@ -742,6 +964,38 @@ const docTemplate = `{
                 }
             }
         },
+        "req.Otpverifier": {
+            "type": "object",
+            "required": [
+                "phoneNumber",
+                "pin"
+            ],
+            "properties": {
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "pin": {
+                    "type": "string"
+                }
+            }
+        },
+        "req.UpdateCoupon": {
+            "type": "object",
+            "properties": {
+                "discountmaximumamount": {
+                    "type": "number"
+                },
+                "discountpercent": {
+                    "type": "number"
+                },
+                "expirationdate": {
+                    "type": "string"
+                },
+                "minimumpurchaseamount": {
+                    "type": "number"
+                }
+            }
+        },
         "req.UserReq": {
             "type": "object",
             "required": [
@@ -761,21 +1015,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
-                }
-            }
-        },
-        "req.VerifyOtp": {
-            "type": "object",
-            "required": [
-                "code",
-                "user"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/req.OTPData"
                 }
             }
         },

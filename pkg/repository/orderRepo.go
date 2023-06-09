@@ -247,4 +247,19 @@ func (c *OrderDatabase) ViewOrder(ctx context.Context, startDate, endDate time.T
 
 	return data, nil
 }
-
+func (c *OrderDatabase) AdminOrderDetails(ctx context.Context, orderId int) (res.OrderData, error) {
+	var data res.OrderData
+	query := ` select * from orders o join order_items oi on oi.orders_id=o.id join users u on u.id=o.users_id join product_items pi on pi.id=oi.product_item_id join products p on p.id=pi.product_id join addresses a on a.id=o.address_id  WHERE o.id=$1`
+	err := c.DB.Raw(query, orderId).Scan(&data).Error
+	fmt.Println("id", data.Brand)
+	return data, err
+}
+func (c *OrderDatabase) ListOrdersOfUsers(ctx context.Context, UserId int) ([]domain.Order, error) {
+	var data []domain.Order
+	query := `select * from orders where users_id=$1`
+	err := c.DB.Raw(query, UserId).Scan(&data).Error
+	if err != nil {
+		return data, err
+	}
+	return data, err
+}

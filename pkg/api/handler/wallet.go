@@ -75,3 +75,33 @@ func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+func (c *WalletHandler) RemoveWallet(ctx *gin.Context) {
+	userid, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "please login",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	err = c.walletUseCase.RemoveWallet(ctx, uint(userid))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to remove wallet",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "coin removed",
+		Data:       nil,
+		Errors:     nil,
+	})
+
+}

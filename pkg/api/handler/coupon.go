@@ -75,7 +75,7 @@ func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 // @Param couponId path string true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/coupon/delete/:couponId [delete]
+// @Router /admin/coupon/delete/{couponId} [delete]
 func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 	strId := ctx.Param("couponId")
 	couponId, err := strconv.Atoi(strId)
@@ -113,10 +113,11 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 // @Tags Coupon
 // @Accept json
 // @Produce json
-// @Param admin body req.Coupons true "New Admin details"
+// @Param couponId path string true "Coupon ID"
+// @Param admin body req.UpdateCoupon true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/coupon/update [patch]
+// @Router /admin/coupon/update/{couponId} [patch]
 func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 	strId := ctx.Param("couponId")
 	couponId, err := strconv.Atoi(strId)
@@ -129,7 +130,7 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 		})
 		return
 	}
-	var coupon req.Coupons
+	var coupon req.UpdateCoupon
 	err = ctx.Bind(&coupon)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
@@ -159,10 +160,10 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 
 }
 
-// ViewCoupon
-// @Summary view coupons
-// @ID ViewCoupon
-// @Description admin view all coupon
+// ViewAllCoupons
+// @Summary Admins and users can see all available coupons
+// @ID view-coupons
+// @Description Admins and users can see all available coupons
 // @Tags Coupon
 // @Accept json
 // @Produce json

@@ -68,7 +68,7 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		order := admin.Group("/order", middleware.AdminAuth)
 		{
 			order.GET("", orderHandler.ViewOrder)
-			order.GET("/:orderid", orderHandler.ListAllOrders)
+			order.GET("/:orderid", orderHandler.AdminOrderDetails)
 			order.GET("/placed", orderHandler.ListOrderByPlaced)
 			order.GET("/cancelled", orderHandler.ListOrderByCancelled)
 		}
@@ -77,6 +77,11 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		offer := admin.Group("offer", middleware.AdminAuth)
 		{
 			offer.POST("/", productHandler.SaveOffer)
+		}
+		sales := admin.Group("/sales", middleware.AdminAuth)
+		{
+			sales.GET("get", adminHandler.ViewSalesReport)
+			sales.GET("download", adminHandler.DownloadSalesReport)
 		}
 	}
 }

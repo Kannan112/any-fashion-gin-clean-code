@@ -46,29 +46,28 @@ func (c *CouponDatabase) AddCoupon(ctx context.Context, coupon req.Coupons) erro
 	err := c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate).Error
 	return err
 }
-func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error {
+func (c *CouponDatabase) UpdateCoupon(ctx context.Context, coupon req.UpdateCoupon, CouponId int) error {
 	var check bool
 	tx := c.DB.Begin()
-	Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE code=$1)`
-	err := c.DB.Raw(Querycheck, coupon.Code).Scan(&check).Error
+	Querycheck := `SELECT EXISTS(SELECT code FROM coupons WHERE id=$1)`
+	err := c.DB.Raw(Querycheck, CouponId).Scan(&check).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
-	if check {
+	if !check {
 		tx.Rollback()
-		return fmt.Errorf("coupon code already exists")
+		return fmt.Errorf("no coupon code found")
 	}
 
 	query := `UPDATE coupons 
-	SET code=$1, 
-		discount_percent=$2,
-		discount_maximum_amount=$3,
-		minimum_purchase_amount=$4,
-		expiration_date=$5 
-	WHERE id=$6;
+	SET discount_percent=$1,
+		discount_maximum_amount=$2,
+		minimum_purchase_amount=$3,
+		expiration_date=$4
+	WHERE id=$5;
 	`
-	err = c.DB.Exec(query, coupon.Code, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
+	err = c.DB.Exec(query, coupon.DiscountPercent, coupon.DiscountMaximumAmount, coupon.MinimumPurchaseAmount, coupon.ExpirationDate, CouponId).Error
 	if err != nil {
 		tx.Rollback()
 		return err

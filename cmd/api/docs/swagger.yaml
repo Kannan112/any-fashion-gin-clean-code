@@ -25,6 +25,23 @@ definitions:
     - pincode
     - street
     type: object
+  req.BlockData:
+    properties:
+      reason:
+        type: string
+      userid:
+        type: integer
+    required:
+    - reason
+    - userid
+    type: object
+  req.Category:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   req.Coupons:
     properties:
       code:
@@ -53,6 +70,27 @@ definitions:
       phoneNumber:
         type: string
     type: object
+  req.Otpverifier:
+    properties:
+      phoneNumber:
+        type: string
+      pin:
+        type: string
+    required:
+    - phoneNumber
+    - pin
+    type: object
+  req.UpdateCoupon:
+    properties:
+      discountmaximumamount:
+        type: number
+      discountpercent:
+        type: number
+      expirationdate:
+        type: string
+      minimumpurchaseamount:
+        type: number
+    type: object
   req.UserReq:
     properties:
       email:
@@ -68,16 +106,6 @@ definitions:
     - mobile
     - name
     type: object
-  req.VerifyOtp:
-    properties:
-      code:
-        type: string
-      user:
-        $ref: '#/definitions/req.OTPData'
-    required:
-    - code
-    - user
-    type: object
   res.Response:
     properties:
       data: {}
@@ -90,6 +118,59 @@ definitions:
 info:
   contact: {}
 paths:
+  /admin/adminlogin:
+    post:
+      consumes:
+      - application/json
+      description: Logs in an admin user and returns an authentication token
+      parameters:
+      - description: Admin login details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/req.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin Login
+      tags:
+      - Admin
+  /admin/category/add:
+    post:
+      consumes:
+      - application/json
+      description: Admin can create new category from admin panel
+      operationId: create-category
+      parameters:
+      - description: New category name
+        in: body
+        name: category_name
+        required: true
+        schema:
+          $ref: '#/definitions/req.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Create new product category
+      tags:
+      - Product Category
   /admin/category/delete/{category_id}:
     delete:
       consumes:
@@ -120,8 +201,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: admin view all coupon
-      operationId: ViewCoupon
+      description: Admins and users can see all available coupons
+      operationId: view-coupons
       produces:
       - application/json
       responses:
@@ -133,7 +214,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
-      summary: view coupons
+      summary: Admins and users can see all available coupons
       tags:
       - Coupon
   /admin/coupon/add:
@@ -163,7 +244,7 @@ paths:
       summary: Admin can create new coupon
       tags:
       - Coupon
-  /admin/coupon/delete/:couponId:
+  /admin/coupon/delete/{couponId}:
     delete:
       consumes:
       - application/json
@@ -189,19 +270,24 @@ paths:
       summary: Delete a coupon
       tags:
       - Coupon
-  /admin/coupon/update:
+  /admin/coupon/update/{couponId}:
     patch:
       consumes:
       - application/json
       description: admin coupon update
       operationId: UpdateCoupon
       parameters:
+      - description: Coupon ID
+        in: path
+        name: couponId
+        required: true
+        type: string
       - description: New Admin details
         in: body
         name: admin
         required: true
         schema:
-          $ref: '#/definitions/req.Coupons'
+          $ref: '#/definitions/req.UpdateCoupon'
       produces:
       - application/json
       responses:
@@ -216,18 +302,13 @@ paths:
       summary: Update a existing coupon
       tags:
       - Coupon
-  /admin/login:
-    post:
+  /admin/dashbord/list:
+    get:
       consumes:
       - application/json
-      description: Logs in an admin user and returns an authentication token
-      parameters:
-      - description: Admin login details
-        in: body
-        name: admin
-        required: true
-        schema:
-          $ref: '#/definitions/req.LoginReq'
+      description: Admin can access dashboard and view details regarding orders, products,
+        etc.
+      operationId: admin-dashboard
       produces:
       - application/json
       responses:
@@ -239,7 +320,59 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
-      summary: Admin Login
+      summary: Admin Dashboard
+      tags:
+      - Admin
+  /admin/user/block:
+    patch:
+      consumes:
+      - application/json
+      description: admin block user access to the store
+      parameters:
+      - description: User bolocking details
+        in: body
+        name: blocking_details
+        required: true
+        schema:
+          $ref: '#/definitions/req.BlockData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin BlockUser
+      tags:
+      - Admin
+  /admin/user/unblock/{user_id}:
+    patch:
+      consumes:
+      - application/json
+      description: Admins can block users
+      operationId: unblock-users
+      parameters:
+      - description: ID of the user to be blocked
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin can unbolock a blocked user
       tags:
       - Admin
   /user/address/add:
@@ -316,11 +449,11 @@ paths:
       summary: Update Address
       tags:
       - Address
-  /user/cart/add/:product_items_id:
+  /user/cart/add/:product_item_id:
     post:
       consumes:
       - application/json
-      description: Admin can delete a category
+      description: User can add product item to the cart
       operationId: add-to-cart
       parameters:
       - description: product_item_id
@@ -428,7 +561,7 @@ paths:
         name: otp
         required: true
         schema:
-          $ref: '#/definitions/req.VerifyOtp'
+          $ref: '#/definitions/req.Otpverifier'
       produces:
       - application/json
       responses:
@@ -490,7 +623,7 @@ paths:
       summary: View Profile
       tags:
       - Profile
-  /user/wishlist/add/:itemId:
+  /user/wishlist/add/{itemId}:
     post:
       consumes:
       - application/json
@@ -514,6 +647,32 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Add Wishlist
+      tags:
+      - Wishlist
+  /user/wishlist/remove/:itemId:
+    delete:
+      consumes:
+      - application/json
+      description: Remove item from wishlist
+      operationId: RemoveFromWishlis
+      parameters:
+      - description: itemId
+        in: path
+        name: itemId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Remove Item
       tags:
       - Wishlist
 swagger: "2.0"

@@ -9,7 +9,7 @@ import (
 type CouponRepository interface {
 	FindCouponByName(ctx context.Context, couponCode string) (bool, error)
 	AddCoupon(ctx context.Context, coupon req.Coupons) error
-	UpdateCoupon(ctx context.Context, coupon req.Coupons, CouponId int) error
+	UpdateCoupon(ctx context.Context, coupon req.UpdateCoupon, CouponId int) error
 	DeleteCoupon(ctx context.Context, Couponid int) error
 	ViewCoupon(ctx context.Context) ([]domain.Coupon, error)
 	ApplyCoupon(ctx context.Context, userId int, couponCode string) (int, error)

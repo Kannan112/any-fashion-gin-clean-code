@@ -1,6 +1,9 @@
 package res
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 type AdminData struct {
 	Id    int
@@ -12,4 +15,12 @@ type AdminDashboard struct {
 	TotalOrders      int
 	TotalProductSold sql.NullInt64
 	TotalRevenue     int
+}
+type SalesReport struct {
+	Id          int
+	Name        string
+	Mobile      string
+	OrderStatus string
+	OrderTime   time.Time
+	OrderTotal  int
 }

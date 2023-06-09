@@ -13,13 +13,11 @@ import (
 
 type ProductHandler struct {
 	productuseCase services.ProductUseCase
-	
 }
 
 func NewProductHandler(productUseCase services.ProductUseCase) *ProductHandler {
 	return &ProductHandler{
 		productuseCase: productUseCase,
-		
 	}
 }
 
@@ -34,7 +32,6 @@ func NewProductHandler(productUseCase services.ProductUseCase) *ProductHandler {
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/category/add [post]
-
 func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 	var category req.Category
 	err := c.Bind(&category)

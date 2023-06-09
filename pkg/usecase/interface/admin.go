@@ -16,4 +16,5 @@ type AdminUsecase interface {
 	BlockUser(body req.BlockData, adminId int) error
 	UnblockUser(id int) error
 	GetDashBord(ctx context.Context) (res.AdminDashboard, error)
+	ViewSalesReport(ctx context.Context) ([]res.SalesReport, error)
 }

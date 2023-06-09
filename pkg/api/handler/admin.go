@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/csv"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -75,7 +76,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 // @Param admin body req.LoginReq true "Admin login details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/login [post]
+// @Router /admin/adminlogin [post]
 func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	var admin req.LoginReq
 	err := c.Bind(&admin)
@@ -109,15 +110,16 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	})
 }
 
-// @AdminLogout
+// Admin Logout
 // @Summary Admin Logout
-// @ID AdminLogout
-// @Description Logout the currently authenticated admin user
-// @Tags admin
+// @ID admin-logout
+// @Description Logs out a logged-in admin from the E-commerce web api admin panel
+// @Tags Admin
+// @Accept json
 // @Produce json
-// @Success 200 {object} res.Respons
-// @Failure 400 {object} res.Respons
-// @Router /admin/logout [get]
+// @Success 200 {object} res.Response
+// @Failure 400
+// @Router /admin/logout [post]
 
 func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 	c.SetCookie("AdminAuth", "", -1, "", "", false, true)
@@ -130,6 +132,15 @@ func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 
 }
 
+// @Summary Admin BlockUser
+// @Description admin block user access to the store
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param blocking_details body req.BlockData true "User bolocking details"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/user/block [patch]
 func (cr *AdminHandler) BlockUser(c *gin.Context) {
 	var body req.BlockData
 	err := c.Bind(&body)
@@ -171,6 +182,17 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 
 }
 
+// UnBlockUser
+// @Summary Admin can unbolock a blocked user
+// @ID unblock-users
+// @Description Admins can block users
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param user_id path string true "ID of the user to be blocked"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/user/unblock/{user_id} [patch]
 func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	paramsId := c.Param("userId")
 	id, err := strconv.Atoi(paramsId)
@@ -202,6 +224,16 @@ func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	})
 }
 
+// AdminDashboard
+// @Summary Admin Dashboard
+// @ID admin-dashboard
+// @Description Admin can access dashboard and view details regarding orders, products, etc.
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/dashbord/list [get]
 func (cr *AdminHandler) GetDashBord(c *gin.Context) {
 	data, err := cr.adminUseCase.GetDashBord(c)
 	if err != nil {
@@ -220,6 +252,7 @@ func (cr *AdminHandler) GetDashBord(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
 func (c *AdminHandler) ListUsers(ctx *gin.Context) {
 	data, err := c.adminUseCase.ListUsers(ctx)
 	if err != nil {
@@ -268,5 +301,77 @@ func (c *AdminHandler) FindUserByEmail(ctx *gin.Context) {
 		Data:       data,
 		Errors:     nil,
 	})
+
+}
+
+func (cr *AdminHandler) ViewSalesReport(ctx *gin.Context) {
+	sales, err := cr.adminUseCase.ViewSalesReport(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant get sales report",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "Sales report",
+		Data:       sales,
+		Errors:     nil,
+	})
+
+}
+
+// DownloadSalesReport
+// @Summary Admin can download sales report
+// @ID download-sales-report
+// @Description Admin can download sales report in .csv format
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Failure 400 {object} response.Response
+// @Router /admin/salesreport/download [get]
+func (cr *AdminHandler) DownloadSalesReport(ctx *gin.Context) {
+	sales, err := cr.adminUseCase.ViewSalesReport(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "cant get sales report",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	// Set headers so browser will download the file
+	ctx.Header("Content-Type", "text/csv")
+	ctx.Header("Content-Disposition", "attachment;filename=sales.csv")
+
+	// Create a CSV writer using our response writer as our io.Writer
+	wr := csv.NewWriter(ctx.Writer)
+
+	// Write CSV header row
+	headers := []string{"Name", "Mobile", "OrderStatus", "OrderTime", "OrderTotal"}
+	if err := wr.Write(headers); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	// Write data rows
+	for _, sale := range sales {
+		row := []string{sale.Name, sale.Mobile, sale.OrderStatus, sale.OrderTime.Format("2006-01-02 15:04:05"), strconv.Itoa(sale.OrderTotal)}
+		if err := wr.Write(row); err != nil {
+			ctx.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+	}
+	// Flush the writer's buffer to ensure all data is written to the client
+	wr.Flush()
+	if err := wr.Error(); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
 
 }

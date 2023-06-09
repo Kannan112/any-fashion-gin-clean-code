@@ -399,3 +399,61 @@ func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
 	})
 
 }
+
+func (c *OrderHandler) ListOrdersOfUsers(ctx *gin.Context) {
+	userId, err := handlerUtil.GetUserIdFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get user id",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	orders, err := c.orderUsecase.ListOrdersOfUsers(ctx, userId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Failed to list",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "User order list",
+		Data:       orders,
+		Errors:     nil,
+	})
+}
+func (c *OrderHandler) AdminOrderDetails(ctx *gin.Context) {
+	orderId, err := strconv.Atoi(ctx.Param("orderid"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get order id",
+			Data:       nil,
+			Errors:     err,
+		})
+		return
+	}
+	order, err := c.orderUsecase.AdminOrderDetails(ctx, orderId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "failed to get order details",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+
+	}
+	ctx.JSON(http.StatusOK, res.Response{
+		StatusCode: 200,
+		Message:    "order details",
+		Data:       order,
+		Errors:     nil,
+	})
+}

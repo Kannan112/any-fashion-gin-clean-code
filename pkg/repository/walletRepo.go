@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
@@ -87,4 +88,32 @@ func (c *WalletDataBase) ApplyWallet(ctx context.Context, userId uint) error {
 	}
 	return nil
 
+}
+
+func (c *WalletDataBase) RemoveWallet(ctx context.Context, userId uint) error {
+	tx := c.DB.Begin()
+	var coins int
+	query1 := `select coin from carts where users_id=$1`
+	err := tx.Raw(query1, userId).Scan(&coins).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if coins == 0 {
+		return fmt.Errorf("no coins added")
+	}
+	query2 := `update wallets set coins=coins+$1 where users_id=$2`
+	err = tx.Exec(query2, coins, userId).Error
+	if err != nil {
+		return err
+	}
+	query3 := `update carts set total=total+$1,coin=0 where users_id=$2`
+	err = tx.Exec(query3, coins, userId).Error
+	if err != nil {
+		return err
+	}
+	if err = tx.Commit().Error; err != nil {
+		return err
+	}
+	return nil
 }

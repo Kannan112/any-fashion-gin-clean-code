@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
@@ -42,8 +43,8 @@ func (c *OrderUseCase) UserCancelOrder(orderId, userId int) (float32, error) {
 	}
 	return price, err
 }
-func (c *OrderUseCase) ListAllOrders(userId int) ([]domain.Order, error) {
-	order, err := c.orderRepo.ListAllOrders(userId)
+func (c *OrderUseCase) ListAllOrders(userId int, startDate, EndDate time.Time) ([]domain.Order, error) {
+	order, err := c.orderRepo.ListAllOrders(userId, startDate, EndDate)
 	return order, err
 }
 
@@ -154,11 +155,20 @@ func (c *OrderUseCase) ListOrderByCancelled(ctx context.Context) ([]domain.Order
 	return OrderDetails, err
 }
 
-func (c *OrderUseCase) ViewOrder(ctx context.Context) ([]domain.Order, error) {
+func (c *OrderUseCase) ViewOrder(ctx context.Context, startDate, endDate time.Time) ([]domain.Order, error) {
 	var OrderDetails []domain.Order
-	OrderDetails, err := c.orderRepo.ViewOrder(ctx)
+	OrderDetails, err := c.orderRepo.ViewOrder(ctx, startDate, endDate)
 	if err != nil {
 		return OrderDetails, err
 	}
 	return OrderDetails, err
+}
+func (c *OrderUseCase) ListOrdersOfUsers(ctx context.Context, UserId int) ([]domain.Order, error) {
+	order, err := c.orderRepo.ListOrdersOfUsers(ctx, UserId)
+	return order, err
+}
+
+func (c *OrderUseCase) AdminOrderDetails(ctx context.Context, orderId int) (res.OrderData, error) {
+	order, err := c.orderRepo.AdminOrderDetails(ctx, orderId)
+	return order, err
 }

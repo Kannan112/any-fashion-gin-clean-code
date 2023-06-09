@@ -6,17 +6,20 @@ import (
 )
 
 type Config struct {
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBName     string `mapstructure:"DB_NAME"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPort     string `mapstructure:"DB_PORT"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
-	RazorKey   string `mapstructure:"RZOR_KEYID"`
-	RazorSec   string `mapstructure:"RAZOR_KEYSCR"`
+	DBHost           string `mapstructure:"DB_HOST"`
+	DBName           string `mapstructure:"DB_NAME"`
+	DBUser           string `mapstructure:"DB_USER"`
+	DBPort           string `mapstructure:"DB_PORT"`
+	DBPassword       string `mapstructure:"DB_PASSWORD"`
+	RazorKey         string `mapstructure:"RZOR_KEYID"`
+	RazorSec         string `mapstructure:"RAZOR_KEYSCR"`
+	TWILIOACCOUNTSID string `mapstructure:"TWILIO_ACCOUNT_SID"`
+	TWILIOAUTHTOKEN  string `mapstructure:"TWILIO_AUTHTOKEN"`
+	TWILIOSERVICESID string `mapstructure:"TWILIO_SERVICES_ID"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "RZOR_KEYID", "RAZOR_KEYSCR",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "RZOR_KEYID", "RAZOR_KEYSCR", "TWILIO_SERVICES_ID", "TWILIO_ACCOUNT_SID", "TWILIO_AUTHTOKEN",
 }
 var config Config
 

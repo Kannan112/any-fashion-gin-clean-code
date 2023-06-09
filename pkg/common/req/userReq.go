@@ -27,4 +27,8 @@ type Address struct {
 	Pincode      int    `json:"pincode" binding:"required"`
 	IsDefault    bool   `json:"isdefault" `
 }
+type Otpverifier struct {
+	Pin   string `json:"pin,omitempty" validate:"required"`
+	Phone string `json:"phoneNumber,omitempty" validate:"required"`
+}
 

@@ -72,11 +72,10 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 			Data:       nil,
 			Errors:     nil,
 		})
-		fmt.Println("login err2")
 		return
 	}
-	sid, err := cr.otpUseCase.SendOtp(c, phno)
-
+	fmt.Println("otp send near", phno)
+	err = cr.otpUseCase.SendOtp(c.Request.Context(), phno)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -90,7 +89,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 201,
 		Message:    "otp send",
-		Data:       sid,
+		Data:       nil,
 		Errors:     nil,
 	})
 }
@@ -102,12 +101,12 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 // @Tags Otp
 // @Accept json
 // @Produce json
-// @Param otp body req.VerifyOtp true "OTP sent to user's mobile number"
+// @Param otp body req.Otpverifier true "OTP sent to user's mobile number"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /user/otp/verify [post]
 func (cr *OtpHandler) ValidateOtp(c *gin.Context) {
-	var otpDetails req.VerifyOtp
+	var otpDetails req.Otpverifier
 	err := c.Bind(&otpDetails)
 
 	if err != nil {
@@ -119,25 +118,19 @@ func (cr *OtpHandler) ValidateOtp(c *gin.Context) {
 		})
 		return
 	}
-	resp, err := cr.otpUseCase.ValidateOtp(otpDetails)
+	err = cr.otpUseCase.VerifyOTP(c, otpDetails)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "can't bind",
+			Message:    "validation failed",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-	} else if *resp.Status != "approved" {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "incorect",
-			Data:       nil,
-			Errors:     "incorect",
-		})
 		return
 	}
-	ss, err := cr.userUseCase.OtpLogin(otpDetails.User.PhoneNumber)
+	fmt.Println("test me verify")
+	ss, err := cr.userUseCase.OtpLogin(otpDetails.Phone)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

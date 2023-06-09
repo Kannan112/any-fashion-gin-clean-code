@@ -31,7 +31,7 @@ func NewWishlistHandler(wishlistusecase services.WishlistUseCases) *WishlistHand
 // @Param itemId path string true "itemId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/wishlist/add/:itemId [post]
+// @Router /user/wishlist/add/{itemId} [post]
 func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 	str := c.Param("itemId")
 	itemId, err := strconv.Atoi(str)
@@ -150,7 +150,7 @@ func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
 		})
 		return
 	}
-	wishlist, err := c.WishlistUsecase.ListAllWishlist(ctx, userId,pagenation)
+	wishlist, err := c.WishlistUsecase.ListAllWishlist(ctx, userId, pagenation)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

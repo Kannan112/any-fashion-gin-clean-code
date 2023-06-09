@@ -11,4 +11,5 @@ type WalletUseCase interface {
 	WallerProfile(ctx context.Context, userID uint) (res.Wallet, error)
 	AddCoinToWallet(ctx context.Context, price float32, usersId uint) error
 	ApplyWallet(ctx context.Context, userId uint) error
+	RemoveWallet(ctx context.Context, userId uint) error
 }

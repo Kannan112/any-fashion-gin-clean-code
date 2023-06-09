@@ -10,7 +10,6 @@ type Display struct {
 	Brand       string
 	Color       string
 	Size        int
-	Quantity    string
 	Price       int
 }
 

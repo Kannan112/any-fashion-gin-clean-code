@@ -14,6 +14,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		otp := user.Group("/otp")
 		{
 			otp.POST("send", otpHandler.SendOtp)
+			otp.POST("verify", otpHandler.ValidateOtp)
 		}
 		// User routes
 		user.POST("/signup", userHandler.UserSignUp)
@@ -85,7 +86,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
 			order.POST("orderAll", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
-			order.GET("listall", orderHandler.ListAllOrders)
+			order.GET("listall", orderHandler.ListOrdersOfUsers)
 			order.GET("/:orderId", orderHandler.OrderDetails)
 		}
 
@@ -101,6 +102,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		{
 			wallet.GET("", walletHandler.WallerProfile)
 			wallet.POST("/apply", walletHandler.ApplyWallet)
+			wallet.PATCH("/remove", walletHandler.RemoveWallet)
 			//wallet apply while purchasing{reduce the amount in wallet}
 		}
 	}

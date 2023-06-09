@@ -34,3 +34,7 @@ func (c *WalletUseCase) ApplyWallet(ctx context.Context, userId uint) error {
 	err := c.WalletRepo.ApplyWallet(ctx, userId)
 	return err
 }
+func (c *WalletUseCase) RemoveWallet(ctx context.Context, userId uint) error {
+	err := c.WalletRepo.RemoveWallet(ctx, userId)
+	return err
+}

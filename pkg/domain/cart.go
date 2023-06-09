@@ -13,6 +13,7 @@ type Cart struct {
 	Id        uint `gorm:"primeryKey;unique;not null"`
 	UsersID   uint
 	Sub_total int
+	Coin      float32
 	Total     int
 }
 type CartItem struct {
