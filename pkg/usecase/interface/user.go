@@ -14,8 +14,8 @@ type UserUseCase interface {
 	IsSignIn(phno string) (bool, error)
 	OtpLogin(phone string) (string, error)
 	FindAddress(ctx context.Context, userId int) (bool, error)
-	AddAddress(id int, body req.Address) error
-	UpdateAddress(id int, addressId int, address req.Address) error
+	AddAddress(id int, body req.AddAddress) error
+	UpdateAddress(id int, addressId int, address req.AddAddress) error
 	ListallAddress(id int) ([]domain.Addresss, error)
 	DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)

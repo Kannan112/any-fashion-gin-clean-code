@@ -27,18 +27,17 @@ func NewUserHandler(usecase services.UserUseCase, cartcase services.CartUseCases
 
 //---------------------------------UserSignUp-----------------------------
 
-// CreateAccount
-// @Summary User Signup
+// UserSignUp handles user signup.
+// @Summary user-signup
 // @ID UserSignUp
-// @Description Login as a user to access the ecommerce site
+// @Description Signup as a new user to access the ecommerce site
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param   input   body     req.UserReq{}   true  "Input Field"
-// @Success 200 {object} res.Response
+// @Param user_details body  req.UserReq true "User details"
+// @Success 201 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /user/signup [post]
-
 func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 	var user req.UserReq
 	err := ctx.Bind(&user)
@@ -80,7 +79,7 @@ func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-		return 
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, res.Response{
@@ -160,12 +159,12 @@ func (cr *UserHandler) UserLogout(c *gin.Context) {
 
 // AddAddress
 // @Summary Add Address
-// @ID AddAddress
+// @ID add-address
 // @Description Login as a user to access the ecommerce site
 // @Tags Address
 // @Accept json
 // @Produce json
-// @Param   input   body     req.Address{}   true  "Input Field"
+// @Param   input   body     req.AddAddress{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /user/address/add [post]
@@ -180,7 +179,7 @@ func (cr *UserHandler) AddAddress(c *gin.Context) {
 		})
 		return
 	}
-	var address req.Address
+	var address req.AddAddress
 	err = c.Bind(&address)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -211,17 +210,18 @@ func (cr *UserHandler) AddAddress(c *gin.Context) {
 
 }
 
-// AddAddress
+// UpdateAddress
 // @Summary Update Address
-// @ID UpdateAddress
-// @Description Login as a user to access the ecommerce site
+// @ID update-address
+// @Description user update addresses
 // @Tags Address
 // @Accept json
 // @Produce json
-// @Param   input   body     req.Address{}   true  "Input Field"
+// @Param addressId path string true "addressId"
+// @Param   input   body     req.AddAddress{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/update [patch]
+// @Router /user/address/update/{addressId} [patch]
 func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	paramsId := c.Param("addressId")
 	addressId, err := strconv.Atoi(paramsId)
@@ -244,7 +244,7 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 		})
 		return
 	}
-	var address req.Address
+	var address req.AddAddress
 	err = c.Bind(&address)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -259,7 +259,7 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
-			Message:    "Can't add address",
+			Message:    "failed to update",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
@@ -273,16 +273,16 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	})
 }
 
-// AddAddress
-// @Summary List Address
-// @ID ListallAddres
+// ListAddress
+// @Summary List Addresses
+// @ID list-all-addresses
 // @Description Login as a user to access the ecommerce site
 // @Tags Address
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/listall [get]
+// @Router /user/address/list [get]
 func (cr *UserHandler) ListallAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -402,6 +402,17 @@ func (cr *UserHandler) EditProfile(c *gin.Context) {
 	})
 }
 
+// DeleteAddress
+// @Summary Delete Address
+// @ID delete-address
+// @Description user can delete any of his addresses
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param addressId path string true "addressId"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/address/delete/{addressId} [delete]
 func (cr *UserHandler) DeleteAddress(ctx *gin.Context) {
 	addressStr := ctx.Param("addressId")
 	addressId, err := strconv.Atoi(addressStr)

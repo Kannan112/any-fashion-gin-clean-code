@@ -271,6 +271,7 @@ func (c *AdminHandler) ListUsers(ctx *gin.Context) {
 		Errors:     nil,
 	})
 }
+
 func (c *AdminHandler) FindUserByEmail(ctx *gin.Context) {
 	var userEmail req.UserEmail
 	err := ctx.BindJSON(&userEmail)
@@ -332,7 +333,7 @@ func (cr *AdminHandler) ViewSalesReport(ctx *gin.Context) {
 // @Tags Admin
 // @Accept json
 // @Produce json
-// @Failure 400 {object} response.Response
+// @Failure 400 {object} res.Response
 // @Router /admin/salesreport/download [get]
 func (cr *AdminHandler) DownloadSalesReport(ctx *gin.Context) {
 	sales, err := cr.adminUseCase.ViewSalesReport(ctx)

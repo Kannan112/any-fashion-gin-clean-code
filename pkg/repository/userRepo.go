@@ -59,7 +59,7 @@ func (c *userDatabase) OtpLogin(phone string) (int, error) {
 	err := c.DB.Raw(query, phone).Scan(&id).Error
 	return id, err
 }
-func (c *userDatabase) AddAddress(id int, address req.Address) error {
+func (c *userDatabase) AddAddress(id int, address req.AddAddress) error {
 	//isDefault
 	if address.IsDefault {
 		changeAddress := `UPDATE addresses SET is_default=$1 WHERE users_id=$2 AND is_default=$3`
@@ -73,7 +73,7 @@ func (c *userDatabase) AddAddress(id int, address req.Address) error {
 	err := c.DB.Exec(query, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault).Error
 	return err
 }
-func (c *userDatabase) UpdateAddress(id int, addressId int, address req.Address) error {
+func (c *userDatabase) UpdateAddress(id int, addressId int, address req.AddAddress) error {
 	//check is Default
 	if address.IsDefault {
 		changeDefault := `UPDATE addresses SET is_default = $1 WHERE users_id=$2 AND is_default=$3`
@@ -83,9 +83,20 @@ func (c *userDatabase) UpdateAddress(id int, addressId int, address req.Address)
 			return err
 		}
 	}
+	//CHECK ADDRESS IS USERS OR NOT
+	var check bool
+	addressGot := `select exists(select * from addresses where users_id=$1 AND id=$2)`
+	err := c.DB.Raw(addressGot, id, addressId).Scan(&check).Error
+	if err != nil {
+		return err
+	}
+	if !check {
+		return fmt.Errorf("wrong address id")
+	}
+
 	//UPDATE THE ADDRESS
 	updatequery := `UPDATE addresses SET users_id=$1,house_number=$2,street=$3,city=$4, district=$5,landmark=$6,pincode=$7,is_default=$8 WHERE users_id=$9 AND id=$10`
-	err := c.DB.Exec(updatequery, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault, id, addressId).Error
+	err = c.DB.Exec(updatequery, id, address.House_number, address.Street, address.City, address.District, address.Landmark, address.Pincode, address.IsDefault, id, addressId).Error
 	return err
 }
 

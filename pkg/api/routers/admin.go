@@ -33,7 +33,7 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		category := admin.Group("/category", middleware.AdminAuth)
 		{
 			category.POST("add", productHandler.CreateCategory)
-			category.PATCH("update/:id", productHandler.UpdatCategory)
+			category.PATCH("update/:id", productHandler.UpdateCategory)
 			category.DELETE("delete/:category_id")
 			category.GET("listall", productHandler.ListCategories)
 			category.GET("/:category_id", productHandler.DisplayCategory)
@@ -44,6 +44,8 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		{
 			product.POST("add", productHandler.AddProduct)
 			product.PATCH("update/:id", productHandler.UpdateProduct)
+			product.GET("/:id", productHandler.DisplayProduct)
+			product.GET("list", productHandler.ListProducts)
 		}
 
 		// Product item

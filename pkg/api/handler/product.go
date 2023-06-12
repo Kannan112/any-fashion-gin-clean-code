@@ -44,6 +44,7 @@ func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 		})
 		return
 	}
+
 	NewCategory, err := cr.productuseCase.CreateCategory(category)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -75,8 +76,7 @@ func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/category/update/{id} [patch]
-
-func (cr *ProductHandler) UpdatCategory(c *gin.Context) {
+func (cr *ProductHandler) UpdateCategory(c *gin.Context) {
 	var category req.Category
 	err := c.Bind(&category)
 	if err != nil {
@@ -168,7 +168,6 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/category/listall [get]
-
 func (cr *ProductHandler) ListCategories(c *gin.Context) {
 
 	count, err1 := strconv.Atoi(c.Query("count"))
@@ -207,7 +206,7 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 
 // FindCategoryByID
 // @Summary Fetch details of a specific category using category id
-// @ID find-category-by-id
+// @ID display-category
 // @Description Users and admins can fetch details of a specific category using id
 // @Tags Product Category
 // @Accept json
@@ -215,9 +214,7 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 // @Param id path string true "category id"
 // @Success 200 {object} res.Response
 // @Failure 422 {object} res.Response
-// @Failure 500 {object} res.Response
 // @Router /admin/category/find/{id} [get]
-
 func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 	var category []res.Product
 	paramsId := c.Param("category_id")
@@ -251,20 +248,19 @@ func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 
 }
 
-// --------ProductItem--------
+// --------Product--------
 
-// CreateProductItem
-// @Summary Creates a new product item
-// @ID create-product-item
+// Create Product
+// @Summary Creates a new produc
+// @ID add-product
 // @Description This endpoint allows an admin user to create a new product item.
-// @Tags Product Item
+// @Tags Product
 // @Accept json
 // @Produce json
-// @Param product_item body req.ProductItem true "Product item details"
+// @Param product body req.Product true "Product details"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
-// @Router /admin/product-item/add/ [post]
-
+// @Router /admin/product/add [post]
 func (cr *ProductHandler) AddProduct(c *gin.Context) {
 	var product req.Product
 	err := c.Bind(&product)
@@ -285,7 +281,7 @@ func (cr *ProductHandler) AddProduct(c *gin.Context) {
 			StatusCode: 400,
 			Message:    "Cant create",
 			Data:       nil,
-			Errors:     err,
+			Errors:     err.Error(),
 		})
 		return
 
@@ -297,6 +293,19 @@ func (cr *ProductHandler) AddProduct(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// Update Product
+// @Summary Update product
+// @ID update-product
+// @Description updating exsisting product details.
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Param product body req.Product true "Product details"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product/update/{id} [patch]
 func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 	var product req.Product
 	productId := c.Param("id")
@@ -385,6 +394,17 @@ func (cr *ProductHandler) ListProducts(c *gin.Context) {
 	})
 }
 
+// Display Products
+// @Summary Display products
+// @ID display-product
+// @Description list all saved products
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product/{id} [patch]
 func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
 	productId := c.Param("id")
 	id, err := strconv.Atoi(productId)

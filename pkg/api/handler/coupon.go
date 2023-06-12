@@ -65,17 +65,6 @@ func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 	})
 }
 
-// DeleteCoupon
-// @Summary Delete a coupon
-// @ID DeleteCoupon
-// @Description Delete coupon
-// @Tags Coupon
-// @Accept json
-// @Produce json
-// @Param couponId path string true "New Admin details"
-// @Success 200 {object} res.Response
-// @Failure 400 {object} res.Response
-// @Router /admin/coupon/delete/{couponId} [delete]
 func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 	strId := ctx.Param("couponId")
 	couponId, err := strconv.Atoi(strId)

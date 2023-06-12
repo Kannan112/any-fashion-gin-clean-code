@@ -1,5 +1,5 @@
 definitions:
-  req.Address:
+  req.AddAddress:
     properties:
       city:
         type: string
@@ -7,8 +7,6 @@ definitions:
         type: string
       house_number:
         type: string
-      id:
-        type: integer
       isdefault:
         type: boolean
       landmark:
@@ -79,6 +77,22 @@ definitions:
     required:
     - phoneNumber
     - pin
+    type: object
+  req.Product:
+    properties:
+      brand:
+        type: string
+      categoryid:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - brand
+    - categoryid
+    - description
+    - name
     type: object
   req.UpdateCoupon:
     properties:
@@ -197,6 +211,85 @@ paths:
       summary: Admin can delete a category
       tags:
       - Product Category
+  /admin/category/find/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Users and admins can fetch details of a specific category using
+        id
+      operationId: display-category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Fetch details of a specific category using category id
+      tags:
+      - Product Category
+  /admin/category/listall:
+    get:
+      consumes:
+      - application/json
+      description: Admin, users and unregistered users can see all the available categories
+      operationId: view-all-categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: View all available categories
+      tags:
+      - Product Category
+  /admin/category/update/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Admin can update category details
+      operationId: update-category
+      parameters:
+      - description: ID of the Category to be updated
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: category info
+        in: body
+        name: category_details
+        required: true
+        schema:
+          $ref: '#/definitions/req.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin can update category details
+      tags:
+      - Product Category
   /admin/coupon:
     get:
       consumes:
@@ -242,32 +335,6 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Admin can create new coupon
-      tags:
-      - Coupon
-  /admin/coupon/delete/{couponId}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete coupon
-      operationId: DeleteCoupon
-      parameters:
-      - description: New Admin details
-        in: path
-        name: couponId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Delete a coupon
       tags:
       - Coupon
   /admin/coupon/update/{couponId}:
@@ -321,6 +388,81 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Admin Dashboard
+      tags:
+      - Admin
+  /admin/product/add:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint allows an admin user to create a new product item.
+      operationId: add-product
+      parameters:
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/req.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Creates a new produc
+      tags:
+      - Product
+  /admin/product/update/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: updating exsisting product details.
+      operationId: update-product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/req.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Update product
+      tags:
+      - Product
+  /admin/salesreport/download:
+    get:
+      consumes:
+      - application/json
+      description: Admin can download sales report in .csv format
+      operationId: download-sales-report
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Admin can download sales report
       tags:
       - Admin
   /admin/user/block:
@@ -380,14 +522,14 @@ paths:
       consumes:
       - application/json
       description: Login as a user to access the ecommerce site
-      operationId: AddAddress
+      operationId: add-address
       parameters:
       - description: Input Field
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/req.Address'
+          $ref: '#/definitions/req.AddAddress'
       produces:
       - application/json
       responses:
@@ -402,12 +544,18 @@ paths:
       summary: Add Address
       tags:
       - Address
-  /user/address/listall:
-    get:
+  /user/address/delete/{addressId}:
+    delete:
       consumes:
       - application/json
-      description: Login as a user to access the ecommerce site
-      operationId: ListallAddres
+      description: user can delete any of his addresses
+      operationId: delete-address
+      parameters:
+      - description: addressId
+        in: path
+        name: addressId
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -419,22 +567,47 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
-      summary: List Address
+      summary: Delete Address
       tags:
       - Address
-  /user/address/update:
-    patch:
+  /user/address/list:
+    get:
       consumes:
       - application/json
       description: Login as a user to access the ecommerce site
-      operationId: UpdateAddress
+      operationId: list-all-addresses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: List Addresses
+      tags:
+      - Address
+  /user/address/update/{addressId}:
+    patch:
+      consumes:
+      - application/json
+      description: user update addresses
+      operationId: update-address
       parameters:
+      - description: addressId
+        in: path
+        name: addressId
+        required: true
+        type: string
       - description: Input Field
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/req.Address'
+          $ref: '#/definitions/req.AddAddress'
       produces:
       - application/json
       responses:
@@ -623,6 +796,93 @@ paths:
       summary: View Profile
       tags:
       - Profile
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Signup as a new user to access the ecommerce site
+      operationId: UserSignUp
+      parameters:
+      - description: User details
+        in: body
+        name: user_details
+        required: true
+        schema:
+          $ref: '#/definitions/req.UserReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user-signup
+      tags:
+      - Users
+  /user/wallet:
+    get:
+      consumes:
+      - application/json
+      description: user wallet displays super-coins
+      operationId: wallet-profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Wallet Profile
+      tags:
+      - Profile-wallet
+  /user/wallet/apply:
+    post:
+      consumes:
+      - application/json
+      description: user can add wallet coins to the cart
+      operationId: apply-wallet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Wallet Profile
+      tags:
+      - Profile-wallet
+  /user/wallet/remove:
+    patch:
+      consumes:
+      - application/json
+      description: user can add wallet coins to the cart
+      operationId: remove-wallet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Wallet Profile
+      tags:
+      - Profile-wallet
   /user/wishlist/add/{itemId}:
     post:
       consumes:
@@ -649,7 +909,7 @@ paths:
       summary: Add Wishlist
       tags:
       - Wishlist
-  /user/wishlist/remove/:itemId:
+  /user/wishlist/remove/{itemId}:
     delete:
       consumes:
       - application/json

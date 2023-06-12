@@ -18,6 +18,17 @@ func NewWalletHandler(WalletUseCase services.WalletUseCase) *WalletHandler {
 		walletUseCase: WalletUseCase,
 	}
 }
+
+// WalletProfile
+// @Summary Wallet Profile
+// @ID wallet-profile
+// @Description user wallet displays super-coins
+// @Tags Profile-wallet
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wallet [get]
 func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
@@ -47,6 +58,17 @@ func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 	})
 
 }
+
+// ApplyWallet
+// @Summary Wallet Profile
+// @ID apply-wallet
+// @Description user can add wallet coins to the cart
+// @Tags Profile-wallet
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wallet/apply [post]
 func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
@@ -76,6 +98,16 @@ func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 	})
 }
 
+// RemoveWallet
+// @Summary Wallet Profile
+// @ID remove-wallet
+// @Description user can add wallet coins to the cart
+// @Tags Profile-wallet
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wallet/remove [patch]
 func (c *WalletHandler) RemoveWallet(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {

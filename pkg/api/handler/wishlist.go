@@ -83,7 +83,7 @@ func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 // @Param itemId path string true "itemId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/wishlist/remove/:itemId [DELETE]
+// @Router /user/wishlist/remove/{itemId} [DELETE]
 func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 	str := c.Param("itemId")
 	itemid, err := strconv.Atoi(str)
@@ -123,6 +123,7 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
 
 func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
 	count, err1 := strconv.Atoi(ctx.Query("count"))

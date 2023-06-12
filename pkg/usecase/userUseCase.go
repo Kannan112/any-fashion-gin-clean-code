@@ -87,13 +87,13 @@ func (c *userUseCase) OtpLogin(phno string) (string, error) {
 }
 
 // -------------------AddAddress-----------
-func (c *userUseCase) AddAddress(id int, body req.Address) error {
+func (c *userUseCase) AddAddress(id int, body req.AddAddress) error {
 	err := c.userRepo.AddAddress(id, body)
 	return err
 }
 
 // -------------------UpdateAddress---------------
-func (c *userUseCase) UpdateAddress(id int, addressId int, address req.Address) error {
+func (c *userUseCase) UpdateAddress(id int, addressId int, address req.AddAddress) error {
 	err := c.userRepo.UpdateAddress(id, addressId, address)
 	return err
 }

@@ -14,8 +14,8 @@ type UserRepository interface {
 	IsSignIn(phno string) (bool, error)
 	OtpLogin(phone string) (int, error)
 	FindAddress(ctx context.Context, userId int) (bool, error)
-	AddAddress(id int, address req.Address) error
-	UpdateAddress(id int, addressId int, address req.Address) error
+	AddAddress(id int, address req.AddAddress) error
+	UpdateAddress(id int, addressId int, address req.AddAddress) error
 	ListallAddress(id int) ([]domain.Addresss, error)
 	DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)

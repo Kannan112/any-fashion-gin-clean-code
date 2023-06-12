@@ -32,3 +32,12 @@ type Otpverifier struct {
 	Phone string `json:"phoneNumber,omitempty" validate:"required"`
 }
 
+type AddAddress struct {
+	House_number string `json:"house_number" binding:"required"`
+	Street       string `json:"street" binding:"required"`
+	City         string `json:"city" binding:"required"`
+	District     string `json:"district" binding:"required"`
+	Landmark     string `json:"landmark" binding:"required"`
+	Pincode      int    `json:"pincode" binding:"required"`
+	IsDefault    bool   `json:"isdefault" `
+}

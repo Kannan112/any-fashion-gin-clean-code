@@ -9,6 +9,10 @@ import (
 )
 
 type AdminRepository interface {
+	//SuperAdmin
+	//SuperAdminLogin(ctx context.Context)
+	//CheckSuperAdmin(ctx context.Context, email string) (bool, error)
+
 	FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error)
 	CreateAdmin(ctx context.Context, admin domain.Admin) error
 	AdminLogin(email string) (domain.Admin, error)
@@ -20,6 +24,6 @@ type AdminRepository interface {
 	ListUsers(ctx context.Context) ([]domain.UsersData, error)
 	FindUserByEmail(ctx context.Context, name string) (domain.UsersData, error)
 
-	//sales report
+	//SalesReport
 	ViewSalesReport(ctx context.Context) ([]res.SalesReport, error)
 }

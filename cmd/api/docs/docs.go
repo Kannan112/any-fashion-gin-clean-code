@@ -136,6 +136,123 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/category/find/{id}": {
+            "get": {
+                "description": "Users and admins can fetch details of a specific category using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Category"
+                ],
+                "summary": "Fetch details of a specific category using category id",
+                "operationId": "display-category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/category/listall": {
+            "get": {
+                "description": "Admin, users and unregistered users can see all the available categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Category"
+                ],
+                "summary": "View all available categories",
+                "operationId": "view-all-categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/category/update/{id}": {
+            "patch": {
+                "description": "Admin can update category details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Category"
+                ],
+                "summary": "Admin can update category details",
+                "operationId": "update-category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the Category to be updated",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "category info",
+                        "name": "category_details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/coupon": {
             "get": {
                 "description": "Admins and users can see all available coupons",
@@ -189,45 +306,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/req.Coupons"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/coupon/delete/{couponId}": {
-            "delete": {
-                "description": "Delete coupon",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupon"
-                ],
-                "summary": "Delete a coupon",
-                "operationId": "DeleteCoupon",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "New Admin details",
-                        "name": "couponId",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -315,6 +393,119 @@ const docTemplate = `{
                             "$ref": "#/definitions/res.Response"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/product/add": {
+            "post": {
+                "description": "This endpoint allows an admin user to create a new product item.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Creates a new produc",
+                "operationId": "add-product",
+                "parameters": [
+                    {
+                        "description": "Product details",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/product/update/{id}": {
+            "patch": {
+                "description": "updating exsisting product details.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update product",
+                "operationId": "update-product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Product details",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/salesreport/download": {
+            "get": {
+                "description": "Admin can download sales report in .csv format",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin can download sales report",
+                "operationId": "download-sales-report",
+                "responses": {
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -416,7 +607,7 @@ const docTemplate = `{
                     "Address"
                 ],
                 "summary": "Add Address",
-                "operationId": "AddAddress",
+                "operationId": "add-address",
                 "parameters": [
                     {
                         "description": "Input Field",
@@ -424,7 +615,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/req.Address"
+                            "$ref": "#/definitions/req.AddAddress"
                         }
                     }
                 ],
@@ -444,7 +635,46 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/address/listall": {
+        "/user/address/delete/{addressId}": {
+            "delete": {
+                "description": "user can delete any of his addresses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Delete Address",
+                "operationId": "delete-address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "addressId",
+                        "name": "addressId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/address/list": {
             "get": {
                 "description": "Login as a user to access the ecommerce site",
                 "consumes": [
@@ -456,8 +686,8 @@ const docTemplate = `{
                 "tags": [
                     "Address"
                 ],
-                "summary": "List Address",
-                "operationId": "ListallAddres",
+                "summary": "List Addresses",
+                "operationId": "list-all-addresses",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -474,9 +704,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/address/update": {
+        "/user/address/update/{addressId}": {
             "patch": {
-                "description": "Login as a user to access the ecommerce site",
+                "description": "user update addresses",
                 "consumes": [
                     "application/json"
                 ],
@@ -487,15 +717,22 @@ const docTemplate = `{
                     "Address"
                 ],
                 "summary": "Update Address",
-                "operationId": "UpdateAddress",
+                "operationId": "update-address",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "addressId",
+                        "name": "addressId",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Input Field",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/req.Address"
+                            "$ref": "#/definitions/req.AddAddress"
                         }
                     }
                 ],
@@ -778,6 +1015,137 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/signup": {
+            "post": {
+                "description": "Signup as a new user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "user-signup",
+                "operationId": "UserSignUp",
+                "parameters": [
+                    {
+                        "description": "User details",
+                        "name": "user_details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/wallet": {
+            "get": {
+                "description": "user wallet displays super-coins",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile-wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "wallet-profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/wallet/apply": {
+            "post": {
+                "description": "user can add wallet coins to the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile-wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "apply-wallet",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/wallet/remove": {
+            "patch": {
+                "description": "user can add wallet coins to the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile-wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "remove-wallet",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/wishlist/add/{itemId}": {
             "post": {
                 "description": "Login as a user to access the ecommerce site",
@@ -817,7 +1185,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/wishlist/remove/:itemId": {
+        "/user/wishlist/remove/{itemId}": {
             "delete": {
                 "description": "Remove item from wishlist",
                 "consumes": [
@@ -858,7 +1226,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "req.Address": {
+        "req.AddAddress": {
             "type": "object",
             "required": [
                 "city",
@@ -877,9 +1245,6 @@ const docTemplate = `{
                 },
                 "house_number": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "isdefault": {
                     "type": "boolean"
@@ -975,6 +1340,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pin": {
+                    "type": "string"
+                }
+            }
+        },
+        "req.Product": {
+            "type": "object",
+            "required": [
+                "brand",
+                "categoryid",
+                "description",
+                "name"
+            ],
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "categoryid": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 }
             }

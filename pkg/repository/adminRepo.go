@@ -21,6 +21,12 @@ func NewAdminRepository(DB *gorm.DB) interfaces.AdminRepository {
 	return &AdminDatabase{DB}
 }
 
+// func (c *AdminDatabase) CheckSuperAdmin(ctx context.Context, email string) (bool, error) {
+// 	check := `select exists(select * from admins where email AND is_super=true)`
+// 	err := c.DB.Exec(check, email).Error
+// 	return true, err
+//}
+
 // Find Admin FOR super admin
 func (a *AdminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error) {
 	if err := a.DB.Where("email = ? OR user_name = ?", admin.Email, admin.UserName).First(&admin).Error; err != nil {
@@ -176,5 +182,4 @@ func (c *AdminDatabase) ViewSalesReport(ctx context.Context) ([]res.SalesReport,
 		return sales, err
 	}
 	return sales, nil
-
 }

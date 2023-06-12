@@ -19,7 +19,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		// User routes
 		user.POST("/signup", userHandler.UserSignUp)
 		user.POST("/login", userHandler.UserLogin)
-		user.POST("/logout", userHandler.UserLogout)
+		user.GET("/logout", userHandler.UserLogout)
 
 		// Profile
 		profile := user.Group("/profile")
@@ -34,7 +34,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 			address.POST("add", userHandler.AddAddress)
 			address.PATCH("update/:addressId", userHandler.UpdateAddress)
 			address.GET("list", userHandler.ListallAddress)
-			address.DELETE("delete/:id", userHandler.DeleteAddress)
+			address.DELETE("delete/:addressId", userHandler.DeleteAddress)
 		}
 
 		// Wishlist
