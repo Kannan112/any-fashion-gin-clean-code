@@ -36,7 +36,7 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 			category.PATCH("update/:id", productHandler.UpdateCategory)
 			category.DELETE("delete/:category_id")
 			category.GET("listall", productHandler.ListCategories)
-			category.GET("/:category_id", productHandler.DisplayCategory)
+			category.GET("listspecific/:category_id", productHandler.DisplayCategory)
 		}
 
 		// Product

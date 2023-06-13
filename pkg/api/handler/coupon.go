@@ -181,6 +181,17 @@ func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 
 //--------------------------------Users Side-----------------------------------------
 
+// ApplyCoupon
+// @Summary  user apply coupon
+// @ID apply-coupon
+// @Description  user can use his coupon code in cart
+// @Tags Coupon
+// @Accept json
+// @Produce json
+// @Param code path string true "code"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/coupon/apply/{code} [post]
 func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
@@ -210,6 +221,17 @@ func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// RemoveCoupon
+// @Summary  user remove coupon
+// @ID remove-coupon
+// @Description  user can remove the apply code in cart
+// @Tags Coupon
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/coupon/remove [delete]
 func (c *CouponHandler) RemoveCoupon(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {

@@ -1,4 +1,23 @@
 definitions:
+  domain.Admin:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      isSuper:
+        type: boolean
+      password:
+        maxLength: 30
+        minLength: 5
+        type: string
+      user_name:
+        maxLength: 15
+        minLength: 3
+        type: string
+    required:
+    - password
+    type: object
   req.AddAddress:
     properties:
       city:
@@ -184,7 +203,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Create new product category
       tags:
-      - Product Category
+      - Category
   /admin/category/delete/{category_id}:
     delete:
       consumes:
@@ -210,34 +229,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Admin can delete a category
       tags:
-      - Product Category
-  /admin/category/find/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Users and admins can fetch details of a specific category using
-        id
-      operationId: display-category
-      parameters:
-      - description: category id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Fetch details of a specific category using category id
-      tags:
-      - Product Category
+      - Category
   /admin/category/listall:
     get:
       consumes:
@@ -257,7 +249,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: View all available categories
       tags:
-      - Product Category
+      - Category
   /admin/category/update/{id}:
     patch:
       consumes:
@@ -289,7 +281,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Admin can update category details
       tags:
-      - Product Category
+      - Category
   /admin/coupon:
     get:
       consumes:
@@ -369,6 +361,33 @@ paths:
       summary: Update a existing coupon
       tags:
       - Coupon
+  /admin/createadmin:
+    post:
+      consumes:
+      - application/json
+      description: admin creation
+      operationId: CreateAdmin
+      parameters:
+      - description: New Admin details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Admin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Create a new admin from admin panel
+      tags:
+      - Admin
   /admin/dashbord/list:
     get:
       consumes:
@@ -390,6 +409,50 @@ paths:
       summary: Admin Dashboard
       tags:
       - Admin
+  /admin/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logs out a logged-in admin from the E-commerce web api admin panel
+      operationId: admin-logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+      summary: Admin Logout
+      tags:
+      - Admin
+  /admin/product/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: list all saved products
+      operationId: display-product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Display products
+      tags:
+      - Product
   /admin/product/add:
     post:
       consumes:
@@ -622,16 +685,36 @@ paths:
       summary: Update Address
       tags:
       - Address
-  /user/cart/add/:product_item_id:
+  /user/cart-item/list:
+    get:
+      consumes:
+      - application/json
+      description: User can view items in cart
+      operationId: list-cart-items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user can view
+      tags:
+      - Cart
+  /user/cart/add/{product_items_id}:
     post:
       consumes:
       - application/json
       description: User can add product item to the cart
       operationId: add-to-cart
       parameters:
-      - description: product_item_id
+      - description: product_items_id
         in: path
-        name: product-items-id
+        name: product_items_id
         required: true
         type: string
       produces:
@@ -648,6 +731,145 @@ paths:
       summary: User add product-item to cart
       tags:
       - Cart
+  /user/cart/list:
+    get:
+      consumes:
+      - application/json
+      description: User can view the cart with amount
+      operationId: list-cart
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user can view
+      tags:
+      - Cart
+  /user/cart/orderAll:
+    get:
+      consumes:
+      - application/json
+      description: order all cart items
+      operationId: order-all
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order cart
+      tags:
+      - Order
+  /user/cart/remove/{product_item_id}:
+    delete:
+      consumes:
+      - application/json
+      description: User can remove product item from carts
+      operationId: remove-from-cart
+      parameters:
+      - description: product_item_id
+        in: path
+        name: product_item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user remove item
+      tags:
+      - Cart
+  /user/category/listspecific/{category_id}:
+    get:
+      consumes:
+      - application/json
+      description: Users and admins can fetch details of a specific category using
+        id
+      operationId: display-category
+      parameters:
+      - description: category_id
+        in: path
+        name: category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Fetch details of a specific category using category id
+      tags:
+      - Category
+  /user/coupon/apply/{code}:
+    post:
+      consumes:
+      - application/json
+      description: user can use his coupon code in cart
+      operationId: apply-coupon
+      parameters:
+      - description: code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user apply coupon
+      tags:
+      - Coupon
+  /user/coupon/remove:
+    delete:
+      consumes:
+      - application/json
+      description: user can remove the apply code in cart
+      operationId: remove-coupon
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: user remove coupon
+      tags:
+      - Coupon
   /user/login:
     post:
       consumes:
@@ -907,6 +1129,35 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Add Wishlist
+      tags:
+      - Wishlist
+  /user/wishlist/list:
+    get:
+      consumes:
+      - application/json
+      description: list all added items
+      operationId: list-all-wishlist
+      parameters:
+      - description: Page number for pagination
+        in: query
+        name: page
+        type: integer
+      - description: Number of items to retrieve per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: List wishl list
       tags:
       - Wishlist
   /user/wishlist/remove/{itemId}:

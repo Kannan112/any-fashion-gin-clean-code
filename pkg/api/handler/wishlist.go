@@ -124,23 +124,37 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 	})
 }
 
-
+// Wishlist
+// @Summary List wishl list
+// @ID list-all-wishlist
+// @Description list all added items
+// @Tags Wishlist
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number for pagination"
+// @Param limit query int false "Number of items to retrieve per page"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/wishlist/list [GET]
 func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
-	count, err1 := strconv.Atoi(ctx.Query("count"))
-	page, err2 := strconv.Atoi(ctx.Query("page"))
-	if err1 != nil || err2 != nil {
-		ctx.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "page not found",
-			Data:       nil,
-			Errors:     err1,
-		})
-		return
-	}
 	var pagenation req.Pagenation
-	pagenation.Count = count
-	pagenation.Page = page
-
+	countstr := ctx.Query("count")
+	pagestr := ctx.Query("page")
+	if countstr != "" || pagestr != "" {
+		count, err1 := strconv.Atoi(countstr)
+		page, err2 := strconv.Atoi(pagestr)
+		pagenation.Count = count
+		pagenation.Page = page
+		if err1 != nil || err2 != nil {
+			ctx.JSON(http.StatusBadRequest, res.Response{
+				StatusCode: 400,
+				Message:    "page not found",
+				Data:       nil,
+				Errors:     err1,
+			})
+			return
+		}
+	}
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{

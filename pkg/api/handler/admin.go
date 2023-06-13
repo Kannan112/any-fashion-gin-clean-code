@@ -31,11 +31,10 @@ func NewAdminSHandler(admiUseCase services.AdminUsecase) *AdminHandler {
 // @Tags Admin
 // @Accept json
 // @Produce json
-// @Param admin body req.CreateAdmin true "New Admin details"
+// @Param admin body domain.Admin true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/createadmin [post]
-
 func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 	var adminData domain.Admin
 	if err := c.Bind(&adminData); err != nil {
@@ -120,7 +119,6 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Failure 400
 // @Router /admin/logout [post]
-
 func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 	c.SetCookie("AdminAuth", "", -1, "", "", false, true)
 	c.JSON(http.StatusOK, res.Response{

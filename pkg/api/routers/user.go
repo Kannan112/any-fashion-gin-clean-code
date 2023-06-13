@@ -46,7 +46,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		}
 
 		// Categories
-		categories := user.Group("categories", middleware.UserAuth)
+		categories := user.Group("category", middleware.UserAuth)
 		{
 			categories.GET("listall", productHandler.ListCategories)
 			categories.GET("listspecific/:category_id", productHandler.DisplayCategory)
@@ -68,7 +68,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
 			cart.POST("add/:product_items_id", cartHandler.AddToCart)
-			cart.PATCH("remove/:product_item_id", cartHandler.RemoveFromCart)
+			cart.DELETE("remove/:product_item_id", cartHandler.RemoveFromCart)
 			cart.GET("list", cartHandler.ListCart)
 		}
 
@@ -84,7 +84,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		{
 			order.GET("/razorpay/checkout/:payment_id", orderHandler.RazorPayCheckout)
 			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
-			order.POST("orderAll", orderHandler.OrderAll)
+			order.GET("orderAll", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListOrdersOfUsers)
 			order.GET("/:orderId", orderHandler.OrderDetails)
@@ -93,7 +93,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		// Coupon
 		coupon := user.Group("/coupon", middleware.UserAuth)
 		{
-			coupon.GET("apply", couponHandler.ApplyCoupon)
+			coupon.POST("apply", couponHandler.ApplyCoupon)
 			coupon.PATCH("remove", couponHandler.RemoveCoupon)
 		}
 
@@ -102,7 +102,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		{
 			wallet.GET("", walletHandler.WallerProfile)
 			wallet.POST("/apply", walletHandler.ApplyWallet)
-			wallet.PATCH("/remove", walletHandler.RemoveWallet)
+			wallet.DELETE("/remove", walletHandler.RemoveWallet)
 			//wallet apply while purchasing{reduce the amount in wallet}
 		}
 	}

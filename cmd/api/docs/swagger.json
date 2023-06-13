@@ -54,7 +54,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product Category"
+                    "Category"
                 ],
                 "summary": "Create new product category",
                 "operationId": "create-category",
@@ -95,7 +95,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product Category"
+                    "Category"
                 ],
                 "summary": "Admin can delete a category",
                 "operationId": "delete-category",
@@ -124,45 +124,6 @@
                 }
             }
         },
-        "/admin/category/find/{id}": {
-            "get": {
-                "description": "Users and admins can fetch details of a specific category using id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product Category"
-                ],
-                "summary": "Fetch details of a specific category using category id",
-                "operationId": "display-category",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "category id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/admin/category/listall": {
             "get": {
                 "description": "Admin, users and unregistered users can see all the available categories",
@@ -173,7 +134,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product Category"
+                    "Category"
                 ],
                 "summary": "View all available categories",
                 "operationId": "view-all-categories",
@@ -203,7 +164,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product Category"
+                    "Category"
                 ],
                 "summary": "Admin can update category details",
                 "operationId": "update-category",
@@ -360,6 +321,47 @@
                 }
             }
         },
+        "/admin/createadmin": {
+            "post": {
+                "description": "admin creation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Create a new admin from admin panel",
+                "operationId": "CreateAdmin",
+                "parameters": [
+                    {
+                        "description": "New Admin details",
+                        "name": "admin",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/dashbord/list": {
             "get": {
                 "description": "Admin can access dashboard and view details regarding orders, products, etc.",
@@ -386,6 +388,33 @@
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
+                    }
+                }
+            }
+        },
+        "/admin/logout": {
+            "post": {
+                "description": "Logs out a logged-in admin from the E-commerce web api admin panel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Logout",
+                "operationId": "admin-logout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     }
                 }
             }
@@ -461,6 +490,45 @@
                         "schema": {
                             "$ref": "#/definitions/req.Product"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/product/{id}": {
+            "patch": {
+                "description": "list all saved products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Display products",
+                "operationId": "display-product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -740,7 +808,37 @@
                 }
             }
         },
-        "/user/cart/add/:product_item_id": {
+        "/user/cart-item/list": {
+            "get": {
+                "description": "User can view items in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user can view",
+                "operationId": "list-cart-items",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/cart/add/{product_items_id}": {
             "post": {
                 "description": "User can add product item to the cart",
                 "consumes": [
@@ -757,12 +855,219 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "product_item_id",
-                        "name": "product-items-id",
+                        "description": "product_items_id",
+                        "name": "product_items_id",
                         "in": "path",
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/cart/list": {
+            "get": {
+                "description": "User can view the cart with amount",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user can view",
+                "operationId": "list-cart",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/cart/orderAll": {
+            "get": {
+                "description": "order all cart items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order cart",
+                "operationId": "order-all",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/cart/remove/{product_item_id}": {
+            "delete": {
+                "description": "User can remove product item from carts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user remove item",
+                "operationId": "remove-from-cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product_item_id",
+                        "name": "product_item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/category/listspecific/{category_id}": {
+            "get": {
+                "description": "Users and admins can fetch details of a specific category using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Fetch details of a specific category using category id",
+                "operationId": "display-category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/coupon/apply/{code}": {
+            "post": {
+                "description": "user can use his coupon code in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "user apply coupon",
+                "operationId": "apply-coupon",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/coupon/remove": {
+            "delete": {
+                "description": "user can remove the apply code in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "user remove coupon",
+                "operationId": "remove-coupon",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1173,6 +1478,50 @@
                 }
             }
         },
+        "/user/wishlist/list": {
+            "get": {
+                "description": "list all added items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "List wishl list",
+                "operationId": "list-all-wishlist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items to retrieve per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/wishlist/remove/{itemId}": {
             "delete": {
                 "description": "Remove item from wishlist",
@@ -1214,6 +1563,33 @@
         }
     },
     "definitions": {
+        "domain.Admin": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSuper": {
+                    "type": "boolean"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "minLength": 5
+                },
+                "user_name": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "minLength": 3
+                }
+            }
+        },
         "req.AddAddress": {
             "type": "object",
             "required": [

@@ -25,6 +25,16 @@ func NewOrderHandler(orderUseCase services.OrderUseCase, walletUseCase services.
 	}
 }
 
+// Cash on delevery
+// @Summary order cart
+// @ID order-all
+// @Description order all cart items
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/cart/orderAll [get]
 func (cr *OrderHandler) OrderAll(c *gin.Context) {
 
 	userId, err := handlerUtil.GetUserIdFromContext(c)
@@ -369,18 +379,6 @@ func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
 			return
 		}
 	}
-
-	// var filter req.FilterByDate
-	// err := ctx.Bind(&filter)
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, res.Response{
-	// 		StatusCode: 400,
-	// 		Message:    "failed to bind",
-	// 		Data:       nil,
-	// 		Errors:     err.Error(),
-	// 	})
-	// 	return
-	// }
 	viewOrder, err := c.orderUsecase.ViewOrder(ctx, startDate, endDate)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{

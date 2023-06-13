@@ -25,7 +25,7 @@ func NewProductHandler(productUseCase services.ProductUseCase) *ProductHandler {
 // @Summary Create new product category
 // @ID create-category
 // @Description Admin can create new category from admin panel
-// @Tags Product Category
+// @Tags Category
 // @Accept json
 // @Produce json
 // @Param category_name body req.Category true "New category name"
@@ -68,7 +68,7 @@ func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 // @Summary Admin can update category details
 // @ID update-category
 // @Description Admin can update category details
-// @Tags Product Category
+// @Tags Category
 // @Accept json
 // @Produce json
 // @Param id path string true "ID of the Category to be updated"
@@ -121,7 +121,7 @@ func (cr *ProductHandler) UpdateCategory(c *gin.Context) {
 // @Summary Admin can delete a category
 // @ID delete-category
 // @Description Admin can delete a category
-// @Tags Product Category
+// @Tags Category
 // @Accept json
 // @Produce json
 // @Param category_id path string true "category_id"
@@ -162,29 +162,33 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Summary View all available categories
 // @ID view-all-categories
 // @Description Admin, users and unregistered users can see all the available categories
-// @Tags Product Category
+// @Tags Category
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/category/listall [get]
 func (cr *ProductHandler) ListCategories(c *gin.Context) {
-
-	count, err1 := strconv.Atoi(c.Query("count"))
-	page, err2 := strconv.Atoi(c.Query("page"))
-	if err1 != nil || err2 != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "page not found",
-			Data:       nil,
-			Errors:     err1,
-		})
-		return
-	}
 	var pagenation req.Pagenation
-	pagenation.Count = count
-	pagenation.Page = page
-	fmt.Printf("count: %v,page: %v", count, page)
+	countStr := c.Query("count")
+	pageStr := c.Query("page")
+	if countStr != "" || pageStr != "" {
+		count, err1 := strconv.Atoi(countStr)
+		page, err := strconv.Atoi(pageStr)
+		pagenation.Count = count
+		pagenation.Page = page
+		if err != nil || err1 != nil {
+			c.JSON(http.StatusBadRequest, res.Response{
+				StatusCode: 400,
+				Message:    "page not found",
+				Data:       nil,
+				Errors:     err,
+			})
+			return
+		}
+
+	}
+	fmt.Printf("count: %v,page: %v", pagenation.Count, pagenation.Page)
 	categories, err := cr.productuseCase.ListCategories(c, pagenation)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -208,13 +212,13 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 // @Summary Fetch details of a specific category using category id
 // @ID display-category
 // @Description Users and admins can fetch details of a specific category using id
-// @Tags Product Category
+// @Tags Category
 // @Accept json
 // @Produce json
-// @Param id path string true "category id"
+// @Param category_id path string true "category_id"
 // @Success 200 {object} res.Response
 // @Failure 422 {object} res.Response
-// @Router /admin/category/find/{id} [get]
+// @Router /user/category/listspecific/{category_id} [get]
 func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 	var category []res.Product
 	paramsId := c.Param("category_id")
@@ -346,6 +350,7 @@ func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
 func (cr *ProductHandler) DeleteProduct(c *gin.Context) {
 	productId := c.Param("id")
 	id, err := strconv.Atoi(productId)
@@ -375,6 +380,19 @@ func (cr *ProductHandler) DeleteProduct(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// List Product
+// @Summary Update product
+// @ID update-product
+// @Description updating exsisting product details.
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Param product body req.Product true "Product details"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product/update/{id} [patch]
 func (cr *ProductHandler) ListProducts(c *gin.Context) {
 	product, err := cr.productuseCase.ListProducts()
 	if err != nil {

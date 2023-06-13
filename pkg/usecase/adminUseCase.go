@@ -100,6 +100,3 @@ func (c *adminUseCase) ViewSalesReport(ctx context.Context) ([]res.SalesReport, 
 	report, err := c.adminRepo.ViewSalesReport(ctx)
 	return report, err
 }
-
-
-

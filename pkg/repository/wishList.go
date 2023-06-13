@@ -88,41 +88,39 @@ func (c *WishListDataBase) RemoveFromWishlist(ctx context.Context, userid, itemI
 
 func (c *WishListDataBase) ListAllWishlist(ctx context.Context, userId int, pagenation req.Pagenation) ([]res.ProductItem, error) {
 	var wishlists []res.ProductItem
-	limit := pagenation.Count
-	offset := (pagenation.Page - 1) * limit
-	var check bool
-	query := `SELECT EXISTS (SELECT 1 FROM wish_lists)`
-	err := c.DB.Raw(query).Scan(&check).Error
-	if err != nil {
-		return nil, err
-	}
-	if !check {
-		return nil, fmt.Errorf("wish list is empty")
-	}
-	query2 := `SELECT pi.id,
-	w.item_id,
-	pi.sku,
-	pi.qnty_in_stock,
-	pi.color,
-	pi.gender,
-	pi.material,
-	pi.size,
-	pi.model,
-	pi.price,
-	p.product_name,
-	p.description,
-	p.brand,
-	c.name 
-FROM wish_lists w
-JOIN product_items pi ON w.item_id=pi.id
-JOIN products p ON pi.product_id=p.id
-JOIN categories c ON p.category_id = c.id
-WHERE w.users_id=$1
-OFFSET $2
-LIMIT $3;
-`
+	var err error
 
-	err = c.DB.Raw(query2, userId, offset, limit).Scan(&wishlists).Error
+	if pagenation.Count == 0 || pagenation.Page == 0 {
+		err = c.DB.Table("wish_lists").
+			Select("pi.id, wish_lists.item_id, pi.sku, pi.qnty_in_stock, pi.color, pi.gender, pi.material, pi.size, pi.model, pi.price, p.product_name, p.description, p.brand, c.name").
+			Joins("JOIN product_items pi ON wish_lists.item_id = pi.id").
+			Joins("JOIN products p ON pi.product_id = p.id").
+			Joins("JOIN categories c ON p.category_id = c.id").
+			Where("wish_lists.users_id = ?", userId).
+			Scan(&wishlists).Error
+	} else {
+		limit := pagenation.Count
+		offset := (pagenation.Page - 1) * limit
+		var check bool
+		query := `SELECT EXISTS (SELECT 1 FROM wish_lists)`
+		err = c.DB.Raw(query).Scan(&check).Error
+		if err != nil {
+			return nil, err
+		}
+		if !check {
+			return nil, fmt.Errorf("wish list is empty")
+		}
+		query2 := `SELECT pi.id, w.item_id, pi.sku, pi.qnty_in_stock, pi.color, pi.gender, pi.material, pi.size, pi.model, pi.price, p.product_name, p.description, p.brand, c.name 
+			FROM wish_lists w
+			JOIN product_items pi ON w.item_id = pi.id
+			JOIN products p ON pi.product_id = p.id
+			JOIN categories c ON p.category_id = c.id
+			WHERE w.users_id = $1
+			OFFSET $2
+			LIMIT $3;`
+		err = c.DB.Raw(query2, userId, offset, limit).Scan(&wishlists).Error
+	}
+
 	return wishlists, err
 }
 

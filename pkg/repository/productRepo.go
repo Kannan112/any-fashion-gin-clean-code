@@ -41,13 +41,22 @@ func (c *ProductDataBase) DeleteCategory(id int) error {
 
 func (c *ProductDataBase) ListCategories(ctx context.Context, pagenation req.Pagenation) ([]res.Category, error) {
 	var categories []res.Category
-	fmt.Println("page", pagenation.Count, "count", pagenation.Count)
+
+	// Check if pagination parameters are empty or zero
+	if pagenation.Count == 0 && pagenation.Page == 0 {
+		// Retrieve all categories
+		query := `SELECT id, name FROM categories ORDER BY id ASC`
+		err := c.DB.Raw(query).Scan(&categories).Error
+		return categories, err
+	}
+
 	limit := pagenation.Count
 	offset := (pagenation.Page - 1) * limit
-	query := `SELECT id,name FROM categories order by id ASC limit $1 offset $2`
+	query := `SELECT id, name FROM categories ORDER BY id ASC LIMIT $1 OFFSET $2`
 	err := c.DB.Raw(query, limit, offset).Scan(&categories).Error
 	return categories, err
 }
+
 
 func (c *ProductDataBase) DisplayCategory(id int) ([]res.Product, error) {
 	var product []res.Product

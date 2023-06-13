@@ -27,10 +27,10 @@ func NewCartHandler(cartUsecases services.CartUseCases) *CartHandler {
 // @Tags Cart
 // @Accept json
 // @Produce json
-// @Param product-items-id path string true "product_item_id"
+// @Param product_items_id path string true "product_items_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart/add/:product_item_id [post]
+// @Router /user/cart/add/{product_items_id} [post]
 func (cr *CartHandler) AddToCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -70,6 +70,18 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 }
 
 // remove from cart
+
+// RemoveFromCart
+// @Summary user remove item
+// @ID remove-from-cart
+// @Description User can remove product item from carts
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Param product_item_id path string true "product_item_id"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/cart/remove/{product_item_id} [delete]
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -112,6 +124,17 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 }
 
 // Llist cart
+
+// List Cart
+// @Summary user can view
+// @ID list-cart
+// @Description User can view the cart with amount
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/cart/list [get]
 func (cr *CartHandler) ListCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -140,6 +163,17 @@ func (cr *CartHandler) ListCart(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// List Cart items
+// @Summary user can view
+// @ID list-cart-items
+// @Description User can view items in cart
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/cart-item/list [get]
 func (c *CartHandler) ListCartItems(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
