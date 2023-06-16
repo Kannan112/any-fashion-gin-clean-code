@@ -29,7 +29,7 @@ func NewOrderHandler(orderUseCase services.OrderUseCase, walletUseCase services.
 // @Summary order cart
 // @ID order-all
 // @Description order all cart items
-// @Tags Order
+// @Tags Cart
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response
@@ -66,6 +66,17 @@ func (cr *OrderHandler) OrderAll(c *gin.Context) {
 	})
 }
 
+// User Cancel Order
+// @Summary order cart
+// @ID user-cancel-order
+// @Description user cancel order
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param orderId path string true "orderId"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/order/cancel/{orderId} [patch]
 func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -115,6 +126,17 @@ func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// User List Order
+// @Summary order status
+// @ID list-all-order
+// @Description user can view all his orders
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /user/order/listall [get]
 func (ch *OrderHandler) ListAllOrders(c *gin.Context) {
 	StartDateStr := c.Query("start")
 	EndDateStr := c.Query("end")
@@ -309,6 +331,16 @@ func (cr *OrderHandler) OrderDetails(ctx *gin.Context) {
 
 }
 
+// List Order By Placed
+// @Summary order placed
+// @ID list-order-by-placed
+// @Description admin list order placed
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/order/placed [get]
 func (c *OrderHandler) ListOrderByPlaced(ctx *gin.Context) {
 	data, err := c.orderUsecase.ListOrderByPlaced(ctx)
 	if err != nil {
@@ -328,6 +360,17 @@ func (c *OrderHandler) ListOrderByPlaced(ctx *gin.Context) {
 	})
 
 }
+
+// List Order By Cancelled
+// @Summary order cancelled
+// @ID list-order-by-cancelled
+// @Description admin view order cancelled
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/order/cancelled [get]
 func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
 	data, err := c.orderUsecase.ListOrderByCancelled(ctx)
 	if err != nil {
@@ -347,6 +390,18 @@ func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
 	})
 }
 
+// Admin View Order
+// @Summary order view
+// @ID view-order
+// @Description admin can view orders
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param start query string false "Start date (format: 2006-1-2)"
+// @Param end query string false "End date (format: 2006-1-2)"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/order [get]
 func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
 	startDateStr := ctx.Query("start")
 	endDateStr := ctx.Query("end")
@@ -426,6 +481,18 @@ func (c *OrderHandler) ListOrdersOfUsers(ctx *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// Admin Order Details
+// @Summary order details
+// @ID admin-order-details
+// @Description admin can view orders
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param orderid path string true "orderid"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /admin/order/{orderid} [post]
 func (c *OrderHandler) AdminOrderDetails(ctx *gin.Context) {
 	orderId, err := strconv.Atoi(ctx.Param("orderid"))
 	if err != nil {

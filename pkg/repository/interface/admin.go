@@ -12,9 +12,9 @@ type AdminRepository interface {
 	//SuperAdmin
 	//SuperAdminLogin(ctx context.Context)
 	//CheckSuperAdmin(ctx context.Context, email string) (bool, error)
-
+	IsSuperAdmin(createrId int) (bool, error)
 	FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error)
-	CreateAdmin(ctx context.Context, admin domain.Admin) error
+	CreateAdmin(admin req.CreateAdmin) (res.AdminData, error)
 	AdminLogin(email string) (domain.Admin, error)
 
 	//DashBord

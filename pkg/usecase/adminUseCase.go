@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -25,24 +24,23 @@ func NewAdminUseCase(adminRepo interfaces.AdminRepository) services.AdminUsecase
 	}
 }
 
-func (c *adminUseCase) CreateAdmin(ctx context.Context, admin domain.Admin) error {
-
-	cadmin, err := c.adminRepo.FindAdmin(ctx, admin)
+func (c *adminUseCase) CreateAdmin(ctx context.Context, admin req.CreateAdmin, createrId int) (res.AdminData, error) {
+	IsSuper, err := c.adminRepo.IsSuperAdmin(createrId)
 	if err != nil {
-		return err
-	} else if cadmin.ID != 0 {
-		return errors.New("can't save admin already exist")
+		return res.AdminData{}, err
 	}
-	// generate a hashed password for admin
-	hashPass, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
+	if !IsSuper {
+		return res.AdminData{}, fmt.Errorf("not a super admin")
+	}
 
+	hash, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
 	if err != nil {
-		return errors.New("failed to generate hashed password for admin")
+		return res.AdminData{}, err
 	}
-	// set the hashed password on the admin
-	admin.Password = string(hashPass)
+	admin.Password = string(hash)
+	adminData, err := c.adminRepo.CreateAdmin(admin)
 
-	return c.adminRepo.CreateAdmin(ctx, admin)
+	return adminData, err
 }
 
 func (c *adminUseCase) AdminLogin(admin req.LoginReq) (string, error) {

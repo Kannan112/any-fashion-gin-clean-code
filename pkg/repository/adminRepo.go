@@ -25,7 +25,14 @@ func NewAdminRepository(DB *gorm.DB) interfaces.AdminRepository {
 // 	check := `select exists(select * from admins where email AND is_super=true)`
 // 	err := c.DB.Exec(check, email).Error
 // 	return true, err
-//}
+// }
+
+func (c *AdminDatabase) IsSuperAdmin(createrId int) (bool, error) {
+	var isSuper bool
+	query := "SELECT is_super_admin FROM admins WHERE id=$1"
+	err := c.DB.Raw(query, createrId).Scan(&isSuper).Error
+	return isSuper, err
+}
 
 // Find Admin FOR super admin
 func (a *AdminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (domain.Admin, error) {
@@ -37,12 +44,13 @@ func (a *AdminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (doma
 }
 
 // Create admin
-func (a *AdminDatabase) CreateAdmin(ctx context.Context, admin domain.Admin) error {
+func (a *AdminDatabase) CreateAdmin(admin req.CreateAdmin) (res.AdminData, error) {
+	var adminData res.AdminData
 	if err := a.DB.Create(&admin).Error; err != nil {
-		return errors.New("failed to save admin")
+		return adminData, errors.New("failed to save admin")
 	}
 
-	return nil
+	return adminData, nil
 }
 
 // Admin login

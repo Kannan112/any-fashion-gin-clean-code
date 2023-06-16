@@ -61,7 +61,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 
 		productitem := user.Group("/product-item")
 		{
-			productitem.GET("display/:id", productHandler.DisaplyaAllProductItems)
+			productitem.GET("/:product_id", productHandler.DisaplyaAllProductItems)
 		}
 
 		// Cart

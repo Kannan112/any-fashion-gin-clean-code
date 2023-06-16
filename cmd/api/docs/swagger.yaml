@@ -1,23 +1,4 @@
 definitions:
-  domain.Admin:
-    properties:
-      email:
-        type: string
-      id:
-        type: integer
-      isSuper:
-        type: boolean
-      password:
-        maxLength: 30
-        minLength: 5
-        type: string
-      user_name:
-        maxLength: 15
-        minLength: 3
-        type: string
-    required:
-    - password
-    type: object
   req.AddAddress:
     properties:
       city:
@@ -72,6 +53,21 @@ definitions:
       minimumpurchaseamount:
         type: number
     type: object
+  req.CreateAdmin:
+    properties:
+      email:
+        type: string
+      isSuper:
+        type: boolean
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
   req.LoginReq:
     properties:
       email:
@@ -112,6 +108,27 @@ definitions:
     - categoryid
     - description
     - name
+    type: object
+  req.ProductItems:
+    properties:
+      color:
+        type: string
+      gender:
+        type: string
+      material:
+        type: string
+      model:
+        type: string
+      price:
+        type: number
+      productId:
+        type: integer
+      qty:
+        type: integer
+      size:
+        type: integer
+      sku:
+        type: string
     type: object
   req.UpdateCoupon:
     properties:
@@ -236,6 +253,15 @@ paths:
       - application/json
       description: Admin, users and unregistered users can see all the available categories
       operationId: view-all-categories
+      parameters:
+      - description: Page number for pagination
+        in: query
+        name: count
+        type: integer
+      - description: Number of items to retrieve per page
+        in: query
+        name: page
+        type: integer
       produces:
       - application/json
       responses:
@@ -373,7 +399,7 @@ paths:
         name: admin
         required: true
         schema:
-          $ref: '#/definitions/domain.Admin'
+          $ref: '#/definitions/req.CreateAdmin'
       produces:
       - application/json
       responses:
@@ -427,8 +453,157 @@ paths:
       summary: Admin Logout
       tags:
       - Admin
-  /admin/product/{id}:
+  /admin/order:
+    get:
+      consumes:
+      - application/json
+      description: admin can view orders
+      operationId: view-order
+      parameters:
+      - description: 'Start date (format: 2006-1-2)'
+        in: query
+        name: start
+        type: string
+      - description: 'End date (format: 2006-1-2)'
+        in: query
+        name: end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order view
+      tags:
+      - Order
+  /admin/order/{orderid}:
+    post:
+      consumes:
+      - application/json
+      description: admin can view orders
+      operationId: admin-order-details
+      parameters:
+      - description: orderid
+        in: path
+        name: orderid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order details
+      tags:
+      - Order
+  /admin/order/cancelled:
+    get:
+      consumes:
+      - application/json
+      description: admin view order cancelled
+      operationId: list-order-by-cancelled
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order cancelled
+      tags:
+      - Order
+  /admin/order/placed:
+    get:
+      consumes:
+      - application/json
+      description: admin list order placed
+      operationId: list-order-by-placed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order placed
+      tags:
+      - Order
+  /admin/product-item/add:
+    post:
+      consumes:
+      - application/json
+      description: add a new product item with an existing product id
+      operationId: add-product-item
+      parameters:
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/req.ProductItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Add products item
+      tags:
+      - Product Item
+  /admin/product-item/update:
     patch:
+      consumes:
+      - application/json
+      description: update existing product item with id
+      operationId: update-product-item
+      parameters:
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/req.ProductItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Add products item
+      tags:
+      - Product Item
+  /admin/product/{id}:
+    get:
       consumes:
       - application/json
       description: list all saved products
@@ -502,11 +677,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successfully added new product item
+          description: Successfully updated new product
           schema:
             $ref: '#/definitions/res.Response'
         "400":
-          description: Failed to add new product item
+          description: Failed to add new product
           schema:
             $ref: '#/definitions/res.Response'
       summary: Update product
@@ -770,7 +945,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: order cart
       tags:
-      - Order
+      - Cart
   /user/cart/remove/{product_item_id}:
     delete:
       consumes:
@@ -917,6 +1092,52 @@ paths:
       summary: User Logout
       tags:
       - Users
+  /user/order/cancel/{orderId}:
+    patch:
+      consumes:
+      - application/json
+      description: user cancel order
+      operationId: user-cancel-order
+      parameters:
+      - description: orderId
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order cart
+      tags:
+      - Order
+  /user/order/listall:
+    get:
+      consumes:
+      - application/json
+      description: user can view all his orders
+      operationId: list-all-order
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order status
+      tags:
+      - Order
   /user/otp/send:
     post:
       consumes:
@@ -971,6 +1192,32 @@ paths:
       summary: Validate the OTP to user's mobile
       tags:
       - Otp
+  /user/product-item/{product_id}:
+    get:
+      consumes:
+      - application/json
+      description: update existing product item with id
+      operationId: display-product-items
+      parameters:
+      - description: id
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Failed to add new product item
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: display products item
+      tags:
+      - Product Item
   /user/profile/edit:
     patch:
       consumes:
@@ -1064,7 +1311,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Wallet Profile
       tags:
-      - Profile-wallet
+      - Profile Wallet
   /user/wallet/apply:
     post:
       consumes:
@@ -1084,7 +1331,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Wallet Profile
       tags:
-      - Profile-wallet
+      - Profile Wallet
   /user/wallet/remove:
     patch:
       consumes:
@@ -1104,7 +1351,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Wallet Profile
       tags:
-      - Profile-wallet
+      - Profile Wallet
   /user/wishlist/add/{itemId}:
     post:
       consumes:
@@ -1131,7 +1378,7 @@ paths:
       summary: Add Wishlist
       tags:
       - Wishlist
-  /user/wishlist/list:
+  /user/wishlist/list/:
     get:
       consumes:
       - application/json
@@ -1140,11 +1387,11 @@ paths:
       parameters:
       - description: Page number for pagination
         in: query
-        name: page
+        name: count
         type: integer
       - description: Number of items to retrieve per page
         in: query
-        name: limit
+        name: page
         type: integer
       produces:
       - application/json

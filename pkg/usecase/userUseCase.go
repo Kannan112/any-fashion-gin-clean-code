@@ -106,7 +106,7 @@ func (c *userUseCase) FindAddress(ctx context.Context, userId int) (bool, error)
 
 // --------------------ListAddress------------------
 func (c *userUseCase) ListallAddress(id int) ([]domain.Addresss, error) {
-	list, err := c.userRepo.ListallAddress(id)
+	list, err := c.userRepo.ListAllAddress(id)
 	return list, err
 }
 

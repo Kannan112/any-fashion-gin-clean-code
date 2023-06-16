@@ -150,6 +150,20 @@ const docTemplate = `{
                 ],
                 "summary": "View all available categories",
                 "operationId": "view-all-categories",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items to retrieve per page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -354,7 +368,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Admin"
+                            "$ref": "#/definitions/req.CreateAdmin"
                         }
                     }
                 ],
@@ -427,6 +441,231 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/admin/order": {
+            "get": {
+                "description": "admin can view orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order view",
+                "operationId": "view-order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start date (format: 2006-1-2)",
+                        "name": "start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (format: 2006-1-2)",
+                        "name": "end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/order/cancelled": {
+            "get": {
+                "description": "admin view order cancelled",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order cancelled",
+                "operationId": "list-order-by-cancelled",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/order/placed": {
+            "get": {
+                "description": "admin list order placed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order placed",
+                "operationId": "list-order-by-placed",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/order/{orderid}": {
+            "post": {
+                "description": "admin can view orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order details",
+                "operationId": "admin-order-details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "orderid",
+                        "name": "orderid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/product-item/add": {
+            "post": {
+                "description": "add a new product item with an existing product id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Item"
+                ],
+                "summary": "Add products item",
+                "operationId": "add-product-item",
+                "parameters": [
+                    {
+                        "description": "Product details",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.ProductItems"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/product-item/update": {
+            "patch": {
+                "description": "update existing product item with id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Item"
+                ],
+                "summary": "Add products item",
+                "operationId": "update-product-item",
+                "parameters": [
+                    {
+                        "description": "Product details",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.ProductItems"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
                     }
                 }
             }
@@ -506,13 +745,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully added new product item",
+                        "description": "Successfully updated new product",
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
                     },
                     "400": {
-                        "description": "Failed to add new product item",
+                        "description": "Failed to add new product",
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
@@ -521,7 +760,7 @@ const docTemplate = `{
             }
         },
         "/admin/product/{id}": {
-            "patch": {
+            "get": {
                 "description": "list all saved products",
                 "consumes": [
                     "application/json"
@@ -929,7 +1168,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Order"
+                    "Cart"
                 ],
                 "summary": "order cart",
                 "operationId": "order-all",
@@ -1167,6 +1406,75 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/order/cancel/{orderId}": {
+            "patch": {
+                "description": "user cancel order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order cart",
+                "operationId": "user-cancel-order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "orderId",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/order/listall": {
+            "get": {
+                "description": "user can view all his orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order status",
+                "operationId": "list-all-order",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/otp/send": {
             "post": {
                 "description": "Send OTP to use's mobile",
@@ -1242,6 +1550,45 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/product-item/{product_id}": {
+            "get": {
+                "description": "update existing product item with id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Item"
+                ],
+                "summary": "display products item",
+                "operationId": "display-product-items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
@@ -1371,7 +1718,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Profile-wallet"
+                    "Profile Wallet"
                 ],
                 "summary": "Wallet Profile",
                 "operationId": "wallet-profile",
@@ -1401,7 +1748,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Profile-wallet"
+                    "Profile Wallet"
                 ],
                 "summary": "Wallet Profile",
                 "operationId": "apply-wallet",
@@ -1431,7 +1778,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Profile-wallet"
+                    "Profile Wallet"
                 ],
                 "summary": "Wallet Profile",
                 "operationId": "remove-wallet",
@@ -1490,7 +1837,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/wishlist/list": {
+        "/user/wishlist/list/": {
             "get": {
                 "description": "list all added items",
                 "consumes": [
@@ -1508,13 +1855,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Page number for pagination",
-                        "name": "page",
+                        "name": "count",
                         "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "Number of items to retrieve per page",
-                        "name": "limit",
+                        "name": "page",
                         "in": "query"
                     }
                 ],
@@ -1575,33 +1922,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Admin": {
-            "type": "object",
-            "required": [
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "isSuper": {
-                    "type": "boolean"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 30,
-                    "minLength": 5
-                },
-                "user_name": {
-                    "type": "string",
-                    "maxLength": 15,
-                    "minLength": 3
-                }
-            }
-        },
         "req.AddAddress": {
             "type": "object",
             "required": [
@@ -1682,6 +2002,28 @@ const docTemplate = `{
                 }
             }
         },
+        "req.CreateAdmin": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "isSuper": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "req.LoginReq": {
             "type": "object",
             "required": [
@@ -1739,6 +2081,38 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "req.ProductItems": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "material": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "productId": {
+                    "type": "integer"
+                },
+                "qty": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "sku": {
                     "type": "string"
                 }
             }

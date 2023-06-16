@@ -131,11 +131,11 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 // @Tags Wishlist
 // @Accept json
 // @Produce json
-// @Param page query int false "Page number for pagination"
-// @Param limit query int false "Number of items to retrieve per page"
+// @Param count query int false "Page number for pagination"
+// @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/wishlist/list [GET]
+// @Router /user/wishlist/list/ [GET]
 func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
 	var pagenation req.Pagenation
 	countstr := ctx.Query("count")

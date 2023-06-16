@@ -10,7 +10,6 @@ import (
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
-	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 )
 
@@ -31,12 +30,12 @@ func NewAdminSHandler(admiUseCase services.AdminUsecase) *AdminHandler {
 // @Tags Admin
 // @Accept json
 // @Produce json
-// @Param admin body domain.Admin true "New Admin details"
+// @Param admin body req.CreateAdmin true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/createadmin [post]
 func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
-	var adminData domain.Admin
+	var adminData req.CreateAdmin
 	if err := c.Bind(&adminData); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, res.Response{
 			StatusCode: 422,
@@ -46,8 +45,18 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 		})
 		return
 	}
+	createrId, err := handlerUtil.GetAdminIdFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res.Response{
+			StatusCode: 400,
+			Message:    "Can't find AdminId",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
 
-	err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData)
+	admin, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData, createrId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -61,7 +70,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 201,
 		Message:    "Admin created",
-		Data:       nil,
+		Data:       admin,
 		Errors:     nil,
 	})
 

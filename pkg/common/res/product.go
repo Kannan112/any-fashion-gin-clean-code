@@ -12,20 +12,33 @@ type Product struct {
 	Brand       string
 }
 
-type ProductItem struct {
-	ItemId      uint
-	Model       string
-	Size        string
-	Material    string
-	Gender      string
-	SKU         string
-	QntyInStock int
-	Price       int
-}
+//	type ProductItem struct {
+//		Id          uint
+//		ItemId      uint
+//		Model       string
+//		Size        string
+//		Material    string
+//		Gender      string
+//		Sku         string
+//		QntyInStock int
+//		Price       int
+//	}
 type OfferTable struct {
 	ProductId   uint `gorm:"not null" json:"product_id" validate:"required"`
 	Discount    float32
 	StartDate   string
 	EndDate     string
 	Discription string
+}
+
+type ProductItem struct {
+	ProductId uint
+	Sku       string
+	Qty       int
+	Gender    string
+	Model     string
+	Size      int
+	Color     string
+	Material  string
+	Price     float64
 }

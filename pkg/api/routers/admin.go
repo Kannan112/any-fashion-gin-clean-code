@@ -10,7 +10,7 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 	admin := engine.Group("/admin")
 	{
 		// Admin routes
-		admin.POST("createadmin", adminHandler.CreateAdmin)
+		admin.POST("createadmin", adminHandler.CreateAdmin, middleware.AdminAuth)
 		admin.POST("adminlogin", adminHandler.AdminLogin)
 		admin.POST("logout", adminHandler.AdminLogout)
 
@@ -52,9 +52,9 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		productItem := admin.Group("/product-item", middleware.AdminAuth)
 		{
 			productItem.POST("add", productHandler.AddProductItem)
-			productItem.PATCH("update/:id", productHandler.UpdateProductItem)
+			productItem.PATCH("update", productHandler.UpdateProductItem)
 			productItem.DELETE("delete/:id", productHandler.DeleteProductItem)
-			productItem.GET("display/:id", productHandler.DisaplyaAllProductItems)
+			productItem.GET("/:product_id", productHandler.DisaplyaAllProductItems)
 		}
 
 		// Coupon
@@ -70,7 +70,7 @@ func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, pr
 		order := admin.Group("/order", middleware.AdminAuth)
 		{
 			order.GET("", orderHandler.ViewOrder)
-			order.GET("/:orderid", orderHandler.AdminOrderDetails)
+			order.POST("/:orderid", orderHandler.AdminOrderDetails)
 			order.GET("/placed", orderHandler.ListOrderByPlaced)
 			order.GET("/cancelled", orderHandler.ListOrderByCancelled)
 		}

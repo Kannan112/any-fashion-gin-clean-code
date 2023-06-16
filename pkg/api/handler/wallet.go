@@ -23,7 +23,7 @@ func NewWalletHandler(WalletUseCase services.WalletUseCase) *WalletHandler {
 // @Summary Wallet Profile
 // @ID wallet-profile
 // @Description user wallet displays super-coins
-// @Tags Profile-wallet
+// @Tags Profile Wallet
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response
@@ -63,7 +63,7 @@ func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 // @Summary Wallet Profile
 // @ID apply-wallet
 // @Description user can add wallet coins to the cart
-// @Tags Profile-wallet
+// @Tags Profile Wallet
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response
@@ -98,11 +98,11 @@ func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 	})
 }
 
-// RemoveWallet
+// Remove Wallet
 // @Summary Wallet Profile
 // @ID remove-wallet
 // @Description user can add wallet coins to the cart
-// @Tags Profile-wallet
+// @Tags Profile Wallet
 // @Accept json
 // @Produce json
 // @Success 200 {object} res.Response

@@ -12,7 +12,6 @@ type Product struct {
 }
 
 type ProductItem struct {
-	ID        uint
 	ProductID uint
 	Product   Product
 	Model     string
@@ -22,7 +21,6 @@ type ProductItem struct {
 	SKU       string
 	Color     string
 	Qty       int
-	Image     []string
 	Price     int
 }
 
@@ -32,4 +30,16 @@ type OfferTable struct {
 	StartDate   string
 	EndDate     string
 	Discription string
+}
+
+type ProductItems struct {
+	ProductId uint
+	Sku       string
+	Qty       int
+	Gender    string
+	Model     string
+	Size      int
+	Color     string
+	Material  string
+	Price     float64
 }

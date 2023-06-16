@@ -57,7 +57,6 @@ func (c *ProductDataBase) ListCategories(ctx context.Context, pagenation req.Pag
 	return categories, err
 }
 
-
 func (c *ProductDataBase) DisplayCategory(id int) ([]res.Product, error) {
 	var product []res.Product
 	query := `SELECT id,product_name,description,brand FROM products WHERE category_id=$1`
@@ -134,7 +133,7 @@ func (c *ProductDataBase) AddProductItem(productItem req.ProductItem) (res.Produ
 	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price).Scan(&NewProductItem).Error
 	return NewProductItem, err
 }
-func (c *ProductDataBase) UpdateProductItem(id int, productItem req.ProductItem) (res.ProductItem, error) {
+func (c *ProductDataBase) UpdateProductItem(productItem req.ProductItems) (res.ProductItem, error) {
 	var UpdateProductItem res.ProductItem
 	query := `UPDATE product_items
 	SET product_id = $1,
@@ -150,7 +149,7 @@ func (c *ProductDataBase) UpdateProductItem(id int, productItem req.ProductItem)
 		WHERE id=$10
 	RETURNING product_id, qnty_in_stock, gender, model, size, color, material, price, created_at;
 	`
-	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price, id).Scan(&UpdateProductItem).Error
+	err := c.DB.Raw(query, productItem.ProductId, productItem.Sku, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price, productItem.ProductId).Scan(&UpdateProductItem).Error
 	return UpdateProductItem, err
 }
 

@@ -165,6 +165,8 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Tags Category
 // @Accept json
 // @Produce json
+// @Param count query int false "Page number for pagination"
+// @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /admin/category/listall [get]
@@ -307,8 +309,8 @@ func (cr *ProductHandler) AddProduct(c *gin.Context) {
 // @Produce json
 // @Param id path string true "id"
 // @Param product body req.Product true "Product details"
-// @Success 200 {object} res.Response "Successfully added new product item"
-// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Success 200 {object} res.Response "Successfully updated new product"
+// @Failure 400 {object} res.Response "Failed to add new product"
 // @Router /admin/product/update/{id} [patch]
 func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 	var product req.Product
@@ -381,18 +383,6 @@ func (cr *ProductHandler) DeleteProduct(c *gin.Context) {
 	})
 }
 
-// List Product
-// @Summary Update product
-// @ID update-product
-// @Description updating exsisting product details.
-// @Tags Product
-// @Accept json
-// @Produce json
-// @Param id path string true "id"
-// @Param product body req.Product true "Product details"
-// @Success 200 {object} res.Response "Successfully added new product item"
-// @Failure 400 {object} res.Response "Failed to add new product item"
-// @Router /admin/product/update/{id} [patch]
 func (cr *ProductHandler) ListProducts(c *gin.Context) {
 	product, err := cr.productuseCase.ListProducts()
 	if err != nil {
@@ -422,7 +412,7 @@ func (cr *ProductHandler) ListProducts(c *gin.Context) {
 // @Param id path string true "id"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
-// @Router /admin/product/{id} [patch]
+// @Router /admin/product/{id} [get]
 func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
 	productId := c.Param("id")
 	id, err := strconv.Atoi(productId)
@@ -452,6 +442,17 @@ func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
 	})
 }
 
+// Add Product Item
+// @Summary Add products item
+// @ID add-product-item
+// @Description add a new product item with an existing product id
+// @Tags Product Item
+// @Accept json
+// @Produce json
+// @Param product body req.ProductItems true "Product details"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product-item/add [post]
 func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 	var productItem req.ProductItem
 	err := c.Bind(&productItem)
@@ -481,8 +482,20 @@ func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// Update Product Item
+// @Summary Add products item
+// @ID update-product-item
+// @Description update existing product item with id
+// @Tags Product Item
+// @Accept json
+// @Produce json
+// @Param product body req.ProductItems true "Product details"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product-item/update [patch]
 func (cr *ProductHandler) UpdateProductItem(c *gin.Context) {
-	var productItem req.ProductItem
+	var productItem req.ProductItems
 	err := c.Bind(&productItem)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -493,19 +506,19 @@ func (cr *ProductHandler) UpdateProductItem(c *gin.Context) {
 		})
 		return
 	}
-	paramsId := c.Param("id")
-	id, err := strconv.Atoi(paramsId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "can't find id",
-			Data:       nil,
-			Errors:     err.Error(),
-		})
-		return
-	}
+	// paramsId := c.Param("id")
+	// id, err := strconv.Atoi(paramsId)
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, res.Response{
+	// 		StatusCode: 400,
+	// 		Message:    "can't find id",
+	// 		Data:       nil,
+	// 		Errors:     err.Error(),
+	// 	})
+	// 	return
+	// }
 
-	UpdateProductItem, err := cr.productuseCase.UpdateProductItem(id, productItem)
+	UpdateProductItem, err := cr.productuseCase.UpdateProductItem(productItem)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -551,8 +564,32 @@ func (cr *ProductHandler) DeleteProductItem(c *gin.Context) {
 		Errors:     nil,
 	})
 }
+
+// Display Product Item
+// @Summary display products item
+// @ID display-product-items
+// @Description update existing product item with id
+// @Tags Product Item
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /admin/product-item/display/{id} [get]
+
+// Display Product Item
+// @Summary display products item
+// @ID display-product-items
+// @Description update existing product item with id
+// @Tags Product Item
+// @Accept json
+// @Produce json
+// @Param product_id path string true "id"
+// @Success 200 {object} res.Response "Successfully added new product item"
+// @Failure 400 {object} res.Response "Failed to add new product item"
+// @Router /user/product-item/{product_id} [get]
 func (cr *ProductHandler) DisaplyaAllProductItems(c *gin.Context) {
-	paramsId := c.Param("id")
+	paramsId := c.Param("product_id")
 	id, err := strconv.Atoi(paramsId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
