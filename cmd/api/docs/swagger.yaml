@@ -57,16 +57,14 @@ definitions:
     properties:
       email:
         type: string
-      isSuper:
-        type: boolean
-      name:
-        type: string
       password:
+        type: string
+      user_name:
         type: string
     required:
     - email
-    - name
     - password
+    - user_name
     type: object
   req.LoginReq:
     properties:

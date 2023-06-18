@@ -2006,20 +2006,17 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "name",
-                "password"
+                "password",
+                "user_name"
             ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
-                "isSuper": {
-                    "type": "boolean"
-                },
-                "name": {
+                "password": {
                     "type": "string"
                 },
-                "password": {
+                "user_name": {
                     "type": "string"
                 }
             }

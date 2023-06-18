@@ -49,8 +49,8 @@ func (a *AdminDatabase) CreateAdmin(admin req.CreateAdmin) (res.AdminData, error
 	// if err := a.DB.Create(&admin).Error; err != nil {
 	// 	return adminData, errors.New("failed to save admin")
 	// }
-	addQuery := `INSERT INTO admins (user_name,email,password,is_super) VALUES($1,$2,$3,$4)`
-	err := a.DB.Raw(addQuery, admin.Name, admin.Email, admin.Password, admin.IsSuper).Scan(&adminData).Error
+	addQuery := `INSERT INTO admins (user_name,email,password) VALUES($1,$2,$3)`
+	err := a.DB.Raw(addQuery, admin.Name, admin.Email, admin.Password).Scan(&adminData).Error
 	return adminData, err
 }
 
