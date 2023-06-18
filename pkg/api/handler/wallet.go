@@ -40,7 +40,7 @@ func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 		})
 		return
 	}
-	profile, err := c.walletUseCase.WallerProfile(ctx, uint(userid))
+	profile, err := c.walletUseCase.GetWalletProfile(ctx, uint(userid))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

@@ -46,11 +46,12 @@ func (a *AdminDatabase) FindAdmin(ctx context.Context, admin domain.Admin) (doma
 // Create admin
 func (a *AdminDatabase) CreateAdmin(admin req.CreateAdmin) (res.AdminData, error) {
 	var adminData res.AdminData
-	if err := a.DB.Create(&admin).Error; err != nil {
-		return adminData, errors.New("failed to save admin")
-	}
-
-	return adminData, nil
+	// if err := a.DB.Create(&admin).Error; err != nil {
+	// 	return adminData, errors.New("failed to save admin")
+	// }
+	addQuery := `INSERT INTO admins (user_name,email,password,is_super) VALUES($1,$2,$3,$4)`
+	err := a.DB.Raw(addQuery, admin.Name, admin.Email, admin.Password, admin.IsSuper).Scan(&adminData).Error
+	return adminData, err
 }
 
 // Admin login

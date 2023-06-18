@@ -45,18 +45,18 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 		})
 		return
 	}
-	createrId, err := handlerUtil.GetAdminIdFromContext(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "Can't find AdminId",
-			Data:       nil,
-			Errors:     err.Error(),
-		})
-		return
-	}
+	// createrId, err := handlerUtil.GetAdminIdFromContext(c)
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, res.Response{
+	// 		StatusCode: 400,
+	// 		Message:    "Can't find AdminId",
+	// 		Data:       nil,
+	// 		Errors:     err.Error(),
+	// 	})
+	// 	return
+	// }
 
-	admin, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData, createrId)
+	_, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -70,7 +70,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 201,
 		Message:    "Admin created",
-		Data:       admin,
+		Data:       nil,
 		Errors:     nil,
 	})
 

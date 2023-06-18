@@ -9,7 +9,7 @@ import (
 type WalletRepo interface {
 	SaveWallet(ctx context.Context, userID int) error
 	AddCoinToWallet(ctx context.Context, price float32, usersId uint) error
-	WallerProfile(ctx context.Context, userID uint) (res.Wallet, error)
+	GetWalletProfile(ctx context.Context, userID uint) (res.Wallet, error)
 	ApplyWallet(ctx context.Context, userId uint) error
 	RemoveWallet(ctx context.Context,userId uint)error
 }

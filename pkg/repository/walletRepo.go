@@ -41,7 +41,7 @@ func (c *WalletDataBase) AddCoinToWallet(ctx context.Context, price float32, use
 	return err
 }
 
-func (c *WalletDataBase) WallerProfile(ctx context.Context, userID uint) (res.Wallet, error) {
+func (c *WalletDataBase) GetWalletProfile(ctx context.Context, userID uint) (res.Wallet, error) {
 	var profile res.Wallet
 	walletProfile := `SELECT users_id,coins FROM wallets WHERE users_id=$1`
 	err := c.DB.Raw(walletProfile, userID).Scan(&profile).Error
@@ -105,11 +105,13 @@ func (c *WalletDataBase) RemoveWallet(ctx context.Context, userId uint) error {
 	query2 := `update wallets set coins=coins+$1 where users_id=$2`
 	err = tx.Exec(query2, coins, userId).Error
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	query3 := `update carts set total=total+$1,coin=0 where users_id=$2`
 	err = tx.Exec(query3, coins, userId).Error
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	if err = tx.Commit().Error; err != nil {

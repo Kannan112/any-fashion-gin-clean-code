@@ -18,23 +18,42 @@ func NewWalletUseCase(repo interfaces.WalletRepo) services.WalletUseCase {
 	}
 }
 
-func (c *WalletUseCase) SaveWallet(ctx context.Context, userId int) error {
-	err := c.WalletRepo.SaveWallet(ctx, userId)
-	return err
+func (uc *WalletUseCase) SaveWallet(ctx context.Context, userID int) error {
+	err := uc.WalletRepo.SaveWallet(ctx, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (c *WalletUseCase) WallerProfile(ctx context.Context, userID uint) (res.Wallet, error) {
-	response, err := c.WalletRepo.WallerProfile(ctx, userID)
-	return response, err
+
+func (uc *WalletUseCase) GetWalletProfile(ctx context.Context, userID uint) (res.Wallet, error) {
+	response, err := uc.WalletRepo.GetWalletProfile(ctx,userID)
+	if err != nil {
+		return response, err
+	}
+	return response, nil
 }
-func (c *WalletUseCase) AddCoinToWallet(ctx context.Context, price float32, usersId uint) error {
-	err := c.WalletRepo.AddCoinToWallet(ctx, price, usersId)
-	return err
+
+func (uc *WalletUseCase) AddCoinToWallet(ctx context.Context, price float32, userID uint) error {
+	err := uc.WalletRepo.AddCoinToWallet(ctx, price, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (c *WalletUseCase) ApplyWallet(ctx context.Context, userId uint) error {
-	err := c.WalletRepo.ApplyWallet(ctx, userId)
-	return err
+
+func (uc *WalletUseCase) ApplyWallet(ctx context.Context, userID uint) error {
+	err := uc.WalletRepo.ApplyWallet(ctx, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (c *WalletUseCase) RemoveWallet(ctx context.Context, userId uint) error {
-	err := c.WalletRepo.RemoveWallet(ctx, userId)
-	return err
+
+func (uc *WalletUseCase) RemoveWallet(ctx context.Context, userID uint) error {
+	err := uc.WalletRepo.RemoveWallet(ctx, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

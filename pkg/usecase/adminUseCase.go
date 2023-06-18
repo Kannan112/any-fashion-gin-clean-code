@@ -24,14 +24,14 @@ func NewAdminUseCase(adminRepo interfaces.AdminRepository) services.AdminUsecase
 	}
 }
 
-func (c *adminUseCase) CreateAdmin(ctx context.Context, admin req.CreateAdmin, createrId int) (res.AdminData, error) {
-	IsSuper, err := c.adminRepo.IsSuperAdmin(createrId)
-	if err != nil {
-		return res.AdminData{}, err
-	}
-	if !IsSuper {
-		return res.AdminData{}, fmt.Errorf("not a super admin")
-	}
+func (c *adminUseCase) CreateAdmin(ctx context.Context, admin req.CreateAdmin) (res.AdminData, error) {
+	// IsSuper, err := c.adminRepo.IsSuperAdmin(createrId)
+	// if err != nil {
+	// 	return res.AdminData{}, err
+	// }
+	// if !IsSuper {
+	// 	return res.AdminData{}, fmt.Errorf("not a super admin")
+	// }
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
 	if err != nil {
