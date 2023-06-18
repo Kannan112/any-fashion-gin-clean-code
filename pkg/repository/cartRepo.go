@@ -212,8 +212,9 @@ func (c *CartDataBase) ListCart(userId int) ([]domain.Cart, error) {
 // List Cartitems
 func (c *CartDataBase) ListCartItems(ctx context.Context, userId int) ([]res.Display, error) {
 	var cartId uint
-	var CartItemPQ int
-	var data []res.Display
+	var CartItemPQ []int
+	var data res.Display
+	var result []res.Display
 	query := `SELECT id FROM carts WHERE users_id=$1`
 	err := c.DB.Raw(query, userId).Scan(&cartId).Error
 	if err != nil {
@@ -227,7 +228,13 @@ func (c *CartDataBase) ListCartItems(ctx context.Context, userId int) ([]res.Dis
 		return nil, err
 	}
 	join := `select product_name,gender,brand,color,size,material,price from product_items pi JOIN products p ON pi.product_id=p.id  WHERE p.id=$1`
-	err = c.DB.Raw(join, CartItemPQ).Scan(&data).Error
-	return data, err
-
+	//var value string
+	for _, items := range CartItemPQ {
+		err = c.DB.Raw(join, items).Scan(&data).Error
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, data)
+	}
+	return result, nil
 }
