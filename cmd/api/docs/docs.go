@@ -798,7 +798,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/salesreport/download": {
+        "/admin/sales/download": {
             "get": {
                 "description": "Admin can download sales report in .csv format",
                 "consumes": [

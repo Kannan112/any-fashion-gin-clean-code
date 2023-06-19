@@ -685,7 +685,7 @@ paths:
       summary: Update product
       tags:
       - Product
-  /admin/salesreport/download:
+  /admin/sales/download:
     get:
       consumes:
       - application/json

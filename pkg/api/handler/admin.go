@@ -341,7 +341,7 @@ func (cr *AdminHandler) ViewSalesReport(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Failure 400 {object} res.Response
-// @Router /admin/salesreport/download [get]
+// @Router /admin/sales/download [get]
 func (cr *AdminHandler) DownloadSalesReport(ctx *gin.Context) {
 	sales, err := cr.adminUseCase.ViewSalesReport(ctx)
 	if err != nil {
