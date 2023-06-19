@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
@@ -210,7 +211,7 @@ func (c *CartDataBase) ListCart(userId int) ([]domain.Cart, error) {
 }
 
 // List Cartitems
-func (c *CartDataBase) ListCartItems(ctx context.Context, userId int) ([]res.Display, error) {
+func (c *CartDataBase) ListCartItems(ctx context.Context, userId int, pagenation req.Pagenation) ([]res.Display, error) {
 	var cartId uint
 	var CartItemPQ []int
 	var data res.Display

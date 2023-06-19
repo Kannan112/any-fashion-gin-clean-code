@@ -14,7 +14,7 @@ type AdminDashboard struct {
 	TotalUsers       int
 	TotalOrders      int
 	TotalProductSold sql.NullInt64
-	TotalRevenue     int
+	TotalRevenue     sql.NullFloat64
 }
 type SalesReport struct {
 	Id          int

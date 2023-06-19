@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	handlerUtil "github.com/kannan112/go-gin-clean-arch/pkg/api/handlerUril"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
 )
@@ -171,10 +172,30 @@ func (cr *CartHandler) ListCart(c *gin.Context) {
 // @Tags Cart
 // @Accept json
 // @Produce json
+// @Param count query int false "Page number for pagination"
+// @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Router /user/cart-item/list [get]
 func (c *CartHandler) ListCartItems(ctx *gin.Context) {
+	var pagenation req.Pagenation
+	countStr := ctx.Query("count")
+	pageStr := ctx.Query("page")
+	if countStr != "" || pageStr != "" {
+		count, err1 := strconv.Atoi(countStr)
+		page, err := strconv.Atoi(pageStr)
+		pagenation.Count = count
+		pagenation.Page = page
+		if err != nil || err1 != nil {
+			ctx.JSON(http.StatusBadRequest, res.Response{
+				StatusCode: 400,
+				Message:    "page not found",
+				Data:       nil,
+				Errors:     err,
+			})
+			return
+		}
+	}
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
@@ -184,7 +205,7 @@ func (c *CartHandler) ListCartItems(ctx *gin.Context) {
 		})
 		return
 	}
-	list, err := c.cartUsecase.ListCartItems(ctx, userId)
+	list, err := c.cartUsecase.ListCartItems(ctx, userId, pagenation)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,

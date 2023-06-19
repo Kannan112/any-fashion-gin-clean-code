@@ -122,7 +122,7 @@ func (a *AdminDatabase) UnblockUser(id int) error {
 // Admin dashboard { Showing : TOTAL SALES,TOTAL REVENUE,TOTAL ORDERS,TOTAL PRODUCT SOLD }
 func (a *AdminDatabase) GetDashboard(ctx context.Context) (res.AdminDashboard, error) {
 	var adminDashboard res.AdminDashboard
-	var totalRevenue int
+	var totalRevenue sql.NullFloat64
 	var totalOrders int
 	var totalProductSold sql.NullInt64
 	var totalUsers int

@@ -84,7 +84,7 @@ func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartH
 		{
 			order.GET("/razorpay/checkout/:payment_id", orderHandler.RazorPayCheckout)
 			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
-			order.GET("orderAll", orderHandler.OrderAll)
+			order.GET("orderall", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListOrdersOfUsers)
 			order.GET("/:orderId", orderHandler.OrderDetails)

@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
@@ -36,7 +37,7 @@ func (c *CartUsecases) ListCart(userId int) ([]domain.Cart, error) {
 	return list, err
 
 }
-func (c *CartUsecases) ListCartItems(ctx context.Context, userId int) ([]res.Display, error) {
-	data, err := c.cartRepo.ListCartItems(ctx, userId)
+func (c *CartUsecases) ListCartItems(ctx context.Context, userId int, pagenation req.Pagenation) ([]res.Display, error) {
+	data, err := c.cartRepo.ListCartItems(ctx, userId, pagenation)
 	return data, err
 }

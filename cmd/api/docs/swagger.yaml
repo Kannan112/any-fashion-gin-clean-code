@@ -864,6 +864,15 @@ paths:
       - application/json
       description: User can view items in cart
       operationId: list-cart-items
+      parameters:
+      - description: Page number for pagination
+        in: query
+        name: count
+        type: integer
+      - description: Number of items to retrieve per page
+        in: query
+        name: page
+        type: integer
       produces:
       - application/json
       responses:
