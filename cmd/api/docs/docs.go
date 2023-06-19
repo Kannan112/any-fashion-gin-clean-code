@@ -1172,36 +1172,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/cart/orderAll": {
-            "get": {
-                "description": "order all cart items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "order cart",
-                "operationId": "order-all",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/user/cart/remove/{product_item_id}": {
             "delete": {
                 "description": "User can remove product item from carts",
@@ -1473,6 +1443,36 @@ const docTemplate = `{
                 ],
                 "summary": "order status",
                 "operationId": "list-all-order",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/order/orderall": {
+            "get": {
+                "description": "order all cart items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "order cart",
+                "operationId": "order-all",
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -933,26 +933,6 @@ paths:
       summary: user can view
       tags:
       - Cart
-  /user/cart/orderAll:
-    get:
-      consumes:
-      - application/json
-      description: order all cart items
-      operationId: order-all
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: order cart
-      tags:
-      - Cart
   /user/cart/remove/{product_item_id}:
     delete:
       consumes:
@@ -1145,6 +1125,26 @@ paths:
       summary: order status
       tags:
       - Order
+  /user/order/orderall:
+    get:
+      consumes:
+      - application/json
+      description: order all cart items
+      operationId: order-all
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: order cart
+      tags:
+      - Cart
   /user/otp/send:
     post:
       consumes:

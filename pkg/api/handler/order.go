@@ -34,7 +34,7 @@ func NewOrderHandler(orderUseCase services.OrderUseCase, walletUseCase services.
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart/orderAll [get]
+// @Router /user/order/orderall [get]
 func (cr *OrderHandler) OrderAll(c *gin.Context) {
 
 	userId, err := handlerUtil.GetUserIdFromContext(c)
