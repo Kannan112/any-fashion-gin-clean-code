@@ -45,3 +45,4 @@ help: ## Display this help screen
 
 mockgen:
 	mockgen -source=pkg/repository/interface/user.go -destination=pkg/repository/mock/mock_user.go
+	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/usecase/mock/mock_user.go
