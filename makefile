@@ -44,5 +44,7 @@ help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 mockgen:
-	mockgen -source=pkg/repository/interface/user.go -destination=pkg/repository/mock/mock_user.go
-	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/usecase/mock/mock_user.go
+	mockgen -source=pkg/repository/interface/user.go -destination=pkg/repository/mockrepo/mock_user.go
+	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/usecase/mockusecase/mock_user.go
+	mockgen -source=pkg/usecase/interface/cart.go -destination=pkg/usecase/mockusecase/mock_cart.go
+	mockgen -source=pkg/usecase/interface/wallet.go -destination=pkg/usecase/mockusecase/mock_wallet.go

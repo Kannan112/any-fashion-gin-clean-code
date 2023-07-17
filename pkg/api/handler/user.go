@@ -40,10 +40,10 @@ func NewUserHandler(usecase services.UserUseCase, cartcase services.CartUseCases
 // @Router /user/signup [post]
 func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 	var user req.UserReq
-	err := ctx.Bind(&user)
+	err := ctx.ShouldBindJSON(&user)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, res.Response{
-			StatusCode: 422,
+			StatusCode: 400,
 			Message:    "can't bind",
 			Data:       nil,
 			Errors:     err.Error(),
