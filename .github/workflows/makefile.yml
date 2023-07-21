@@ -41,7 +41,7 @@ jobs:
         run: go test -v ./...
       
       - name: Deploy to AWS EC2
-        uses: actions/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{secrets.EC2_PUBLIC_IP}}
           username: ubuntu
