@@ -48,7 +48,6 @@ jobs:
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
             echo "Connected to AWS EC2 instance"
-            cd anyfashion/ecommerce-gin-clean-code/
+            cd anyfashion/ecommerce-gin-clean-code
             git pull
-            go build -o api ./cmd/api
             sudo systemctl restart mygoapp.service
