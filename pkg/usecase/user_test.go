@@ -55,16 +55,16 @@ func TestUserSignup(t *testing.T) {
 		{
 			name: "new user",
 			input: req.UserReq{
-				Name:     "akshay",
-				Email:    "akshay@gmail.com",
+				Name:     "abhinand",
+				Email:    "abhi@gmail.com",
 				Mobile:   "9072001341",
 				Password: "123456789",
 			},
 			buildStub: func(userRepo mockRepo.MockUserRepository) {
 				userRepo.EXPECT().UserSignUp(gomock.Any(),
 					EqCreateUserParams(req.UserReq{
-						Name:     "akshay",
-						Email:    "akshay@gmail.com",
+						Name:     "abhinand",
+						Email:    "abhi@gmail.com",
 						Mobile:   "9072001341",
 						Password: "123456789",
 					},
@@ -72,15 +72,15 @@ func TestUserSignup(t *testing.T) {
 					Times(1).
 					Return(res.UserData{
 						Id:     1,
-						Name:   "akshay",
-						Email:  "akshay@gmail.com",
+						Name:   "abhinand",
+						Email:  "abhi@gmail.com",
 						Mobile: "9072001341",
 					}, nil)
 			},
 			expectedOutput: res.UserData{
 				Id:     1,
-				Name:   "akshay",
-				Email:  "akshay@gmail.com",
+				Name:   "abhinand",
+				Email:  "abhi@gmail.com",
 				Mobile: "9072001341",
 			},
 			expectedError: nil,
@@ -88,16 +88,16 @@ func TestUserSignup(t *testing.T) {
 		{
 			name: "alredy exits",
 			input: req.UserReq{
-				Name:     "akshay",
-				Email:    "akshay@gmail.com",
+				Name:     "abhinand",
+				Email:    "abhi@gmail.com",
 				Mobile:   "9072001341",
 				Password: "123456789",
 			},
 			buildStub: func(userRepo mockRepo.MockUserRepository) {
 				userRepo.EXPECT().UserSignUp(gomock.Any(),
 					EqCreateUserParams(req.UserReq{
-						Name:     "akshay",
-						Email:    "akshay@gmail.com",
+						Name:     "abhinand",
+						Email:    "abhi@gmail.com",
 						Mobile:   "9072001341",
 						Password: "123456789",
 					},
