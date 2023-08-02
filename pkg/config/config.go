@@ -25,8 +25,8 @@ var config Config
 
 func LoadConfig() (Config, error) {
 
-	viper.AddConfigPath("./")
-	viper.SetConfigFile(".env")
+	// viper.AddConfigPath("./")
+	// viper.SetConfigFile(".env")
 	viper.ReadInConfig()
 
 	for _, env := range envs {
