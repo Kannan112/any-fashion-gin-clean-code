@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=bucketeer
+      - POSTGRES_PASSWORD=bucketeer_pass
+      - POSTGRES_DB=bucketeer_db
+
+    ports:
+      - "5433:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=database   # Replace <HOST_MACHINE_IP> with your host machine's IP address.
+      - DB_USER=bucketeer
+      - DB_PASSWORD=bucketeer_pass
+      - DB_NAME=bucketeer_db
+      - DB_PORT=5432
+    depends_on:
+      - database
+    networks:
+      - default
+volumes:
+  data:
