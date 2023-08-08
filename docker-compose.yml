@@ -19,7 +19,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - DB_HOST=database   # Replace <HOST_MACHINE_IP> with your host machine's IP address.
+      - DB_HOST=database  
       - DB_USER=bucketeer
       - DB_PASSWORD=bucketeer_pass
       - DB_NAME=bucketeer_db
