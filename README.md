@@ -86,10 +86,6 @@ SERVICE_SID="your Twilio messaging service SID"
 ### Razorpay
 RAZOR_PAY_KEY="your Razorpay API test key"
 RAZOR_PAY_SECRET="your Razorpay API test secret key"
-### Stripe
-STRIPE_SECRET="your Stripe account secret key"
-STRIPE_PUBLISH_KEY="your Stripe account publish key"
-STRIPE_WEBHOOK="your Stripe account webhook key"
 ### Google Auth
 GOAUTH_CLIENT_ID="your Google auth client ID"
 GOAUTH_CLIENT_SECRET="your Google auth secret key"
