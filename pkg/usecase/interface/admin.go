@@ -10,7 +10,7 @@ import (
 
 type AdminUsecase interface {
 	CreateAdmin(ctx context.Context, admin req.CreateAdmin) (res.AdminData, error)
-	AdminLogin(admin req.LoginReq) (string, error)
+	AdminLogin(admin req.LoginReq) (res.Token, error)
 	ListUsers(ctx context.Context) ([]domain.UsersData, error)
 	FindUserByEmail(ctx context.Context, name string) (domain.UsersData, error)
 	BlockUser(body req.BlockData, adminId int) error
