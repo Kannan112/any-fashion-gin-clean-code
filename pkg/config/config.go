@@ -6,11 +6,14 @@ import (
 )
 
 type Config struct {
+	Port             string `mapstructure:"PORT"`
 	DBHost           string `mapstructure:"DB_HOST"`
 	DBName           string `mapstructure:"DB_NAME"`
 	DBUser           string `mapstructure:"DB_USER"`
 	DBPort           string `mapstructure:"DB_PORT"`
 	DBPassword       string `mapstructure:"DB_PASSWORD"`
+	AccessToken      string `mapstructure:"ACCESS_TOKEN"`
+	RefreshToken     string `mapstructure:"REFRESH_TOKEN"`
 	RazorKey         string `mapstructure:"RZOR_KEYID"`
 	RazorSec         string `mapstructure:"RAZOR_KEYSCR"`
 	TWILIOACCOUNTSID string `mapstructure:"TWILIO_ACCOUNT_SID"`
@@ -19,14 +22,14 @@ type Config struct {
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "RZOR_KEYID", "RAZOR_KEYSCR", "TWILIO_SERVICES_ID", "TWILIO_ACCOUNT_SID", "TWILIO_AUTHTOKEN",
+	"PORT", "DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "ACCESS_TOKEN", "REFRESH_TOKEN", "RZOR_KEYID", "RAZOR_KEYSCR", "TWILIO_SERVICES_ID", "TWILIO_ACCOUNT_SID", "TWILIO_AUTHTOKEN",
 }
 var config Config
 
 func LoadConfig() (Config, error) {
 
-	// viper.AddConfigPath("./")
-	// viper.SetConfigFile(".env")
+	viper.AddConfigPath("./")
+	viper.SetConfigFile(".env")
 	viper.ReadInConfig()
 
 	for _, env := range envs {
