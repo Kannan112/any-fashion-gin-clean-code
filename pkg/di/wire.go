@@ -24,6 +24,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		repository.NewWishlistRepository,
 		repository.NewCouponRepository,
 		repository.NewWalletRepository,
+		repository.NewRefreshTokenRepository,
 		usecase.NewUserUseCase,
 		usecase.NewAdminUseCase,
 		usecase.NewProductUsecase,
