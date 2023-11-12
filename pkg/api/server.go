@@ -25,7 +25,6 @@ func NewServerHTTP(
 	couponHandler *handler.CouponHandler,
 	walletHandler *handler.WalletHandler,
 	OtpHandler *handler.OtpHandler,
-	
 ) *ServerHTTP {
 	engine := gin.New()
 
@@ -47,5 +46,5 @@ func NewServerHTTP(
 }
 
 func (sh *ServerHTTP) Start() {
-	sh.engine.Run(":3000")
+	sh.engine.Run(":8080")
 }
