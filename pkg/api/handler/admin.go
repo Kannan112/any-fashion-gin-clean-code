@@ -68,7 +68,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, res.Response{
-		StatusCode: 201,
+		StatusCode: 200,
 		Message:    "Admin created",
 		Data:       nil,
 		Errors:     nil,
@@ -98,7 +98,7 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 		})
 		return
 	}
-	ss, err := cr.adminUseCase.AdminLogin(admin)
+	result, err := cr.adminUseCase.AdminLogin(admin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -109,12 +109,15 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 		return
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("AdminAuth", ss, 3660*24*30, "", "", false, true)
+	c.SetCookie("AdminAuth", result.Access_token, 3660*24*30, "", "", false, true)
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
 		Message:    "logined success fully",
-		Data:       nil,
-		Errors:     nil,
+		Data: res.Token{
+			Access_token:  result.Access_token,
+			Refresh_token: result.Refresh_token,
+		},
+		Errors: nil,
 	})
 }
 
@@ -170,8 +173,8 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 		})
 		return
 	}
-	errx := cr.adminUseCase.BlockUser(body, adminId)
-	if errx != nil {
+	err = cr.adminUseCase.BlockUser(body, adminId)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "Can't Block",
