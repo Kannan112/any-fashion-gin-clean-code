@@ -3,9 +3,8 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware/token"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -15,12 +14,14 @@ import (
 )
 
 type adminUseCase struct {
-	adminRepo interfaces.AdminRepository
+	adminRepo        interfaces.AdminRepository
+	refreshTokenRepo interfaces.RefreshTokenRepository
 }
 
-func NewAdminUseCase(adminRepo interfaces.AdminRepository) services.AdminUsecase {
+func NewAdminUseCase(adminRepo interfaces.AdminRepository, refresh_token interfaces.RefreshTokenRepository) services.AdminUsecase {
 	return &adminUseCase{
-		adminRepo: adminRepo,
+		adminRepo:        adminRepo,
+		refreshTokenRepo: refresh_token,
 	}
 }
 
@@ -43,32 +44,40 @@ func (c *adminUseCase) CreateAdmin(ctx context.Context, admin req.CreateAdmin) (
 	return adminData, err
 }
 
-func (c *adminUseCase) AdminLogin(admin req.LoginReq) (string, error) {
+func (c *adminUseCase) AdminLogin(admin req.LoginReq) (res.Token, error) {
+	var result res.Token
 	adminData, err := c.adminRepo.AdminLogin(admin.Email)
 	if err != nil {
-		fmt.Println("second")
-		return "", err
+		return result, err
 	}
 
 	if adminData.Email == "" {
-		return "", fmt.Errorf("no user found")
+		return result, fmt.Errorf("no user found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(adminData.Password), []byte(admin.Password))
 	if err != nil {
-		return "", err
-	}
-	claims := jwt.MapClaims{
-		"id":  adminData.ID,
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString([]byte("secret"))
-	if err != nil {
-		return "", err
+		return result, err
 	}
 
-	return ss, nil
+	accessToken, err := token.JWTAccessTokenGen(int(adminData.ID), "admin")
+	if err != nil {
+		return result, err
+	}
+	refreshToken, err := token.JWTRefreshTokenGen(int(adminData.ID), "admin")
+	if err != nil {
+
+		return result, err
+	}
+	result = res.Token{
+		Access_token:  accessToken,
+		Refresh_token: refreshToken,
+	}
+	if err := c.refreshTokenRepo.AdminRefreshTokenAdd(result.Refresh_token, adminData.ID); err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
 func (c adminUseCase) BlockUser(body req.BlockData, adminId int) error {
 	err := c.adminRepo.BlockUser(body, adminId)
