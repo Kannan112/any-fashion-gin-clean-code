@@ -35,6 +35,7 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		&domain.Wallet{},
 		&domain.OfferTable{},
 		&domain.Images{},
+		&domain.AdminRefreshToken{},
 	)
 
 	return db, dbErr
