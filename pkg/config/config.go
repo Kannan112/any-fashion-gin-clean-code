@@ -12,6 +12,9 @@ type Config struct {
 	DBUser           string `mapstructure:"DB_USER"`
 	DBPort           string `mapstructure:"DB_PORT"`
 	DBPassword       string `mapstructure:"DB_PASSWORD"`
+	GoauthClientID   string `mapstructure:"GOAUTH_CLIENTID"`
+	GoauthClientSRC  string `mapstructure:"GOAUTH_CLIENR_SRC"`
+	Redirect_URL     string `mapstructure:"REDIRECT_URL"`
 	AccessToken      string `mapstructure:"ACCESS_TOKEN"`
 	RefreshToken     string `mapstructure:"REFRESH_TOKEN"`
 	RazorKey         string `mapstructure:"RZOR_KEYID"`
@@ -22,7 +25,7 @@ type Config struct {
 }
 
 var envs = []string{
-	"PORT", "DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "ACCESS_TOKEN", "REFRESH_TOKEN", "RZOR_KEYID", "RAZOR_KEYSCR", "TWILIO_SERVICES_ID", "TWILIO_ACCOUNT_SID", "TWILIO_AUTHTOKEN",
+	"PORT", "DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "GOAUTH_CLIENTID", "GOAUTH_CLIENR_SRC", "REDIRECT_URL", "ACCESS_TOKEN", "REFRESH_TOKEN", "RZOR_KEYID", "RAZOR_KEYSCR", "TWILIO_SERVICES_ID", "TWILIO_ACCOUNT_SID", "TWILIO_AUTHTOKEN",
 }
 var config Config
 
