@@ -25,19 +25,20 @@ func NewServerHTTP(
 	couponHandler *handler.CouponHandler,
 	walletHandler *handler.WalletHandler,
 	OtpHandler *handler.OtpHandler,
+	RenewHandler *handler.RenewHandler,
+	AuthHandler *handler.AuthHandler,
 ) *ServerHTTP {
 	engine := gin.New()
 
 	// Use logger from Gin
 	engine.Use(gin.Logger())
 
-	engine.LoadHTMLGlob("./*.html")
+	engine.LoadHTMLGlob("./view/*.html")
 
 	// Swagger docs
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
 	// Setup user routes
-	routes.SetupUserRoutes(engine, userHandler, cartHandler, productHandler, orderHandler, wishlistHandler, couponHandler, walletHandler, OtpHandler)
+	routes.SetupUserRoutes(engine, userHandler, cartHandler, productHandler, orderHandler, wishlistHandler, couponHandler, walletHandler, OtpHandler, RenewHandler, AuthHandler)
 
 	// Setup admin routes
 	routes.SetupAdminRoutes(engine, adminHandler, productHandler, orderHandler, couponHandler)
