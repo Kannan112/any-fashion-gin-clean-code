@@ -35,7 +35,8 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		usecase.NewCouponUseCase,
 		usecase.NewWalletUseCase,
 		usecase.NewOtpUseCase,
-		// usecase.NewTokenRenewUseCase,
+		usecase.NewTokenRenewUseCase,
+		usecase.NewAuthUseCase,
 		handler.NewUserHandler,
 		handler.NewAdminSHandler,
 		handler.NewProductHandler,
@@ -46,7 +47,8 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		handler.NewCouponHandler,
 		handler.NewWalletHandler,
 		handler.NewOtpHandler,
-		//handler.NewRenewHandler,
+		handler.NewRenewHandler,
+		handler.NewAuthHandler,
 		http.NewServerHTTP,
 	)
 
