@@ -19,6 +19,14 @@ func NewRenewHandler(token services.RenewTokenUseCase) *RenewHandler {
 	}
 }
 
+// @Summary Get Access Token
+// @Description Get access token using TokenString
+// @Accept json
+// @Produce json
+// @Param Token body req.AccessToken true "Access Token Request"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /access-token [post]
 func (c *RenewHandler) GetAccessToken(ctx *gin.Context) {
 	var Token req.AccessToken
 	if err := gin.Bind(&Token); err != nil {
