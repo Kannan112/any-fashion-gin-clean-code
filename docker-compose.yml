@@ -9,7 +9,7 @@ services:
       - POSTGRES_DB=bucketeer_db
 
     ports:
-      - "5433:5432"
+      - "5431:5432"
     volumes:
       - data:/var/lib/postgresql/data
   server:
@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 8080:3000
     environment:
       - DB_HOST=database  
       - DB_USER=bucketeer
