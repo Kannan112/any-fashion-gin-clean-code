@@ -1,4 +1,4 @@
-name: Go Build and Test
+name: Go Build, Test, and Deploy
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: build
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -21,23 +21,35 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.20.4
+
       - name: Install Make
         run: |
           sudo apt update
           sudo apt install -y make
-         
+
       - name: Build
         run: make build
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.20.4
 
       - name: Install dependencies
         run: go mod tidy
 
       - name: Run tests
         run: go test -v ./...
-      
-   
+
+  deploy-to-ec2:
+    name: Deploy to EC2
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to EC2 instance
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{secrets.EC2_PUBLIC_IP}} 
+          username: ubuntu
+          key: ${{secrets.EC2_SSH_KEY}}
+          script: |
+            cd ecommerce-fashionsture-cleanarch/
+            git pull
+            docker-compose down  # Stop running containers
+            docker-compose up -d --build  # Recreate and start containers
