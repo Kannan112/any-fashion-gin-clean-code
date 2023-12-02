@@ -42,14 +42,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET_DIR }}
+
       - name: Connect to EC2 instance
         uses: appleboy/ssh-action@master
         with: 
-          host: ${{secrets.EC2_PUBLIC_IP}} 
+          host: ${{ secrets.HOST_DNS }} 
           username: ubuntu
-          key: ${{secrets.EC2_SSH_KEY}}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ecommerce-fashionsture-cleanarch/
+            cd any-fashion-gin-clean-code
             git pull
             docker-compose down  # Stop running containers
             docker-compose up -d --build  # Recreate and start containers
