@@ -62,5 +62,6 @@ jobs:
           script: |
             cd any-fashion-gin-clean-code
             git pull
-            docker compose down  # Stop running containers
-            docker compose up -d --build  # Recreate and start containers
+            sudo docker-compose down  # Stop running containers
+            sudo docker-compose build
+            sudo docker-compose-up  # Recreate and start containers
