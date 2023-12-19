@@ -10,6 +10,11 @@ type LoginReq struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+type GoogleAuth struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
 type OTPData struct {
 	PhoneNumber string
 }

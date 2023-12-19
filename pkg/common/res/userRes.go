@@ -6,6 +6,12 @@ type UserData struct {
 	Email  string `json:"email"`
 	Mobile string `json:"mobile"`
 }
+type UserResponse struct {
+	Id    uint
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
 type UserDetails struct {
 	Name              string
 	Email             string
