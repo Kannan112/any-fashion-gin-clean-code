@@ -37,6 +37,20 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
+// AccountVerify mocks base method.
+func (m *MockUserRepository) AccountVerify(phone string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AccountVerify", phone)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AccountVerify indicates an expected call of AccountVerify.
+func (mr *MockUserRepositoryMockRecorder) AccountVerify(phone interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccountVerify", reflect.TypeOf((*MockUserRepository)(nil).AccountVerify), phone)
+}
+
 // AddAddress mocks base method.
 func (m *MockUserRepository) AddAddress(id int, address req.AddAddress) error {
 	m.ctrl.T.Helper()
@@ -79,6 +93,21 @@ func (m *MockUserRepository) AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse,
 func (mr *MockUserRepositoryMockRecorder) AuthSignUp(Oauth interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthSignUp", reflect.TypeOf((*MockUserRepository)(nil).AuthSignUp), Oauth)
+}
+
+// CheckVerifyPhone mocks base method.
+func (m *MockUserRepository) CheckVerifyPhone(mobileNo string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckVerifyPhone", mobileNo)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckVerifyPhone indicates an expected call of CheckVerifyPhone.
+func (mr *MockUserRepositoryMockRecorder) CheckVerifyPhone(mobileNo interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckVerifyPhone", reflect.TypeOf((*MockUserRepository)(nil).CheckVerifyPhone), mobileNo)
 }
 
 // DeleteAddress mocks base method.

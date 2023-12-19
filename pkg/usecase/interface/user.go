@@ -12,7 +12,6 @@ type UserUseCase interface {
 	UserSignUp(ctx context.Context, user req.UserReq) (res.UserData, error)
 	UserLogin(ctx context.Context, user req.LoginReq) (string, error)
 	IsSignIn(phno string) (bool, error)
-	OtpLogin(phone string) (string, error)
 	FindAddress(ctx context.Context, userId int) (bool, error)
 	AddAddress(id int, body req.AddAddress) error
 	UpdateAddress(id int, addressId int, address req.AddAddress) error

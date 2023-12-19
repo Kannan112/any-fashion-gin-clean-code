@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,14 +39,12 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 	var phno req.OTPData
 	err := c.Bind(&phno)
 	if err != nil {
-		fmt.Println("e1")
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 422,
 			Message:    "unable to process the request",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
-		fmt.Println("e2")
 		return
 	}
 
@@ -62,10 +59,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(isSignIn)
-
 	if !isSignIn {
-		fmt.Println("login err")
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "no user found",
@@ -74,7 +68,6 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println("otp send near", phno)
 	err = cr.otpUseCase.SendOtp(c.Request.Context(), phno)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -89,7 +82,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 201,
 		Message:    "otp send",
-		Data:       nil,
+		Data:       phno.PhoneNumber,
 		Errors:     nil,
 	})
 }
@@ -119,7 +112,6 @@ func (cr *OtpHandler) ValidateOtp(c *gin.Context) {
 		return
 	}
 	err = cr.otpUseCase.VerifyOTP(c, otpDetails)
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -129,24 +121,10 @@ func (cr *OtpHandler) ValidateOtp(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println("test me verify")
-	ss, err := cr.userUseCase.OtpLogin(otpDetails.Phone)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "failed to login",
-			Data:       nil,
-			Errors:     err.Error(),
-		})
-		return
-	}
-
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("UserAuth", ss, 3600*24*30, "", "", false, true)
-	c.JSON(http.StatusOK, res.Response{
-		StatusCode: 200,
-		Message:    "login successful",
-		Data:       nil,
+	c.JSON(http.StatusCreated, res.Response{
+		StatusCode: 201,
+		Message:    "user account verified",
+		Data:       otpDetails.Phone,
 		Errors:     nil,
 	})
 }

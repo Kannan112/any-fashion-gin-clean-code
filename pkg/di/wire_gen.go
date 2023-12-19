@@ -50,7 +50,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	couponUseCase := usecase.NewCouponUseCase(couponRepository)
 	couponHandler := handler.NewCouponHandler(couponUseCase)
 	walletHandler := handler.NewWalletHandler(walletUseCase)
-	otpUseCase := usecase.NewOtpUseCase(cfg)
+	otpUseCase := usecase.NewOtpUseCase(cfg, userRepository)
 	otpHandler := handler.NewOtpHandler(cfg, otpUseCase, userUseCase)
 	renewTokenUseCase := usecase.NewTokenRenewUseCase(refreshTokenRepository)
 	renewHandler := handler.NewRenewHandler(renewTokenUseCase)

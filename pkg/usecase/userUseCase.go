@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -40,10 +41,10 @@ func (c *userUseCase) UserSignUp(ctx context.Context, user req.UserReq) (res.Use
 
 func (c *userUseCase) UserLogin(ctx context.Context, user req.LoginReq) (string, error) {
 	userData, err := c.userRepo.UserLogin(ctx, user.Email)
+
 	if err != nil {
 		return "", err
 	}
-
 	if userData.Email == "" {
 		return "", fmt.Errorf("no user found")
 	}
@@ -52,29 +53,15 @@ func (c *userUseCase) UserLogin(ctx context.Context, user req.LoginReq) (string,
 	if err != nil {
 		return "", err
 	}
-
+	check, err := c.userRepo.CheckVerifyPhone(userData.Mobile)
+	if err != nil {
+		return "", err
+	}
+	if !check {
+		return "", errors.New("account is not verified")
+	}
 	claims := jwt.MapClaims{
 		"id":  userData.ID,
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString([]byte("secret"))
-	if err != nil {
-		return "", err
-	}
-
-	return ss, nil
-}
-
-// --------------------------Otp Login_-------------
-func (c *userUseCase) OtpLogin(phno string) (string, error) {
-	id, err := c.userRepo.OtpLogin(phno)
-	if err != nil {
-		return "", err
-	}
-
-	claims := jwt.MapClaims{
-		"id":  id,
 		"exp": time.Now().Add(time.Hour * 72).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

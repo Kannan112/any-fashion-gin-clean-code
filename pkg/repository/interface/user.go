@@ -13,8 +13,8 @@ type UserRepository interface {
 	UserLogin(ctx context.Context, email string) (domain.Users, error)
 	AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse, error)
 	AuthLogin(email string) (bool, error)
+	CheckVerifyPhone(mobileNo string) (bool, error)
 	IsSignIn(phno string) (bool, error)
-	OtpLogin(phone string) (int, error)
 	FindAddress(ctx context.Context, userId int) (bool, error)
 	AddAddress(id int, address req.AddAddress) error
 	UpdateAddress(id int, addressId int, address req.AddAddress) error
@@ -22,4 +22,5 @@ type UserRepository interface {
 	DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error)
 	ViewProfile(id int) (res.UserData, error)
 	EditProfile(id int, profile req.UserReq) (res.UserData, error)
+	AccountVerify(phone string) error
 }

@@ -50,10 +50,10 @@ func (c *userDatabase) UserLogin(ctx context.Context, email string) (domain.User
 }
 func (c *userDatabase) AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse, error) {
 	var userData res.UserResponse
-	query := `INSERT INTO users (name, email)
-	VALUES ($1, $2)
+	query := `INSERT INTO users (name, email,verify)
+	VALUES ($1, $2, $3)
 	RETURNING id, name, email`
-	err := c.DB.Raw(query, Oauth.Name, Oauth.Email).Scan(&userData).Error
+	err := c.DB.Raw(query, Oauth.Name, Oauth.Email, true).Scan(&userData).Error
 
 	return userData, err
 }
@@ -72,15 +72,10 @@ func (c *userDatabase) IsSignIn(phone string) (bool, error) {
 	query := "SELECT EXISTS(SELECT 1 FROM users WHERE mobile=?)"
 	var isSignIn bool
 	err := c.DB.Raw(query, phone).Scan(&isSignIn).Error
-	return isSignIn, err
-}
-
-// OtpLogin retrieves the user ID based on the provided phone number.
-func (c *userDatabase) OtpLogin(phone string) (int, error) {
-	var id int
-	query := "SELECT id FROM users WHERE mobile=?"
-	err := c.DB.Raw(query, phone).Scan(&id).Error
-	return id, err
+	if err != nil {
+		return false, err
+	}
+	return isSignIn, nil
 }
 
 // AddAddress adds a new address for a user.
@@ -121,8 +116,6 @@ func (c *userDatabase) UpdateAddress(id int, addressID int, address req.AddAddre
 			return err
 		}
 	}
-
-	// Check if the address belongs to the user.
 	var check bool
 	addressExists := `
 		SELECT EXISTS(SELECT * FROM addresses WHERE users_id = $1 AND id = $2)
@@ -231,11 +224,28 @@ func (c *userDatabase) DeleteAddress(ctx context.Context, userID, addressID int)
 func (c *userDatabase) FindAddress(ctx context.Context, userID int) (bool, error) {
 	var exists bool
 	checkAddress := `
-		SELECT EXISTS(SELECT * FROM addresses WHERE users_id = $1 AND is_default = true)
-	`
+		SELECT EXISTS(SELECT * FROM addresses WHERE users_id = $1 AND is_default = true)`
 	err := c.DB.Raw(checkAddress, userID).Scan(&exists).Error
 	if err != nil {
 		return false, err
 	}
 	return exists, nil
+}
+
+func (c *userDatabase) CheckVerifyPhone(mobileNo string) (bool, error) {
+	var verify bool
+	verifyAccountPhone := `SELECT EXISTS(select * from users where mobile=$1 and verify=$2)`
+	err := c.DB.Raw(verifyAccountPhone, mobileNo, true).Scan(&verify).Error
+	if err != nil {
+		return false, err
+	}
+	return verify, nil
+}
+
+func (c *userDatabase) AccountVerify(phone string) error {
+	query := `UPDATE users set verify=$1 WHERE mobile=$2`
+	if err := c.DB.Exec(query, true, phone).Error; err != nil {
+		return err
+	}
+	return nil
 }
