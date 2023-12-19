@@ -1,4 +1,11 @@
 definitions:
+  req.AccessToken:
+    properties:
+      token_string:
+        type: string
+    required:
+    - token_string
+    type: object
   req.AddAddress:
     properties:
       city:
@@ -166,6 +173,30 @@ definitions:
 info:
   contact: {}
 paths:
+  /access-token:
+    post:
+      consumes:
+      - application/json
+      description: Get access token using TokenString
+      parameters:
+      - description: Access Token Request
+        in: body
+        name: Token
+        required: true
+        schema:
+          $ref: '#/definitions/req.AccessToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Get Access Token
   /admin/adminlogin:
     post:
       consumes:

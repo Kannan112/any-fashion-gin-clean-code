@@ -4,6 +4,43 @@
         "contact": {}
     },
     "paths": {
+        "/access-token": {
+            "post": {
+                "description": "Get access token using TokenString",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Access Token",
+                "parameters": [
+                    {
+                        "description": "Access Token Request",
+                        "name": "Token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.AccessToken"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/adminlogin": {
             "post": {
                 "description": "Logs in an admin user and returns an authentication token",
@@ -1924,6 +1961,17 @@
         }
     },
     "definitions": {
+        "req.AccessToken": {
+            "type": "object",
+            "required": [
+                "token_string"
+            ],
+            "properties": {
+                "token_string": {
+                    "type": "string"
+                }
+            }
+        },
         "req.AddAddress": {
             "type": "object",
             "required": [
