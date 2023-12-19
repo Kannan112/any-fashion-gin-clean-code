@@ -6,10 +6,12 @@ import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware"
 )
 
-func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartHandler *handler.CartHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler, walletHandler *handler.WalletHandler, otpHandler *handler.OtpHandler, renew *handler.RenewHandler, auth *handler.AuthHandler) {
+func SetupUserRoutes(engine *gin.Engine, userHandler *handler.UserHandler, cartHandler *handler.CartHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler, walletHandler *handler.WalletHandler, otpHandler *handler.OtpHandler, renew *handler.RenewHandler, authHandler *handler.AuthHandler) {
 
 	engine.POST("/renew", renew.GetAccessToken)
-	engine.GET("/googleauth", auth.UseGoogleAuthLoginPage)
+	auth := engine.Group("/auth")
+	auth.GET("/google/login", authHandler.GoogleLogin)
+	auth.GET("/google/callback", authHandler.GoogleAuthCallback)
 
 	user := engine.Group("/user")
 	{

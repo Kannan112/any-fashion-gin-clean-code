@@ -1,16 +1,19 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/config"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	services "github.com/kannan112/go-gin-clean-arch/pkg/usecase/interface"
-	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
+	"golang.org/x/oauth2"
 )
 
 type AuthHandler struct {
@@ -20,60 +23,117 @@ type AuthHandler struct {
 	Config           config.Config
 }
 
-func NewAuthHandler(userAuthUsecase services.UserUseCase, adminAuthUsecase services.AdminUsecase, config config.Config) *AuthHandler {
+func NewAuthHandler(userAuthUsecase services.UserUseCase, adminAuthUsecase services.AdminUsecase, config config.Config, AuthUseCase services.AuthUserCase) *AuthHandler {
 	return &AuthHandler{
 		UserAuthUsecase:  userAuthUsecase,
 		AdminAuthUsecase: adminAuthUsecase,
 		Config:           config,
+		AuthUseCase:      AuthUseCase,
 	}
 }
 
-func (c *AuthHandler) UseGoogleAuthLoginPage(ctx *gin.Context) {
-	ctx.HTML(200, "googleauth.html", nil)
+func SetUpConfig(c *AuthHandler) *oauth2.Config {
+	conf := &oauth2.Config{
+		ClientID:     c.Config.GoauthClientID,
+		ClientSecret: c.Config.GoauthClientSRC,
+		RedirectURL:  c.Config.Redirect_URL,
+		Scopes: []string{
+			"https://www.googleapis.com/auth/userinfo.email",
+			"https://www.googleapis.com/auth/userinfo.profile",
+		},
+		Endpoint: google.Endpoint,
+	}
+	return conf
 }
 
-func (c *AuthHandler) UserGoogleAuthInitialize(ctx *gin.Context) {
-	goauthclientID := c.Config.GoauthClientID
-	goauthClientSrc := c.Config.GoauthClientSRC
-	callbackUrl := c.Config.Redirect_URL
-	goth.UseProviders(
-		google.New(goauthclientID, goauthClientSrc, callbackUrl, "email", "profile"),
-	)
-
-	// start google login
-	gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
+func (auth *AuthHandler) GoogleLogin(ctx *gin.Context) {
+	googleConfig := SetUpConfig(auth) // &c.Config
+	url := googleConfig.AuthCodeURL("randomstate")
+	ctx.Redirect(http.StatusSeeOther, url)
 }
 
-func (c *AuthHandler) UserGoogoleAuthCallBack(ctx *gin.Context) {
-	googleuser, err := gothic.CompleteUserAuth(ctx.Writer, ctx.Request)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, res.Response{
-			StatusCode: http.StatusInternalServerError,
-			Message:    "failed to get user details",
+func (c *AuthHandler) GoogleAuthCallback(ctx *gin.Context) {
+	state := ctx.Query("state")
+	if state != "randomstate" {
+		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
+			StatusCode: http.StatusNonAuthoritativeInfo,
+			Message:    "some internal server error occured",
 			Data:       nil,
-			Errors:     err,
+			Errors:     "failed to match with state",
 		})
+		return
 	}
-	data := domain.Users{
-		Name:   googleuser.Name,
-		Email:  googleuser.Email,
-		Images: googleuser.AvatarURL,
-	}
-
-	accessToken, refreshToken, err := c.AuthUseCase.GoogleLoginUser(ctx, data)
-	tokens := map[string]string{
-		"accessToken":  accessToken,
-		"refreshToken": refreshToken,
-	}
+	code := ctx.Query("code")
+	googleConfig := SetUpConfig(c)
+	token, err := googleConfig.Exchange(ctx, code)
 	if err != nil {
 		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
 			StatusCode: http.StatusNonAuthoritativeInfo,
+			Message:    "Error exchanging code for token",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+
+	if err != nil {
+		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
+			StatusCode: http.StatusNonAuthoritativeInfo,
+			Message:    "Error getting user info from Google:",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	authData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
+			StatusCode: http.StatusNonAuthoritativeInfo,
+			Message:    "failed to read:",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+
+	var userInfo domain.GoAuthUserInfo
+	err = json.Unmarshal(authData, &userInfo)
+	if err != nil {
+		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
+			StatusCode: http.StatusNonAuthoritativeInfo,
+			Message:    "failed to write:",
+			Data:       nil,
+			Errors:     err.Error(),
+		})
+		return
+	}
+	fmt.Printf("ID: %s\nEmail: %s\nName: %s\n", userInfo.ID, userInfo.Email, userInfo.Name)
+
+	data := req.GoogleAuth{
+		Name:  userInfo.Name,
+		Email: userInfo.Email,
+	}
+	fmt.Println("testingAneERror")
+	accessToken, refreshToken, err := c.AuthUseCase.GoogleLoginUser(ctx, data)
+	if err != nil {
+		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
+			StatusCode: http.StatusBadGateway,
 			Message:    "some internal server error occured",
 			Data:       nil,
 			Errors:     err.Error(),
 		})
 		return
 	}
+	tokens := map[string]string{
+		"accessToken":  accessToken,
+		"refreshToken": refreshToken,
+	}
+
+	fmt.Println("testingAne")
+
 	ctx.JSON(http.StatusOK, res.Response{
 		StatusCode: http.StatusOK,
 		Message:    "successfully login",
