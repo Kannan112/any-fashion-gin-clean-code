@@ -51,6 +51,36 @@ func (mr *MockUserRepositoryMockRecorder) AddAddress(id, address interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAddress", reflect.TypeOf((*MockUserRepository)(nil).AddAddress), id, address)
 }
 
+// AuthLogin mocks base method.
+func (m *MockUserRepository) AuthLogin(email string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthLogin", email)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthLogin indicates an expected call of AuthLogin.
+func (mr *MockUserRepositoryMockRecorder) AuthLogin(email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthLogin", reflect.TypeOf((*MockUserRepository)(nil).AuthLogin), email)
+}
+
+// AuthSignUp mocks base method.
+func (m *MockUserRepository) AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthSignUp", Oauth)
+	ret0, _ := ret[0].(res.UserResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthSignUp indicates an expected call of AuthSignUp.
+func (mr *MockUserRepositoryMockRecorder) AuthSignUp(Oauth interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthSignUp", reflect.TypeOf((*MockUserRepository)(nil).AuthSignUp), Oauth)
+}
+
 // DeleteAddress mocks base method.
 func (m *MockUserRepository) DeleteAddress(ctx context.Context, userId, AddressesId int) ([]domain.Addresss, error) {
 	m.ctrl.T.Helper()

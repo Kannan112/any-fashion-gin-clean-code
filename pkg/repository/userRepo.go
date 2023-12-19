@@ -45,9 +45,26 @@ func (c *userDatabase) UserLogin(ctx context.Context, email string) (domain.User
 	if userBlocked {
 		return userData, fmt.Errorf("user is blocked")
 	}
-
 	err = c.DB.Raw("SELECT * FROM users WHERE email=?", email).Scan(&userData).Error
 	return userData, err
+}
+func (c *userDatabase) AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse, error) {
+	var userData res.UserResponse
+	query := `INSERT INTO users (name, email)
+	VALUES ($1, $2)
+	RETURNING id, name, email`
+	err := c.DB.Raw(query, Oauth.Name, Oauth.Email).Scan(&userData).Error
+
+	return userData, err
+}
+
+func (c *userDatabase) AuthLogin(email string) (bool, error) {
+	var check bool
+	query := `select EXISTS(SELECT * FROM users where email=$1)`
+	if err := c.DB.Raw(query, email).Scan(&check).Error; err != nil {
+		return false, err
+	}
+	return check, nil
 }
 
 // IsSignIn checks if a user is signed in based on their phone number.
