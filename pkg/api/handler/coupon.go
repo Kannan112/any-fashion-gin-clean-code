@@ -32,6 +32,7 @@ func NewCouponHandler(CouponUsecase services.CouponUseCase) *CouponHandler {
 // @Param new_coupon_details body req.Coupons true "details of new coupon to be created"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/coupon/add [post]
 func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 
@@ -106,6 +107,7 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 // @Param admin body req.UpdateCoupon true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/coupon/update/{couponId} [patch]
 func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 	strId := ctx.Param("couponId")
@@ -158,6 +160,7 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/coupon [get]
 func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 	coupon, err := c.CouponUseCase.ViewCoupon(ctx)
@@ -191,6 +194,7 @@ func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 // @Param code path string true "code"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/coupon/apply/{code} [post]
 func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)

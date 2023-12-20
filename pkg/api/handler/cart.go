@@ -31,6 +31,7 @@ func NewCartHandler(cartUsecases services.CartUseCases) *CartHandler {
 // @Param product_items_id path string true "product_items_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/cart/add/{product_items_id} [post]
 func (cr *CartHandler) AddToCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
@@ -82,6 +83,7 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 // @Param product_item_id path string true "product_item_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/cart/remove/{product_item_id} [delete]
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
@@ -135,6 +137,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/cart/list [get]
 func (cr *CartHandler) ListCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
@@ -176,7 +179,8 @@ func (cr *CartHandler) ListCart(c *gin.Context) {
 // @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart-item/list [get]
+// @Security BearerTokenAuth
+// @Router /api/user/cart-item/list [get]
 func (c *CartHandler) ListCartItems(ctx *gin.Context) {
 	var pagenation req.Pagenation
 	countStr := ctx.Query("count")

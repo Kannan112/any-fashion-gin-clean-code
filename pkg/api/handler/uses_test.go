@@ -114,12 +114,12 @@ func TestUserSignUp(t *testing.T) {
 			tt.buildStub(*userUseCase)
 			engine := gin.Default()            //create an engin instance
 			recorder := httptest.NewRecorder() //creeate a responce recorder to capture the responce from the request
-			engine.POST("/user/signup", UserHandler.UserSignUp)
+			engine.POST("/api/user/signup", UserHandler.UserSignUp)
 			var body []byte
 			fmt.Println(tt.userData)
 			body, err := json.Marshal(tt.userData) //marshal the user data field into json
 			assert.NoError(t, err)
-			url := "/user/signup"
+			url := "/api/user/signup"
 
 			req := httptest.NewRequest(http.MethodPost, url, bytes.NewBuffer(body)) //create a new http request
 			engine.ServeHTTP(recorder, req)                                         //execute the http req

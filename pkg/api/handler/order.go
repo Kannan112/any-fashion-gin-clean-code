@@ -34,6 +34,7 @@ func NewOrderHandler(orderUseCase services.OrderUseCase, walletUseCase services.
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/order/orderall [get]
 func (cr *OrderHandler) OrderAll(c *gin.Context) {
 
@@ -76,6 +77,7 @@ func (cr *OrderHandler) OrderAll(c *gin.Context) {
 // @Param orderId path string true "orderId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/order/cancel/{orderId} [patch]
 func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
@@ -136,6 +138,7 @@ func (cr *OrderHandler) UserCancelOrder(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/order/listall [get]
 func (ch *OrderHandler) ListAllOrders(c *gin.Context) {
 	StartDateStr := c.Query("start")
@@ -340,6 +343,7 @@ func (cr *OrderHandler) OrderDetails(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/order/placed [get]
 func (c *OrderHandler) ListOrderByPlaced(ctx *gin.Context) {
 	data, err := c.orderUsecase.ListOrderByPlaced(ctx)
@@ -370,6 +374,7 @@ func (c *OrderHandler) ListOrderByPlaced(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/order/cancelled [get]
 func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
 	data, err := c.orderUsecase.ListOrderByCancelled(ctx)
@@ -401,6 +406,7 @@ func (c *OrderHandler) ListOrderByCancelled(ctx *gin.Context) {
 // @Param end query string false "End date (format: 2006-1-2)"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/order [get]
 func (c *OrderHandler) ViewOrder(ctx *gin.Context) {
 	startDateStr := ctx.Query("start")
@@ -492,6 +498,7 @@ func (c *OrderHandler) ListOrdersOfUsers(ctx *gin.Context) {
 // @Param orderid path string true "orderid"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/order/{orderid} [post]
 func (c *OrderHandler) AdminOrderDetails(ctx *gin.Context) {
 	orderId, err := strconv.Atoi(ctx.Param("orderid"))

@@ -78,7 +78,6 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	var admin req.LoginReq
 	err := c.Bind(&admin)
 	if err != nil {
-
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
 			Message:    "bind faild",
@@ -97,8 +96,6 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 		})
 		return
 	}
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("AdminAuth", result.Access_token, 3660*24*30, "", "", false, true)
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
 		Message:    "logined success fully",
@@ -139,6 +136,7 @@ func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 // @Param blocking_details body req.BlockData true "User bolocking details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/user/block [patch]
 func (cr *AdminHandler) BlockUser(c *gin.Context) {
 	var body req.BlockData
@@ -191,6 +189,7 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 // @Param user_id path string true "ID of the user to be blocked"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/user/unblock/{user_id} [patch]
 func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	paramsId := c.Param("userId")
@@ -232,6 +231,7 @@ func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/dashbord/list [get]
 func (cr *AdminHandler) GetDashBord(c *gin.Context) {
 	data, err := cr.adminUseCase.GetDashBord(c)
@@ -333,6 +333,7 @@ func (cr *AdminHandler) ViewSalesReport(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/sales/download [get]
 func (cr *AdminHandler) DownloadSalesReport(ctx *gin.Context) {
 	sales, err := cr.adminUseCase.ViewSalesReport(ctx)

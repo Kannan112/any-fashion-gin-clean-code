@@ -31,6 +31,7 @@ func NewWishlistHandler(wishlistusecase services.WishlistUseCases) *WishlistHand
 // @Param itemId path string true "itemId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wishlist/add/{itemId} [post]
 func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 	str := c.Param("itemId")
@@ -83,6 +84,7 @@ func (cr *WishlistHandler) AddToWishlist(c *gin.Context) {
 // @Param itemId path string true "itemId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wishlist/remove/{itemId} [DELETE]
 func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 	str := c.Param("itemId")
@@ -135,6 +137,7 @@ func (cr *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 // @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wishlist/list/ [GET]
 func (c *WishlistHandler) ListAllWishlist(ctx *gin.Context) {
 	var pagenation req.Pagenation

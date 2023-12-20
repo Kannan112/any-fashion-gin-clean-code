@@ -28,6 +28,7 @@ func NewWalletHandler(WalletUseCase services.WalletUseCase) *WalletHandler {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wallet [get]
 func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)
@@ -68,6 +69,7 @@ func (c *WalletHandler) WallerProfile(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wallet/apply [post]
 func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)
@@ -107,6 +109,7 @@ func (c *WalletHandler) ApplyWallet(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/wallet/remove [patch]
 func (c *WalletHandler) RemoveWallet(ctx *gin.Context) {
 	userid, err := handlerUtil.GetUserIdFromContext(ctx)

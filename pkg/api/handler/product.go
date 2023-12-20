@@ -31,6 +31,7 @@ func NewProductHandler(productUseCase services.ProductUseCase) *ProductHandler {
 // @Param category_name body req.Category true "New category name"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/category/add [post]
 func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 	var category req.Category
@@ -75,6 +76,7 @@ func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 // @Param category_details body req.Category true "category info"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/category/update/{id} [patch]
 func (cr *ProductHandler) UpdateCategory(c *gin.Context) {
 	var category req.Category
@@ -127,6 +129,7 @@ func (cr *ProductHandler) UpdateCategory(c *gin.Context) {
 // @Param category_id path string true "category_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/category/delete/{category_id} [delete]
 func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 	paramID := c.Param("category_id")
@@ -169,6 +172,7 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Param page query int false "Number of items to retrieve per page"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/admin/category/listall [get]
 func (cr *ProductHandler) ListCategories(c *gin.Context) {
 	var pagenation req.Pagenation
@@ -220,6 +224,7 @@ func (cr *ProductHandler) ListCategories(c *gin.Context) {
 // @Param category_id path string true "category_id"
 // @Success 200 {object} res.Response
 // @Failure 422 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/category/listspecific/{category_id} [get]
 func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 	var category []res.Product
@@ -266,6 +271,7 @@ func (cr *ProductHandler) DisplayCategory(c *gin.Context) {
 // @Param product body req.Product true "Product details"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/admin/product/add [post]
 func (cr *ProductHandler) AddProduct(c *gin.Context) {
 	var product req.Product
@@ -311,6 +317,7 @@ func (cr *ProductHandler) AddProduct(c *gin.Context) {
 // @Param product body req.Product true "Product details"
 // @Success 200 {object} res.Response "Successfully updated new product"
 // @Failure 400 {object} res.Response "Failed to add new product"
+// @Security BearerTokenAuth
 // @Router /api/admin/product/update/{id} [patch]
 func (cr *ProductHandler) UpdateProduct(c *gin.Context) {
 	var product req.Product
@@ -412,6 +419,7 @@ func (cr *ProductHandler) ListProducts(c *gin.Context) {
 // @Param id path string true "id"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/admin/product/{id} [get]
 func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
 	productId := c.Param("id")
@@ -452,6 +460,7 @@ func (cr *ProductHandler) DisplayProduct(c *gin.Context) {
 // @Param product body req.ProductItems true "Product details"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/admin/product-item/add [post]
 func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 	var productItem req.ProductItem
@@ -493,6 +502,7 @@ func (cr *ProductHandler) AddProductItem(c *gin.Context) {
 // @Param product body req.ProductItems true "Product details"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/admin/product-item/update [patch]
 func (cr *ProductHandler) UpdateProductItem(c *gin.Context) {
 	var productItem req.ProductItems
@@ -564,6 +574,7 @@ func (cr *ProductHandler) DeleteProductItem(c *gin.Context) {
 // @Param id path string true "id"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/admin/product-item/display/{id} [get]
 
 // Display Product Item
@@ -576,6 +587,7 @@ func (cr *ProductHandler) DeleteProductItem(c *gin.Context) {
 // @Param product_id path string true "id"
 // @Success 200 {object} res.Response "Successfully added new product item"
 // @Failure 400 {object} res.Response "Failed to add new product item"
+// @Security BearerTokenAuth
 // @Router /api/user/product-item/{product_id} [get]
 func (cr *ProductHandler) DisaplyaAllProductItems(c *gin.Context) {
 	paramsId := c.Param("product_id")

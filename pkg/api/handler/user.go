@@ -37,6 +37,7 @@ func NewUserHandler(usecase services.UserUseCase, cartcase services.CartUseCases
 // @Param user_details body  req.UserReq true "User details"
 // @Success 201 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/signup [post]
 func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 	var user req.UserReq
@@ -103,6 +104,7 @@ func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 // @Param   input   body     req.LoginReq{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
 // @Router /api/user/login [post]
 func (cr *UserHandler) UserLogin(c *gin.Context) {
 	var user req.LoginReq
@@ -117,7 +119,7 @@ func (cr *UserHandler) UserLogin(c *gin.Context) {
 		return
 
 	}
-	sessionValue, err := cr.userUseCase.UserLogin(c.Request.Context(), user)
+	Token, err := cr.userUseCase.UserLogin(c.Request.Context(), user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
 			StatusCode: 400,
@@ -127,12 +129,10 @@ func (cr *UserHandler) UserLogin(c *gin.Context) {
 		})
 		return
 	}
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("UserAuth", sessionValue, 3600*24*30, "", "", false, true)
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
 		Message:    "logined successfuly",
-		Data:       nil,
+		Data:       Token,
 		Errors:     nil,
 	})
 
@@ -149,7 +149,8 @@ func (cr *UserHandler) UserLogin(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/logout [get]
+// @Security BearerTokenAuth
+// @Router /api/user/logout [get]
 func (cr *UserHandler) UserLogout(c *gin.Context) {
 	c.SetCookie("UserAuth", "", 1, "", "", false, true)
 	c.JSON(http.StatusOK, gin.H{
@@ -167,7 +168,8 @@ func (cr *UserHandler) UserLogout(c *gin.Context) {
 // @Param   input   body     req.AddAddress{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/add [post]
+// @Security BearerTokenAuth
+// @Router /api/user/address/add [post]
 func (cr *UserHandler) AddAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -221,7 +223,8 @@ func (cr *UserHandler) AddAddress(c *gin.Context) {
 // @Param   input   body     req.AddAddress{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/update/{addressId} [patch]
+// @Security BearerTokenAuth
+// @Router /api/user/address/update/{addressId} [patch]
 func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 	paramsId := c.Param("addressId")
 	addressId, err := strconv.Atoi(paramsId)
@@ -282,7 +285,8 @@ func (cr *UserHandler) UpdateAddress(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/list [get]
+// @Security BearerTokenAuth
+// @Router /api/user/address/list [get]
 func (cr *UserHandler) ListallAddress(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -321,7 +325,8 @@ func (cr *UserHandler) ListallAddress(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/profile/view [get]
+// @Security BearerTokenAuth
+// @Router /api/user/profile/view [get]
 func (cr *UserHandler) ViewProfile(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -361,7 +366,8 @@ func (cr *UserHandler) ViewProfile(c *gin.Context) {
 // @Param   input   body     req.UserReq{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/profile/edit [patch]
+// @Security BearerTokenAuth
+// @Router /api/user/profile/edit [patch]
 func (cr *UserHandler) EditProfile(c *gin.Context) {
 	id, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -412,7 +418,8 @@ func (cr *UserHandler) EditProfile(c *gin.Context) {
 // @Param addressId path string true "addressId"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/address/delete/{addressId} [delete]
+// @Security BearerTokenAuth
+// @Router /api/user/address/delete/{addressId} [delete]
 func (cr *UserHandler) DeleteAddress(ctx *gin.Context) {
 	addressStr := ctx.Param("addressId")
 	addressId, err := strconv.Atoi(addressStr)
