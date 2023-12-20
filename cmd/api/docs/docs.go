@@ -1012,6 +1012,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get Access Token",
                 "parameters": [
                     {

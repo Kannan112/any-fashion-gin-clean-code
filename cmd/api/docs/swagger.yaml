@@ -829,6 +829,8 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Get Access Token
+      tags:
+      - Users
   /api/user/address/add:
     post:
       consumes:
