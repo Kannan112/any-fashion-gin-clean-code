@@ -185,21 +185,6 @@ func (mr *MockUserRepositoryMockRecorder) ListAllAddress(id interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllAddress", reflect.TypeOf((*MockUserRepository)(nil).ListAllAddress), id)
 }
 
-// OtpLogin mocks base method.
-func (m *MockUserRepository) OtpLogin(phone string) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OtpLogin", phone)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// OtpLogin indicates an expected call of OtpLogin.
-func (mr *MockUserRepositoryMockRecorder) OtpLogin(phone interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OtpLogin", reflect.TypeOf((*MockUserRepository)(nil).OtpLogin), phone)
-}
-
 // UpdateAddress mocks base method.
 func (m *MockUserRepository) UpdateAddress(id, addressId int, address req.AddAddress) error {
 	m.ctrl.T.Helper()
