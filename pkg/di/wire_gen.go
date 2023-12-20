@@ -23,14 +23,14 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		return nil, err
 	}
 	userRepository := repository.NewUserRepository(gormDB)
-	userUseCase := usecase.NewUserUseCase(userRepository)
+	refreshTokenRepository := repository.NewRefreshTokenRepository(gormDB)
+	userUseCase := usecase.NewUserUseCase(userRepository, refreshTokenRepository)
 	cartRepository := repository.NewCartRepository(gormDB)
 	cartUseCases := usecase.NewCartUseCase(cartRepository)
 	walletRepo := repository.NewWalletRepository(gormDB)
 	walletUseCase := usecase.NewWalletUseCase(walletRepo)
 	userHandler := handler.NewUserHandler(userUseCase, cartUseCases, walletUseCase)
 	adminRepository := repository.NewAdminRepository(gormDB)
-	refreshTokenRepository := repository.NewRefreshTokenRepository(gormDB)
 	adminUsecase := usecase.NewAdminUseCase(adminRepository, refreshTokenRepository)
 	adminHandler := handler.NewAdminSHandler(adminUsecase)
 	cartHandler := handler.NewCartHandler(cartUseCases)
@@ -54,7 +54,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	otpHandler := handler.NewOtpHandler(cfg, otpUseCase, userUseCase)
 	renewTokenUseCase := usecase.NewTokenRenewUseCase(refreshTokenRepository)
 	renewHandler := handler.NewRenewHandler(renewTokenUseCase)
-	authUserCase := usecase.NewAuthUseCase(userRepository)
+	authUserCase := usecase.NewAuthUseCase(userRepository, refreshTokenRepository)
 	authHandler := handler.NewAuthHandler(userUseCase, adminUsecase, cfg, authUserCase)
 	serverHTTP := http.NewServerHTTP(userHandler, adminHandler, cartHandler, productHandler, orderHandler, paymentHandler, wishlistHandler, couponHandler, walletHandler, otpHandler, renewHandler, authHandler)
 	return serverHTTP, nil

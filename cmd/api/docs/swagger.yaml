@@ -171,7 +171,12 @@ definitions:
         type: integer
     type: object
 info:
-  contact: {}
+  contact:
+    email: abhinandarun11@gmail.com
+    name: API Support
+  description: Backend API built with Golang using Clean Code architecture
+  title: AnyFashion Application API
+  version: 1.0.0
 paths:
   /api/admin/adminlogin:
     post:
@@ -223,6 +228,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Create new product category
       tags:
       - Category
@@ -249,6 +256,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin can delete a category
       tags:
       - Category
@@ -278,6 +287,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: View all available categories
       tags:
       - Category
@@ -310,6 +321,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin can update category details
       tags:
       - Category
@@ -330,6 +343,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admins and users can see all available coupons
       tags:
       - Coupon
@@ -357,6 +372,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin can create new coupon
       tags:
       - Coupon
@@ -389,6 +406,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Update a existing coupon
       tags:
       - Coupon
@@ -437,6 +456,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin Dashboard
       tags:
       - Admin
@@ -484,6 +505,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order view
       tags:
       - Order
@@ -510,6 +533,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order details
       tags:
       - Order
@@ -530,6 +555,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order cancelled
       tags:
       - Order
@@ -550,6 +577,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order placed
       tags:
       - Order
@@ -577,6 +606,8 @@ paths:
           description: Failed to add new product item
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add products item
       tags:
       - Product Item
@@ -604,6 +635,8 @@ paths:
           description: Failed to add new product item
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add products item
       tags:
       - Product Item
@@ -630,6 +663,8 @@ paths:
           description: Failed to add new product item
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Display products
       tags:
       - Product
@@ -657,6 +692,8 @@ paths:
           description: Failed to add new product item
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Creates a new produc
       tags:
       - Product
@@ -689,6 +726,8 @@ paths:
           description: Failed to add new product
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Update product
       tags:
       - Product
@@ -705,6 +744,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin can download sales report
       tags:
       - Admin
@@ -731,6 +772,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin BlockUser
       tags:
       - Admin
@@ -757,6 +800,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Admin can unbolock a blocked user
       tags:
       - Admin
@@ -784,6 +829,150 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: Get Access Token
+  /api/user/address/add:
+    post:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: add-address
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.AddAddress'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add Address
+      tags:
+      - Address
+  /api/user/address/delete/{addressId}:
+    delete:
+      consumes:
+      - application/json
+      description: user can delete any of his addresses
+      operationId: delete-address
+      parameters:
+      - description: addressId
+        in: path
+        name: addressId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Delete Address
+      tags:
+      - Address
+  /api/user/address/list:
+    get:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: list-all-addresses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: List Addresses
+      tags:
+      - Address
+  /api/user/address/update/{addressId}:
+    patch:
+      consumes:
+      - application/json
+      description: user update addresses
+      operationId: update-address
+      parameters:
+      - description: addressId
+        in: path
+        name: addressId
+        required: true
+        type: string
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.AddAddress'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Update Address
+      tags:
+      - Address
+  /api/user/cart-item/list:
+    get:
+      consumes:
+      - application/json
+      description: User can view items in cart
+      operationId: list-cart-items
+      parameters:
+      - description: Page number for pagination
+        in: query
+        name: count
+        type: integer
+      - description: Number of items to retrieve per page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: user can view
+      tags:
+      - Cart
   /api/user/cart/add/{product_items_id}:
     post:
       consumes:
@@ -807,6 +996,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: User add product-item to cart
       tags:
       - Cart
@@ -827,6 +1018,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: user can view
       tags:
       - Cart
@@ -853,6 +1046,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: user remove item
       tags:
       - Cart
@@ -880,6 +1075,8 @@ paths:
           description: Unprocessable Entity
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Fetch details of a specific category using category id
       tags:
       - Category
@@ -906,6 +1103,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: user apply coupon
       tags:
       - Coupon
@@ -953,7 +1152,31 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: User Login
+      tags:
+      - Users
+  /api/user/logout:
+    get:
+      consumes:
+      - application/json
+      description: User logout to access the ecommerce site
+      operationId: UserLogout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: User Logout
       tags:
       - Users
   /api/user/order/cancel/{orderId}:
@@ -979,6 +1202,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order cart
       tags:
       - Order
@@ -999,6 +1224,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order status
       tags:
       - Order
@@ -1019,6 +1246,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: order cart
       tags:
       - Cart
@@ -1099,9 +1328,62 @@ paths:
           description: Failed to add new product item
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: display products item
       tags:
       - Product Item
+  /api/user/profile/edit:
+    patch:
+      consumes:
+      - application/json
+      description: Edit user prodile ecommerce site
+      operationId: EditProfile
+      parameters:
+      - description: Input Field
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/req.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Edit Profile
+      tags:
+      - Profile
+  /api/user/profile/view:
+    get:
+      consumes:
+      - application/json
+      description: Login as a user to access the ecommerce site
+      operationId: ViewProfile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: View Profile
+      tags:
+      - Profile
   /api/user/signup:
     post:
       consumes:
@@ -1126,6 +1408,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: user-signup
       tags:
       - Users
@@ -1146,6 +1430,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Wallet Profile
       tags:
       - Profile Wallet
@@ -1166,6 +1452,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Wallet Profile
       tags:
       - Profile Wallet
@@ -1186,6 +1474,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Wallet Profile
       tags:
       - Profile Wallet
@@ -1212,6 +1502,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add Wishlist
       tags:
       - Wishlist
@@ -1241,6 +1533,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: List wishl list
       tags:
       - Wishlist
@@ -1267,208 +1561,14 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Remove Item
       tags:
       - Wishlist
-  /user/address/add:
-    post:
-      consumes:
-      - application/json
-      description: Login as a user to access the ecommerce site
-      operationId: add-address
-      parameters:
-      - description: Input Field
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/req.AddAddress'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Add Address
-      tags:
-      - Address
-  /user/address/delete/{addressId}:
-    delete:
-      consumes:
-      - application/json
-      description: user can delete any of his addresses
-      operationId: delete-address
-      parameters:
-      - description: addressId
-        in: path
-        name: addressId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Delete Address
-      tags:
-      - Address
-  /user/address/list:
-    get:
-      consumes:
-      - application/json
-      description: Login as a user to access the ecommerce site
-      operationId: list-all-addresses
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: List Addresses
-      tags:
-      - Address
-  /user/address/update/{addressId}:
-    patch:
-      consumes:
-      - application/json
-      description: user update addresses
-      operationId: update-address
-      parameters:
-      - description: addressId
-        in: path
-        name: addressId
-        required: true
-        type: string
-      - description: Input Field
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/req.AddAddress'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Update Address
-      tags:
-      - Address
-  /user/cart-item/list:
-    get:
-      consumes:
-      - application/json
-      description: User can view items in cart
-      operationId: list-cart-items
-      parameters:
-      - description: Page number for pagination
-        in: query
-        name: count
-        type: integer
-      - description: Number of items to retrieve per page
-        in: query
-        name: page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: user can view
-      tags:
-      - Cart
-  /user/logout:
-    get:
-      consumes:
-      - application/json
-      description: User logout to access the ecommerce site
-      operationId: UserLogout
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: User Logout
-      tags:
-      - Users
-  /user/profile/edit:
-    patch:
-      consumes:
-      - application/json
-      description: Edit user prodile ecommerce site
-      operationId: EditProfile
-      parameters:
-      - description: Input Field
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/req.UserReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: Edit Profile
-      tags:
-      - Profile
-  /user/profile/view:
-    get:
-      consumes:
-      - application/json
-      description: Login as a user to access the ecommerce site
-      operationId: ViewProfile
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: View Profile
-      tags:
-      - Profile
+securityDefinitions:
+  BearerTokenAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

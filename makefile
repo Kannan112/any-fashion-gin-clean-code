@@ -45,6 +45,7 @@ help: ## Display this help screen
 
 mockgen:
 	mockgen -source=pkg/repository/interface/user.go -destination=pkg/repository/mockrepo/mock_user.go
+	mockgen -source=pkg/repository/interface/refresh_token.go -destination=pkg/repository/mockrepo/refresh_token.go
 	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/usecase/mockusecase/mock_user.go
 	mockgen -source=pkg/usecase/interface/cart.go -destination=pkg/usecase/mockusecase/mock_cart.go
 	mockgen -source=pkg/usecase/interface/wallet.go -destination=pkg/usecase/mockusecase/mock_wallet.go

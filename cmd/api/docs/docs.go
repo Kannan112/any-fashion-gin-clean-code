@@ -9,7 +9,10 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "API Support",
+            "email": "abhinandarun11@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -57,6 +60,11 @@ const docTemplate = `{
         },
         "/api/admin/category/add": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can create new category from admin panel",
                 "consumes": [
                     "application/json"
@@ -98,6 +106,11 @@ const docTemplate = `{
         },
         "/api/admin/category/delete/{category_id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can delete a category",
                 "consumes": [
                     "application/json"
@@ -137,6 +150,11 @@ const docTemplate = `{
         },
         "/api/admin/category/listall": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin, users and unregistered users can see all the available categories",
                 "consumes": [
                     "application/json"
@@ -181,6 +199,11 @@ const docTemplate = `{
         },
         "/api/admin/category/update/{id}": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can update category details",
                 "consumes": [
                     "application/json"
@@ -229,6 +252,11 @@ const docTemplate = `{
         },
         "/api/admin/coupon": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admins and users can see all available coupons",
                 "consumes": [
                     "application/json"
@@ -259,6 +287,11 @@ const docTemplate = `{
         },
         "/api/admin/coupon/add": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can create new coupons",
                 "consumes": [
                     "application/json"
@@ -300,6 +333,11 @@ const docTemplate = `{
         },
         "/api/admin/coupon/update/{couponId}": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin coupon update",
                 "consumes": [
                     "application/json"
@@ -389,6 +427,11 @@ const docTemplate = `{
         },
         "/api/admin/dashbord/list": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can access dashboard and view details regarding orders, products, etc.",
                 "consumes": [
                     "application/json"
@@ -446,6 +489,11 @@ const docTemplate = `{
         },
         "/api/admin/order": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin can view orders",
                 "consumes": [
                     "application/json"
@@ -490,6 +538,11 @@ const docTemplate = `{
         },
         "/api/admin/order/cancelled": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin view order cancelled",
                 "consumes": [
                     "application/json"
@@ -520,6 +573,11 @@ const docTemplate = `{
         },
         "/api/admin/order/placed": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin list order placed",
                 "consumes": [
                     "application/json"
@@ -550,6 +608,11 @@ const docTemplate = `{
         },
         "/api/admin/order/{orderid}": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin can view orders",
                 "consumes": [
                     "application/json"
@@ -589,6 +652,11 @@ const docTemplate = `{
         },
         "/api/admin/product-item/add": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "add a new product item with an existing product id",
                 "consumes": [
                     "application/json"
@@ -630,6 +698,11 @@ const docTemplate = `{
         },
         "/api/admin/product-item/update": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "update existing product item with id",
                 "consumes": [
                     "application/json"
@@ -671,6 +744,11 @@ const docTemplate = `{
         },
         "/api/admin/product/add": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "This endpoint allows an admin user to create a new product item.",
                 "consumes": [
                     "application/json"
@@ -712,6 +790,11 @@ const docTemplate = `{
         },
         "/api/admin/product/update/{id}": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "updating exsisting product details.",
                 "consumes": [
                     "application/json"
@@ -760,6 +843,11 @@ const docTemplate = `{
         },
         "/api/admin/product/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "list all saved products",
                 "consumes": [
                     "application/json"
@@ -799,6 +887,11 @@ const docTemplate = `{
         },
         "/api/admin/sales/download": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admin can download sales report in .csv format",
                 "consumes": [
                     "application/json"
@@ -823,6 +916,11 @@ const docTemplate = `{
         },
         "/api/admin/user/block": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "admin block user access to the store",
                 "consumes": [
                     "application/json"
@@ -863,6 +961,11 @@ const docTemplate = `{
         },
         "/api/admin/user/unblock/{user_id}": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Admins can block users",
                 "consumes": [
                     "application/json"
@@ -937,8 +1040,240 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/address/add": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Add Address",
+                "operationId": "add-address",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.AddAddress"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/address/delete/{addressId}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "user can delete any of his addresses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Delete Address",
+                "operationId": "delete-address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "addressId",
+                        "name": "addressId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/address/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "List Addresses",
+                "operationId": "list-all-addresses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/address/update/{addressId}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "user update addresses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Update Address",
+                "operationId": "update-address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "addressId",
+                        "name": "addressId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.AddAddress"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/cart-item/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "User can view items in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user can view",
+                "operationId": "list-cart-items",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items to retrieve per page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/cart/add/{product_items_id}": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "User can add product item to the cart",
                 "consumes": [
                     "application/json"
@@ -978,6 +1313,11 @@ const docTemplate = `{
         },
         "/api/user/cart/list": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "User can view the cart with amount",
                 "consumes": [
                     "application/json"
@@ -1008,6 +1348,11 @@ const docTemplate = `{
         },
         "/api/user/cart/remove/{product_item_id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "User can remove product item from carts",
                 "consumes": [
                     "application/json"
@@ -1047,6 +1392,11 @@ const docTemplate = `{
         },
         "/api/user/category/listspecific/{category_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Users and admins can fetch details of a specific category using id",
                 "consumes": [
                     "application/json"
@@ -1086,6 +1436,11 @@ const docTemplate = `{
         },
         "/api/user/coupon/apply/{code}": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user can use his coupon code in cart",
                 "consumes": [
                     "application/json"
@@ -1155,6 +1510,11 @@ const docTemplate = `{
         },
         "/api/user/login": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Login as a user to access the ecommerce site",
                 "consumes": [
                     "application/json"
@@ -1194,8 +1554,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/logout": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "User logout to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User Logout",
+                "operationId": "UserLogout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/order/cancel/{orderId}": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user cancel order",
                 "consumes": [
                     "application/json"
@@ -1235,6 +1635,11 @@ const docTemplate = `{
         },
         "/api/user/order/listall": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user can view all his orders",
                 "consumes": [
                     "application/json"
@@ -1265,6 +1670,11 @@ const docTemplate = `{
         },
         "/api/user/order/orderall": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "order all cart items",
                 "consumes": [
                     "application/json"
@@ -1377,6 +1787,11 @@ const docTemplate = `{
         },
         "/api/user/product-item/{product_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "update existing product item with id",
                 "consumes": [
                     "application/json"
@@ -1414,8 +1829,94 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/profile/edit": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Edit user prodile ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Edit Profile",
+                "operationId": "EditProfile",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/profile/view": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "View Profile",
+                "operationId": "ViewProfile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/signup": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Signup as a new user to access the ecommerce site",
                 "consumes": [
                     "application/json"
@@ -1457,6 +1958,11 @@ const docTemplate = `{
         },
         "/api/user/wallet": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user wallet displays super-coins",
                 "consumes": [
                     "application/json"
@@ -1487,6 +1993,11 @@ const docTemplate = `{
         },
         "/api/user/wallet/apply": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user can add wallet coins to the cart",
                 "consumes": [
                     "application/json"
@@ -1517,6 +2028,11 @@ const docTemplate = `{
         },
         "/api/user/wallet/remove": {
             "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "user can add wallet coins to the cart",
                 "consumes": [
                     "application/json"
@@ -1547,6 +2063,11 @@ const docTemplate = `{
         },
         "/api/user/wishlist/add/{itemId}": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Login as a user to access the ecommerce site",
                 "consumes": [
                     "application/json"
@@ -1586,6 +2107,11 @@ const docTemplate = `{
         },
         "/api/user/wishlist/list/": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "list all added items",
                 "consumes": [
                     "application/json"
@@ -1630,6 +2156,11 @@ const docTemplate = `{
         },
         "/api/user/wishlist/remove/{itemId}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Remove item from wishlist",
                 "consumes": [
                     "application/json"
@@ -1651,309 +2182,6 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/add": {
-            "post": {
-                "description": "Login as a user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Address"
-                ],
-                "summary": "Add Address",
-                "operationId": "add-address",
-                "parameters": [
-                    {
-                        "description": "Input Field",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.AddAddress"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/delete/{addressId}": {
-            "delete": {
-                "description": "user can delete any of his addresses",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Address"
-                ],
-                "summary": "Delete Address",
-                "operationId": "delete-address",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "addressId",
-                        "name": "addressId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/list": {
-            "get": {
-                "description": "Login as a user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Address"
-                ],
-                "summary": "List Addresses",
-                "operationId": "list-all-addresses",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/update/{addressId}": {
-            "patch": {
-                "description": "user update addresses",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Address"
-                ],
-                "summary": "Update Address",
-                "operationId": "update-address",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "addressId",
-                        "name": "addressId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Input Field",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.AddAddress"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/cart-item/list": {
-            "get": {
-                "description": "User can view items in cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "user can view",
-                "operationId": "list-cart-items",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number for pagination",
-                        "name": "count",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to retrieve per page",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/logout": {
-            "get": {
-                "description": "User logout to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "User Logout",
-                "operationId": "UserLogout",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/profile/edit": {
-            "patch": {
-                "description": "Edit user prodile ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Edit Profile",
-                "operationId": "EditProfile",
-                "parameters": [
-                    {
-                        "description": "Input Field",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.UserReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/profile/view": {
-            "get": {
-                "description": "Login as a user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "View Profile",
-                "operationId": "ViewProfile",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2227,17 +2455,24 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "BearerTokenAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "AnyFashion Application API",
+	Description:      "Backend API built with Golang using Clean Code architecture",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
