@@ -37,7 +37,7 @@ func NewUserHandler(usecase services.UserUseCase, cartcase services.CartUseCases
 // @Param user_details body  req.UserReq true "User details"
 // @Success 201 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/signup [post]
+// @Router /api/user/signup [post]
 func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 	var user req.UserReq
 	err := ctx.ShouldBindJSON(&user)
@@ -103,7 +103,7 @@ func (cr *UserHandler) UserSignUp(ctx *gin.Context) {
 // @Param   input   body     req.LoginReq{}   true  "Input Field"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/login [post]
+// @Router /api/user/login [post]
 func (cr *UserHandler) UserLogin(c *gin.Context) {
 	var user req.LoginReq
 	err := c.Bind(&user)

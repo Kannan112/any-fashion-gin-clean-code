@@ -31,7 +31,7 @@ func NewCartHandler(cartUsecases services.CartUseCases) *CartHandler {
 // @Param product_items_id path string true "product_items_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart/add/{product_items_id} [post]
+// @Router /api/user/cart/add/{product_items_id} [post]
 func (cr *CartHandler) AddToCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -82,7 +82,7 @@ func (cr *CartHandler) AddToCart(c *gin.Context) {
 // @Param product_item_id path string true "product_item_id"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart/remove/{product_item_id} [delete]
+// @Router /api/user/cart/remove/{product_item_id} [delete]
 func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {
@@ -135,7 +135,7 @@ func (cr *CartHandler) RemoveFromCart(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/cart/list [get]
+// @Router /api/user/cart/list [get]
 func (cr *CartHandler) ListCart(c *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(c)
 	if err != nil {

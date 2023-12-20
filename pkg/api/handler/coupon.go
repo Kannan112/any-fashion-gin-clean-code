@@ -32,7 +32,7 @@ func NewCouponHandler(CouponUsecase services.CouponUseCase) *CouponHandler {
 // @Param new_coupon_details body req.Coupons true "details of new coupon to be created"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/coupon/add [post]
+// @Router /api/admin/coupon/add [post]
 func (cr *CouponHandler) AddCoupon(c *gin.Context) {
 
 	var newCoupon req.Coupons
@@ -106,7 +106,7 @@ func (c *CouponHandler) DeleteCoupon(ctx *gin.Context) {
 // @Param admin body req.UpdateCoupon true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/coupon/update/{couponId} [patch]
+// @Router /api/admin/coupon/update/{couponId} [patch]
 func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 	strId := ctx.Param("couponId")
 	couponId, err := strconv.Atoi(strId)
@@ -158,7 +158,7 @@ func (c *CouponHandler) UpdateCoupon(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/coupon [get]
+// @Router /api/admin/coupon [get]
 func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 	coupon, err := c.CouponUseCase.ViewCoupon(ctx)
 	if err != nil {
@@ -191,7 +191,7 @@ func (c *CouponHandler) ViewCoupon(ctx *gin.Context) {
 // @Param code path string true "code"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/coupon/apply/{code} [post]
+// @Router /api/user/coupon/apply/{code} [post]
 func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {
@@ -231,7 +231,7 @@ func (c *CouponHandler) ApplyCoupon(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /user/coupon/remove [delete]
+// @Router /api/user/coupon/remove [delete]
 func (c *CouponHandler) RemoveCoupon(ctx *gin.Context) {
 	userId, err := handlerUtil.GetUserIdFromContext(ctx)
 	if err != nil {

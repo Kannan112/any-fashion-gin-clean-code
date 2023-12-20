@@ -26,10 +26,10 @@ func NewRenewHandler(token services.RenewTokenUseCase) *RenewHandler {
 // @Param Token body req.AccessToken true "Access Token Request"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /access-token [post]
+// @Router /api/renew-token [post]
 func (c *RenewHandler) GetAccessToken(ctx *gin.Context) {
 	var Token req.AccessToken
-	if err := gin.Bind(&Token); err != nil {
+	if err := ctx.Bind(&Token); err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, res.Response{
 			StatusCode: 400,
 			Message:    "binding failures",

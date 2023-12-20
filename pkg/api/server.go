@@ -38,10 +38,10 @@ func NewServerHTTP(
 	// Swagger docs
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// Setup user routes
-	routes.SetupUserRoutes(engine, userHandler, cartHandler, productHandler, orderHandler, wishlistHandler, couponHandler, walletHandler, OtpHandler, RenewHandler, AuthHandler)
+	routes.SetupUserRoutes(engine.Group("/api"), userHandler, cartHandler, productHandler, orderHandler, wishlistHandler, couponHandler, walletHandler, OtpHandler, RenewHandler, AuthHandler)
 
 	// Setup admin routes
-	routes.SetupAdminRoutes(engine, adminHandler, productHandler, orderHandler, couponHandler)
+	routes.SetupAdminRoutes(engine.Group("/api"), adminHandler, productHandler, orderHandler, couponHandler)
 
 	return &ServerHTTP{engine: engine}
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware"
 )
 
-func SetupAdminRoutes(engine *gin.Engine, adminHandler *handler.AdminHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, couponHandler *handler.CouponHandler) {
+func SetupAdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, couponHandler *handler.CouponHandler) {
 	admin := engine.Group("/admin")
 	{
 		// Admin routes

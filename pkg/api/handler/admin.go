@@ -33,7 +33,7 @@ func NewAdminSHandler(admiUseCase services.AdminUsecase) *AdminHandler {
 // @Param admin body req.CreateAdmin true "New Admin details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/createadmin [post]
+// @Router /api/admin/createadmin [post]
 func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 	var adminData req.CreateAdmin
 	if err := c.Bind(&adminData); err != nil {
@@ -45,17 +45,6 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 		})
 		return
 	}
-	// createrId, err := handlerUtil.GetAdminIdFromContext(c)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, res.Response{
-	// 		StatusCode: 400,
-	// 		Message:    "Can't find AdminId",
-	// 		Data:       nil,
-	// 		Errors:     err.Error(),
-	// 	})
-	// 	return
-	// }
-
 	_, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData)
 
 	if err != nil {
@@ -84,7 +73,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 // @Param admin body req.LoginReq true "Admin login details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/adminlogin [post]
+// @Router /api/admin/adminlogin [post]
 func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	var admin req.LoginReq
 	err := c.Bind(&admin)
@@ -130,7 +119,7 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400
-// @Router /admin/logout [post]
+// @Router /api/admin/logout [post]
 func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 	c.SetCookie("AdminAuth", "", -1, "", "", false, true)
 	c.JSON(http.StatusOK, res.Response{
@@ -150,7 +139,7 @@ func (cr *AdminHandler) AdminLogout(c *gin.Context) {
 // @Param blocking_details body req.BlockData true "User bolocking details"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/user/block [patch]
+// @Router /api/admin/user/block [patch]
 func (cr *AdminHandler) BlockUser(c *gin.Context) {
 	var body req.BlockData
 	err := c.Bind(&body)
@@ -202,7 +191,7 @@ func (cr *AdminHandler) BlockUser(c *gin.Context) {
 // @Param user_id path string true "ID of the user to be blocked"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/user/unblock/{user_id} [patch]
+// @Router /api/admin/user/unblock/{user_id} [patch]
 func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 	paramsId := c.Param("userId")
 	id, err := strconv.Atoi(paramsId)
@@ -243,7 +232,7 @@ func (cr *AdminHandler) UnblockUser(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
-// @Router /admin/dashbord/list [get]
+// @Router /api/admin/dashbord/list [get]
 func (cr *AdminHandler) GetDashBord(c *gin.Context) {
 	data, err := cr.adminUseCase.GetDashBord(c)
 	if err != nil {
@@ -344,7 +333,7 @@ func (cr *AdminHandler) ViewSalesReport(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Failure 400 {object} res.Response
-// @Router /admin/sales/download [get]
+// @Router /api/admin/sales/download [get]
 func (cr *AdminHandler) DownloadSalesReport(ctx *gin.Context) {
 	sales, err := cr.adminUseCase.ViewSalesReport(ctx)
 	if err != nil {

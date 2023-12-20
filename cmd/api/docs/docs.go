@@ -15,44 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/access-token": {
-            "post": {
-                "description": "Get access token using TokenString",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get Access Token",
-                "parameters": [
-                    {
-                        "description": "Access Token Request",
-                        "name": "Token",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.AccessToken"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/adminlogin": {
+        "/api/admin/adminlogin": {
             "post": {
                 "description": "Logs in an admin user and returns an authentication token",
                 "consumes": [
@@ -92,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/category/add": {
+        "/api/admin/category/add": {
             "post": {
                 "description": "Admin can create new category from admin panel",
                 "consumes": [
@@ -133,7 +96,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/category/delete/{category_id}": {
+        "/api/admin/category/delete/{category_id}": {
             "delete": {
                 "description": "Admin can delete a category",
                 "consumes": [
@@ -172,7 +135,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/category/listall": {
+        "/api/admin/category/listall": {
             "get": {
                 "description": "Admin, users and unregistered users can see all the available categories",
                 "consumes": [
@@ -216,7 +179,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/category/update/{id}": {
+        "/api/admin/category/update/{id}": {
             "patch": {
                 "description": "Admin can update category details",
                 "consumes": [
@@ -264,7 +227,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/coupon": {
+        "/api/admin/coupon": {
             "get": {
                 "description": "Admins and users can see all available coupons",
                 "consumes": [
@@ -294,7 +257,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/coupon/add": {
+        "/api/admin/coupon/add": {
             "post": {
                 "description": "Admin can create new coupons",
                 "consumes": [
@@ -335,7 +298,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/coupon/update/{couponId}": {
+        "/api/admin/coupon/update/{couponId}": {
             "patch": {
                 "description": "admin coupon update",
                 "consumes": [
@@ -383,7 +346,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/createadmin": {
+        "/api/admin/createadmin": {
             "post": {
                 "description": "admin creation",
                 "consumes": [
@@ -424,7 +387,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/dashbord/list": {
+        "/api/admin/dashbord/list": {
             "get": {
                 "description": "Admin can access dashboard and view details regarding orders, products, etc.",
                 "consumes": [
@@ -454,7 +417,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/logout": {
+        "/api/admin/logout": {
             "post": {
                 "description": "Logs out a logged-in admin from the E-commerce web api admin panel",
                 "consumes": [
@@ -481,7 +444,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/order": {
+        "/api/admin/order": {
             "get": {
                 "description": "admin can view orders",
                 "consumes": [
@@ -525,7 +488,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/order/cancelled": {
+        "/api/admin/order/cancelled": {
             "get": {
                 "description": "admin view order cancelled",
                 "consumes": [
@@ -555,7 +518,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/order/placed": {
+        "/api/admin/order/placed": {
             "get": {
                 "description": "admin list order placed",
                 "consumes": [
@@ -585,7 +548,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/order/{orderid}": {
+        "/api/admin/order/{orderid}": {
             "post": {
                 "description": "admin can view orders",
                 "consumes": [
@@ -624,7 +587,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/product-item/add": {
+        "/api/admin/product-item/add": {
             "post": {
                 "description": "add a new product item with an existing product id",
                 "consumes": [
@@ -665,7 +628,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/product-item/update": {
+        "/api/admin/product-item/update": {
             "patch": {
                 "description": "update existing product item with id",
                 "consumes": [
@@ -706,7 +669,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/product/add": {
+        "/api/admin/product/add": {
             "post": {
                 "description": "This endpoint allows an admin user to create a new product item.",
                 "consumes": [
@@ -747,7 +710,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/product/update/{id}": {
+        "/api/admin/product/update/{id}": {
             "patch": {
                 "description": "updating exsisting product details.",
                 "consumes": [
@@ -795,7 +758,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/product/{id}": {
+        "/api/admin/product/{id}": {
             "get": {
                 "description": "list all saved products",
                 "consumes": [
@@ -834,7 +797,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/sales/download": {
+        "/api/admin/sales/download": {
             "get": {
                 "description": "Admin can download sales report in .csv format",
                 "consumes": [
@@ -858,7 +821,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/user/block": {
+        "/api/admin/user/block": {
             "patch": {
                 "description": "admin block user access to the store",
                 "consumes": [
@@ -898,7 +861,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/user/unblock/{user_id}": {
+        "/api/admin/user/unblock/{user_id}": {
             "patch": {
                 "description": "Admins can block users",
                 "consumes": [
@@ -917,6 +880,773 @@ const docTemplate = `{
                         "type": "string",
                         "description": "ID of the user to be blocked",
                         "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/renew-token": {
+            "post": {
+                "description": "Get access token using TokenString",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Access Token",
+                "parameters": [
+                    {
+                        "description": "Access Token Request",
+                        "name": "Token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.AccessToken"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/cart/add/{product_items_id}": {
+            "post": {
+                "description": "User can add product item to the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "User add product-item to cart",
+                "operationId": "add-to-cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product_items_id",
+                        "name": "product_items_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/cart/list": {
+            "get": {
+                "description": "User can view the cart with amount",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user can view",
+                "operationId": "list-cart",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/cart/remove/{product_item_id}": {
+            "delete": {
+                "description": "User can remove product item from carts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "user remove item",
+                "operationId": "remove-from-cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product_item_id",
+                        "name": "product_item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/category/listspecific/{category_id}": {
+            "get": {
+                "description": "Users and admins can fetch details of a specific category using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Fetch details of a specific category using category id",
+                "operationId": "display-category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/coupon/apply/{code}": {
+            "post": {
+                "description": "user can use his coupon code in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "user apply coupon",
+                "operationId": "apply-coupon",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/coupon/remove": {
+            "delete": {
+                "description": "user can remove the apply code in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupon"
+                ],
+                "summary": "user remove coupon",
+                "operationId": "remove-coupon",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/login": {
+            "post": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User Login",
+                "operationId": "UserLogin",
+                "parameters": [
+                    {
+                        "description": "Input Field",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/order/cancel/{orderId}": {
+            "patch": {
+                "description": "user cancel order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order cart",
+                "operationId": "user-cancel-order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "orderId",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/order/listall": {
+            "get": {
+                "description": "user can view all his orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "order status",
+                "operationId": "list-all-order",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/order/orderall": {
+            "get": {
+                "description": "order all cart items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "order cart",
+                "operationId": "order-all",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/otp/send": {
+            "post": {
+                "description": "Send OTP to use's mobile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otp"
+                ],
+                "summary": "Send OTP to user's mobile",
+                "operationId": "send-otp",
+                "parameters": [
+                    {
+                        "description": "User mobile number",
+                        "name": "user_mobile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.OTPData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/otp/verify": {
+            "post": {
+                "description": "Validate the  OTP sent to use's mobile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otp"
+                ],
+                "summary": "Validate the OTP to user's mobile",
+                "operationId": "validate-otp",
+                "parameters": [
+                    {
+                        "description": "OTP sent to user's mobile number",
+                        "name": "otp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.Otpverifier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/product-item/{product_id}": {
+            "get": {
+                "description": "update existing product item with id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Item"
+                ],
+                "summary": "display products item",
+                "operationId": "display-product-items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to add new product item",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/signup": {
+            "post": {
+                "description": "Signup as a new user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "user-signup",
+                "operationId": "UserSignUp",
+                "parameters": [
+                    {
+                        "description": "User details",
+                        "name": "user_details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wallet": {
+            "get": {
+                "description": "user wallet displays super-coins",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile Wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "wallet-profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wallet/apply": {
+            "post": {
+                "description": "user can add wallet coins to the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile Wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "apply-wallet",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wallet/remove": {
+            "patch": {
+                "description": "user can add wallet coins to the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile Wallet"
+                ],
+                "summary": "Wallet Profile",
+                "operationId": "remove-wallet",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wishlist/add/{itemId}": {
+            "post": {
+                "description": "Login as a user to access the ecommerce site",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Add Wishlist",
+                "operationId": "AddToWishlist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "itemId",
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wishlist/list/": {
+            "get": {
+                "description": "list all added items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "List wishl list",
+                "operationId": "list-all-wishlist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items to retrieve per page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/wishlist/remove/{itemId}": {
+            "delete": {
+                "description": "Remove item from wishlist",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Remove Item",
+                "operationId": "RemoveFromWishlis",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "itemId",
+                        "name": "itemId",
                         "in": "path",
                         "required": true
                     }
@@ -1139,263 +1869,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/cart/add/{product_items_id}": {
-            "post": {
-                "description": "User can add product item to the cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "User add product-item to cart",
-                "operationId": "add-to-cart",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "product_items_id",
-                        "name": "product_items_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/cart/list": {
-            "get": {
-                "description": "User can view the cart with amount",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "user can view",
-                "operationId": "list-cart",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/cart/remove/{product_item_id}": {
-            "delete": {
-                "description": "User can remove product item from carts",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "user remove item",
-                "operationId": "remove-from-cart",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "product_item_id",
-                        "name": "product_item_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/category/listspecific/{category_id}": {
-            "get": {
-                "description": "Users and admins can fetch details of a specific category using id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Category"
-                ],
-                "summary": "Fetch details of a specific category using category id",
-                "operationId": "display-category",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "category_id",
-                        "name": "category_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/coupon/apply/{code}": {
-            "post": {
-                "description": "user can use his coupon code in cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupon"
-                ],
-                "summary": "user apply coupon",
-                "operationId": "apply-coupon",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "code",
-                        "name": "code",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/coupon/remove": {
-            "delete": {
-                "description": "user can remove the apply code in cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupon"
-                ],
-                "summary": "user remove coupon",
-                "operationId": "remove-coupon",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/login": {
-            "post": {
-                "description": "Login as a user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "User Login",
-                "operationId": "UserLogin",
-                "parameters": [
-                    {
-                        "description": "Input Field",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.LoginReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/user/logout": {
             "get": {
                 "description": "User logout to access the ecommerce site",
@@ -1419,226 +1892,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/order/cancel/{orderId}": {
-            "patch": {
-                "description": "user cancel order",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "order cart",
-                "operationId": "user-cancel-order",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "orderId",
-                        "name": "orderId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/order/listall": {
-            "get": {
-                "description": "user can view all his orders",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "order status",
-                "operationId": "list-all-order",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/order/orderall": {
-            "get": {
-                "description": "order all cart items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "order cart",
-                "operationId": "order-all",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/otp/send": {
-            "post": {
-                "description": "Send OTP to use's mobile",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Otp"
-                ],
-                "summary": "Send OTP to user's mobile",
-                "operationId": "send-otp",
-                "parameters": [
-                    {
-                        "description": "User mobile number",
-                        "name": "user_mobile",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.OTPData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/otp/verify": {
-            "post": {
-                "description": "Validate the  OTP sent to use's mobile",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Otp"
-                ],
-                "summary": "Validate the OTP to user's mobile",
-                "operationId": "validate-otp",
-                "parameters": [
-                    {
-                        "description": "OTP sent to user's mobile number",
-                        "name": "otp",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.Otpverifier"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/product-item/{product_id}": {
-            "get": {
-                "description": "update existing product item with id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product Item"
-                ],
-                "summary": "display products item",
-                "operationId": "display-product-items",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "product_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully added new product item",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to add new product item",
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
@@ -1701,259 +1954,6 @@ const docTemplate = `{
                 ],
                 "summary": "View Profile",
                 "operationId": "ViewProfile",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/signup": {
-            "post": {
-                "description": "Signup as a new user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "user-signup",
-                "operationId": "UserSignUp",
-                "parameters": [
-                    {
-                        "description": "User details",
-                        "name": "user_details",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/req.UserReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wallet": {
-            "get": {
-                "description": "user wallet displays super-coins",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile Wallet"
-                ],
-                "summary": "Wallet Profile",
-                "operationId": "wallet-profile",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wallet/apply": {
-            "post": {
-                "description": "user can add wallet coins to the cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile Wallet"
-                ],
-                "summary": "Wallet Profile",
-                "operationId": "apply-wallet",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wallet/remove": {
-            "patch": {
-                "description": "user can add wallet coins to the cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile Wallet"
-                ],
-                "summary": "Wallet Profile",
-                "operationId": "remove-wallet",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wishlist/add/{itemId}": {
-            "post": {
-                "description": "Login as a user to access the ecommerce site",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Add Wishlist",
-                "operationId": "AddToWishlist",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "itemId",
-                        "name": "itemId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wishlist/list/": {
-            "get": {
-                "description": "list all added items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "List wishl list",
-                "operationId": "list-all-wishlist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number for pagination",
-                        "name": "count",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to retrieve per page",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/res.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/wishlist/remove/{itemId}": {
-            "delete": {
-                "description": "Remove item from wishlist",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Remove Item",
-                "operationId": "RemoveFromWishlis",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "itemId",
-                        "name": "itemId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
