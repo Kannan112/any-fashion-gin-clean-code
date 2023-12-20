@@ -7,32 +7,37 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func ValidateToken(tokenString string) (int, error) {
-	Tokenvalue, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		// validate the signing algorithm
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+func ValidateJWT(TokenString string) (int, error) {
+	tokenValue, err := jwt.Parse(TokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		// return the key for verification
+		// Use your actual secret key here instead of "access"
 		return []byte("access-token-src"), nil
 	})
+
 	if err != nil {
-		return 0, err
+
+		return 0, fmt.Errorf("JWT validation failed: %v", err.Error())
 	}
-	// check if the token is valid
-	var parsedID interface{}
-	if claims, ok := Tokenvalue.Claims.(jwt.MapClaims); ok && Tokenvalue.Valid {
-		parsedID = claims["id"]
-		//Check the expir
-		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			return 0, fmt.Errorf("access token expired please renew it")
+
+	if claims, ok := tokenValue.Claims.(jwt.MapClaims); ok && tokenValue.Valid {
+
+		paramsId, idOK := claims["user_id"].(float64)
+
+		exp, expOK := claims["exp"].(float64)
+		if !idOK || !expOK {
+
+			return 0, fmt.Errorf("Missing or invalid claims in the JWT")
 		}
-		// fmt.Println(claims["exp"])
+
+		if float64(time.Now().Unix()) > exp {
+
+			return 0, fmt.Errorf("Token has expired")
+		}
+
+		return int(paramsId), nil
 	}
-	value, ok := parsedID.(float64)
-	if !ok {
-		return 0, fmt.Errorf("expected an int value, but got %T", parsedID)
-	}
-	id := int(value)
-	return id, err
+	return 0, fmt.Errorf("JWT claims are not valid")
 }

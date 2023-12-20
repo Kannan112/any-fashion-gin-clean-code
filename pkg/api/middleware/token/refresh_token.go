@@ -8,23 +8,6 @@ import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 )
 
-var refreshtokensrc = []byte("refresh-token-src")
-
-func JWTRefreshTokenGen(userId int, role string) (string, error) {
-	claims := jwt.MapClaims{
-		"id":   userId,
-		"role": role,
-		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(),
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedstring, err := token.SignedString(refreshtokensrc)
-	if err != nil {
-		return "", err
-	}
-	return signedstring, nil
-}
-
 func RefreshTokenClaims(tokenString string) (res.TokenCalim, error) {
 	var result res.TokenCalim
 
@@ -44,7 +27,7 @@ func RefreshTokenClaims(tokenString string) (res.TokenCalim, error) {
 	var userrole interface{}
 
 	if claims, ok := Tokenvalue.Claims.(jwt.MapClaims); ok && Tokenvalue.Valid {
-		parsedID = claims["id"]
+		parsedID = claims["user_id"]
 		userrole = claims["role"]
 		//Check the expir
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
