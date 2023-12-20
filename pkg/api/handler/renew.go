@@ -23,6 +23,7 @@ func NewRenewHandler(token services.RenewTokenUseCase) *RenewHandler {
 // @Description Get access token using TokenString
 // @Accept json
 // @Produce json
+// @Tag Users
 // @Param Token body req.AccessToken true "Access Token Request"
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
