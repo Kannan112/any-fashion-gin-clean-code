@@ -14,6 +14,16 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
+// @title AnyFashion Application API
+// @version 1.0.0
+// @description  Backend API built with Golang using Clean Code architecture
+// @contact.name API Support
+// @contact.email				abhinandarun11@gmail.com
+// @securityDefinitions.apikey BearerTokenAuth
+// @in header
+// @name Authorization
+// @BasePath /
+// @query.collection.format multi
 func NewServerHTTP(
 	userHandler *handler.UserHandler,
 	adminHandler *handler.AdminHandler,
