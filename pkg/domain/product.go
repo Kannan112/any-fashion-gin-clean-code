@@ -20,7 +20,6 @@ type Product struct {
 	Updated_at  time.Time
 }
 
-// demo of product_items
 type ProductItem struct {
 	ID          uint `gorm:"primaryKey;unique;not null" json:"id"`
 	ProductID   uint `gorm:"not null" json:"product_id" validate:"required"`

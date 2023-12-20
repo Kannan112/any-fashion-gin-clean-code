@@ -13,6 +13,7 @@ type Users struct {
 	IsBlocked bool      `gorm:"default:false"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
+
 type UsersData struct {
 	ID        uint   `gorm:"primaryKey;unique;not null"`
 	Name      string `json:"name" binding:"required"`
