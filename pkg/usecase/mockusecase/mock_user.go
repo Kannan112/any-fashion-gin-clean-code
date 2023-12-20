@@ -126,21 +126,6 @@ func (mr *MockUserUseCaseMockRecorder) ListallAddress(id interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListallAddress", reflect.TypeOf((*MockUserUseCase)(nil).ListallAddress), id)
 }
 
-// OtpLogin mocks base method.
-func (m *MockUserUseCase) OtpLogin(phone string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OtpLogin", phone)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// OtpLogin indicates an expected call of OtpLogin.
-func (mr *MockUserUseCaseMockRecorder) OtpLogin(phone interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OtpLogin", reflect.TypeOf((*MockUserUseCase)(nil).OtpLogin), phone)
-}
-
 // UpdateAddress mocks base method.
 func (m *MockUserUseCase) UpdateAddress(id, addressId int, address req.AddAddress) error {
 	m.ctrl.T.Helper()
@@ -156,10 +141,10 @@ func (mr *MockUserUseCaseMockRecorder) UpdateAddress(id, addressId, address inte
 }
 
 // UserLogin mocks base method.
-func (m *MockUserUseCase) UserLogin(ctx context.Context, user req.LoginReq) (string, error) {
+func (m *MockUserUseCase) UserLogin(ctx context.Context, user req.LoginReq) (res.Token, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserLogin", ctx, user)
-	ret0, _ := ret[0].(string)
+	ret0, _ := ret[0].(res.Token)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

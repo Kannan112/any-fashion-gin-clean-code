@@ -20,7 +20,7 @@ func NewTokenRenewUseCase(tokenRepo interfaces.RefreshTokenRepository) services.
 }
 
 func (c *TokenRenewUseCase) GetAccessToken(ctx context.Context, AccessToken string) (string, error) {
-	claims, err := token.AccessTokenClaims(AccessToken)
+	claims, err := token.RefreshTokenClaims(AccessToken)
 	if err != nil {
 		return "failed to claim data", err
 	}
@@ -34,7 +34,7 @@ func (c *TokenRenewUseCase) GetAccessToken(ctx context.Context, AccessToken stri
 		if err != nil {
 			return "", err
 		}
-		NewAccessToken, err := token.JWTAccessTokenGen(int(claims.ID), claims.Role)
+		NewAccessToken, err := token.GenerateAccessToken(int(claims.ID), claims.Role)
 		if err != nil {
 			return "", fmt.Errorf("failed to generate access token")
 		}
@@ -49,14 +49,16 @@ func (c *TokenRenewUseCase) GetAccessToken(ctx context.Context, AccessToken stri
 		if err != nil {
 			return "", err
 		}
-		NewAccessToken, err := token.JWTAccessTokenGen(int(claims.ID), claims.Role)
+		NewAccessToken, err := token.GenerateAccessToken(int(claims.ID), claims.Role)
 		if err != nil {
 			return "", fmt.Errorf("failed to generate access token")
 		}
 		return NewAccessToken, nil
 
 	case "":
+
 		return "", fmt.Errorf("cant find any role in claims")
 	}
+
 	return "nothing left", nil
 }

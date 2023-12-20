@@ -10,7 +10,7 @@ import (
 
 type UserUseCase interface {
 	UserSignUp(ctx context.Context, user req.UserReq) (res.UserData, error)
-	UserLogin(ctx context.Context, user req.LoginReq) (string, error)
+	UserLogin(ctx context.Context, user req.LoginReq) (res.Token, error)
 	IsSignIn(phno string) (bool, error)
 	FindAddress(ctx context.Context, userId int) (bool, error)
 	AddAddress(id int, body req.AddAddress) error

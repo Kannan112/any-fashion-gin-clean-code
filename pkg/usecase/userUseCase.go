@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware/token"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
 	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
@@ -16,12 +15,14 @@ import (
 )
 
 type userUseCase struct {
-	userRepo interfaces.UserRepository
+	userRepo         interfaces.UserRepository
+	refreshTokenRepo interfaces.RefreshTokenRepository
 }
 
-func NewUserUseCase(repo interfaces.UserRepository) services.UserUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, refreshtToken interfaces.RefreshTokenRepository) services.UserUseCase {
 	return &userUseCase{
-		userRepo: repo,
+		userRepo:         repo,
+		refreshTokenRepo: refreshtToken,
 	}
 }
 
@@ -39,38 +40,38 @@ func (c *userUseCase) UserSignUp(ctx context.Context, user req.UserReq) (res.Use
 
 //-----------------------UserLogin-----------------------
 
-func (c *userUseCase) UserLogin(ctx context.Context, user req.LoginReq) (string, error) {
+func (c *userUseCase) UserLogin(ctx context.Context, user req.LoginReq) (res.Token, error) {
+	var Token res.Token
 	userData, err := c.userRepo.UserLogin(ctx, user.Email)
 
 	if err != nil {
-		return "", err
+		return Token, err
 	}
 	if userData.Email == "" {
-		return "", fmt.Errorf("no user found")
+		return Token, fmt.Errorf("no user found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(user.Password))
 	if err != nil {
-		return "", err
+		return Token, err
 	}
 	check, err := c.userRepo.CheckVerifyPhone(userData.Mobile)
 	if err != nil {
-		return "", err
+		return Token, err
 	}
 	if !check {
-		return "", errors.New("account is not verified")
-	}
-	claims := jwt.MapClaims{
-		"id":  userData.ID,
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString([]byte("secret"))
-	if err != nil {
-		return "", err
+		return Token, errors.New("account is not verified")
 	}
 
-	return ss, nil
+	AccessToken, err := token.GenerateAccessToken(int(userData.ID), "user")
+	RefreshToken, err := token.GenerateRefreshToken(int(userData.ID), "user")
+	Token.Access_token = AccessToken
+	Token.Refresh_token = RefreshToken
+	if err := c.refreshTokenRepo.UserRefreshTokenAdd(Token.Refresh_token, userData.ID); err != nil {
+
+		return Token, err
+	}
+	return Token, nil
 }
 
 // -------------------AddAddress-----------

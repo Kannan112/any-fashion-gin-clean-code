@@ -26,14 +26,6 @@ func NewAdminUseCase(adminRepo interfaces.AdminRepository, refresh_token interfa
 }
 
 func (c *adminUseCase) CreateAdmin(ctx context.Context, admin req.CreateAdmin) (res.AdminData, error) {
-	// IsSuper, err := c.adminRepo.IsSuperAdmin(createrId)
-	// if err != nil {
-	// 	return res.AdminData{}, err
-	// }
-	// if !IsSuper {
-	// 	return res.AdminData{}, fmt.Errorf("not a super admin")
-	// }
-
 	hash, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
 	if err != nil {
 		return res.AdminData{}, err
@@ -60,11 +52,11 @@ func (c *adminUseCase) AdminLogin(admin req.LoginReq) (res.Token, error) {
 		return result, err
 	}
 
-	accessToken, err := token.JWTAccessTokenGen(int(adminData.ID), "admin")
+	accessToken, err := token.GenerateAccessToken(int(adminData.ID), "admin")
 	if err != nil {
 		return result, err
 	}
-	refreshToken, err := token.JWTRefreshTokenGen(int(adminData.ID), "admin")
+	refreshToken, err := token.GenerateRefreshToken(int(adminData.ID), "admin")
 	if err != nil {
 
 		return result, err

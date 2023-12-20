@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware/token"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
@@ -11,12 +12,14 @@ import (
 )
 
 type AuthUseCase struct {
-	UserRepo interfaces.UserRepository
+	UserRepo  interfaces.UserRepository
+	TokenRepo interfaces.RefreshTokenRepository
 }
 
-func NewAuthUseCase(Repo interfaces.UserRepository) services.AuthUserCase {
+func NewAuthUseCase(Repo interfaces.UserRepository, token interfaces.RefreshTokenRepository) services.AuthUserCase {
 	return &AuthUseCase{
-		UserRepo: Repo,
+		UserRepo:  Repo,
+		TokenRepo: token,
 	}
 }
 
@@ -31,11 +34,11 @@ func (c *AuthUseCase) GoogleLoginUser(ctx context.Context, googleuser req.Google
 		if err != nil {
 			return "", "", err
 		}
-		AccessTokenString, err := token.JWTAccessTokenGen(int(data.Id), "user")
+		AccessTokenString, err := token.GenerateAccessToken(int(data.Id), "user")
 		if err != nil {
 			return "", "", err
 		}
-		RefreshTokenString, err := token.JWTRefreshTokenGen(int(data.Id), "user")
+		RefreshTokenString, err := token.GenerateRefreshToken(int(data.Id), "user")
 		if err != nil {
 			return "", "", err
 		}
@@ -43,13 +46,17 @@ func (c *AuthUseCase) GoogleLoginUser(ctx context.Context, googleuser req.Google
 
 	}
 
-	AccessTokenString, err := token.JWTAccessTokenGen(int(clean.ID), "user")
+	AccessTokenString, err := token.GenerateAccessToken(int(clean.ID), "user")
 	if err != nil {
 		return "", "", err
 	}
-	RefreshTokenString, err := token.JWTRefreshTokenGen(int(clean.ID), "user")
+	RefreshTokenString, err := token.GenerateRefreshToken(int(clean.ID), "user")
 	if err != nil {
 		return "", "", err
 	}
+	if err := c.TokenRepo.UserRefreshTokenAdd(RefreshTokenString, clean.ID); err != nil {
+		return "", "", errors.New("failed to save refresh token")
+	}
+
 	return AccessTokenString, RefreshTokenString, nil
 }

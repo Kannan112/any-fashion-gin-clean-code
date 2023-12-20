@@ -44,7 +44,8 @@ func TestUserSignup(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	userRepo := mockRepo.NewMockUserRepository(ctrl)
-	userUseCase := NewUserUseCase(userRepo)
+	TokenRepo := mockRepo.NewMockRefreshTokenRepository(ctrl)
+	userUseCase := NewUserUseCase(userRepo, TokenRepo)
 	testData := []struct {
 		name           string
 		input          req.UserReq
