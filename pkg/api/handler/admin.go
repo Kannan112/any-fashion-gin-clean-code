@@ -45,7 +45,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 		})
 		return
 	}
-	_, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData)
+	adminDetails, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), adminData)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res.Response{
@@ -59,7 +59,7 @@ func (cr *AdminHandler) CreateAdmin(c *gin.Context) {
 	c.JSON(http.StatusCreated, res.Response{
 		StatusCode: 200,
 		Message:    "Admin created",
-		Data:       nil,
+		Data:       adminDetails,
 		Errors:     nil,
 	})
 

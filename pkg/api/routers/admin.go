@@ -10,7 +10,7 @@ func SetupAdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandle
 	admin := engine.Group("/admin")
 	{
 		// Admin routes
-		admin.POST("createadmin", adminHandler.CreateAdmin, middleware.AdminAuth)
+		admin.POST("createadmin", adminHandler.CreateAdmin)
 		admin.POST("adminlogin", adminHandler.AdminLogin)
 		admin.POST("logout", adminHandler.AdminLogout)
 
