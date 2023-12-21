@@ -6,9 +6,9 @@ import (
 )
 
 type AdminData struct {
-	Id    int
-	Name  string
-	Email string
+	Id       int
+	UserName string
+	Email    string
 }
 type AdminDashboard struct {
 	TotalUsers       int

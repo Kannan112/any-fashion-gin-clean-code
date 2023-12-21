@@ -49,7 +49,10 @@ func (a *AdminDatabase) CreateAdmin(admin req.CreateAdmin) (res.AdminData, error
 	// if err := a.DB.Create(&admin).Error; err != nil {
 	// 	return adminData, errors.New("failed to save admin")
 	// }
-	addQuery := `INSERT INTO admins (user_name,email,password) VALUES($1,$2,$3)`
+	addQuery := `INSERT INTO admins (user_name, email, password) 
+	VALUES ($1, $2, $3) 
+	RETURNING id, user_name, email;
+	`
 	err := a.DB.Raw(addQuery, admin.Name, admin.Email, admin.Password).Scan(&adminData).Error
 	return adminData, err
 }
