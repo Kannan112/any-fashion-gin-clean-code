@@ -46,12 +46,28 @@ func SetUpConfig(c *AuthHandler) *oauth2.Config {
 	return conf
 }
 
+// @Summary Google Login
+// @Description Initiates the Google login flow
+// @Tags Authentication
+// @Produce json
+// @Success 303 {string} string "See Other"
+// @Router /api/auth/google-login [get]
 func (auth *AuthHandler) GoogleLogin(ctx *gin.Context) {
 	googleConfig := SetUpConfig(auth) // &c.Config
 	url := googleConfig.AuthCodeURL("randomstate")
 	ctx.Redirect(http.StatusSeeOther, url)
 }
 
+// @Summary Google Auth Callback
+// @Description Callback endpoint after Google authentication
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param code query string true "Authorization Code"
+// @Param state query string true "State"
+// @Success 200 {object} SomeResponseObject
+// @Failure 400 {object} ErrorResponse
+// @Router api/auth/google-callback [get]
 func (c *AuthHandler) GoogleAuthCallback(ctx *gin.Context) {
 	state := ctx.Query("state")
 	if state != "randomstate" {

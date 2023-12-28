@@ -10,8 +10,8 @@ func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, 
 
 	engine.POST("/renew-token", renew.GetAccessToken)
 	auth := engine.Group("/auth")
-	auth.GET("/google/login", authHandler.GoogleLogin)
-	auth.GET("/google/callback", authHandler.GoogleAuthCallback)
+	auth.GET("/google-login", authHandler.GoogleLogin)
+	auth.GET("/google-callback", authHandler.GoogleAuthCallback)
 
 	user := engine.Group("/user")
 	{

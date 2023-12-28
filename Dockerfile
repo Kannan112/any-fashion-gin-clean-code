@@ -8,5 +8,5 @@ RUN go build -v -o /home/build/api ./cmd/api
     
 FROM gcr.io/distroless/static-debian11
 COPY --from=build-stage /home/build/api /api 
-COPY --from=build-stage /home/app/razor.html /razor.html
+COPY --from=build-stage /home/app/view/razor.html /razor.html
 CMD ["/api"]

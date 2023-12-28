@@ -805,6 +805,19 @@ paths:
       summary: Admin can unbolock a blocked user
       tags:
       - Admin
+  /api/auth/google-login:
+    get:
+      description: Initiates the Google login flow
+      produces:
+      - application/json
+      responses:
+        "303":
+          description: See Other
+          schema:
+            type: string
+      summary: Google Login
+      tags:
+      - Authentication
   /api/renew-token:
     post:
       consumes:

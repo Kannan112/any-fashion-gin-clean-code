@@ -1003,6 +1003,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/auth/google-login": {
+            "get": {
+                "description": "Initiates the Google login flow",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Google Login",
+                "responses": {
+                    "303": {
+                        "description": "See Other",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/renew-token": {
             "post": {
                 "description": "Get access token using TokenString",
