@@ -1,13 +1,14 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func ValidateJWT(TokenString string) (int, error) {
+func ValidateJWT(TokenString string) (int, string, error) {
 	tokenValue, err := jwt.Parse(TokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -18,26 +19,29 @@ func ValidateJWT(TokenString string) (int, error) {
 	})
 
 	if err != nil {
-
-		return 0, fmt.Errorf("JWT validation failed: %v", err.Error())
+		return 0, "", fmt.Errorf("JWT validation failed: %v", err.Error())
 	}
 
 	if claims, ok := tokenValue.Claims.(jwt.MapClaims); ok && tokenValue.Valid {
+		role, roleOk := claims["role"].(string)
+		if !roleOk {
+			return 0, "", errors.New("failed to get a role")
+		}
 
 		paramsId, idOK := claims["user_id"].(float64)
 
 		exp, expOK := claims["exp"].(float64)
 		if !idOK || !expOK {
 
-			return 0, fmt.Errorf("Missing or invalid claims in the JWT")
+			return 0, "", errors.New("missing or invalid claims in the jwt")
 		}
 
 		if float64(time.Now().Unix()) > exp {
 
-			return 0, fmt.Errorf("Token has expired")
+			return 0, "", errors.New("token has expired")
 		}
 
-		return int(paramsId), nil
+		return int(paramsId), role, nil
 	}
-	return 0, fmt.Errorf("JWT claims are not valid")
+	return 0, "", fmt.Errorf("JWT clai,ms are not valid")
 }

@@ -16,13 +16,17 @@ func AdminAuth(c *gin.Context) {
 	}
 	tokenString := strings.TrimPrefix(authorizationHeader, "Bearer ")
 
-	adminID, err := ValidateJWT(tokenString)
+	adminID, role, err := ValidateJWT(tokenString)
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
+	if role != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "role is not admin%v", "err": err.Error()})
+		c.Abort()
+		return
+	}
 
 	c.Set("adminId", adminID)
-
 	c.Next()
 }
