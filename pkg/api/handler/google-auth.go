@@ -65,9 +65,9 @@ func (auth *AuthHandler) GoogleLogin(ctx *gin.Context) {
 // @Produce json
 // @Param code query string true "Authorization Code"
 // @Param state query string true "State"
-// @Success 200 {object} SomeResponseObject
-// @Failure 400 {object} ErrorResponse
-// @Router api/auth/google-callback [get]
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Router /api/auth/google-callback [get]
 func (c *AuthHandler) GoogleAuthCallback(ctx *gin.Context) {
 	state := ctx.Query("state")
 	if state != "randomstate" {
