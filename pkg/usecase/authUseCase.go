@@ -14,12 +14,14 @@ import (
 type AuthUseCase struct {
 	UserRepo  interfaces.UserRepository
 	TokenRepo interfaces.RefreshTokenRepository
+	CartRepo  interfaces.CartRepository
 }
 
-func NewAuthUseCase(Repo interfaces.UserRepository, token interfaces.RefreshTokenRepository) services.AuthUserCase {
+func NewAuthUseCase(Repo interfaces.UserRepository, token interfaces.RefreshTokenRepository, cart interfaces.CartRepository) services.AuthUserCase {
 	return &AuthUseCase{
 		UserRepo:  Repo,
 		TokenRepo: token,
+		CartRepo:  cart,
 	}
 }
 
@@ -33,6 +35,9 @@ func (c *AuthUseCase) GoogleLoginUser(ctx context.Context, googleuser req.Google
 		data, err := c.UserRepo.AuthSignUp(googleuser)
 		if err != nil {
 			return "", "", err
+		}
+		if err := c.CartRepo.CreateCart(int(data.Id)); err != nil {
+			return "", "", errors.New("failed to create cart")
 		}
 		AccessTokenString, err := token.GenerateAccessToken(int(data.Id), "user")
 		if err != nil {
