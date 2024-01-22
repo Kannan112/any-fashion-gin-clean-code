@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #333;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-form button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form class="login-form">
+            <input type="text" placeholder="Username" id="email" required>
+            <input type="password" placeholder="Password" id="password" required>
+            <button type="button" onclick="login()">Login</button>
+        </form>
+    </div>
+
+    <script>
+        function login() {
+            // Add your login logic here
+            var Email = document.getElementById('email').value;
+            var Password = document.getElementById('password').value;
+
+            console.log(email, password)
+            $.ajax({
+                url: "/api/user/login",
+                type: "POST",
+                data: {
+                    Email, Password
+                },  // Replace with your actual data
+
+                success: function (response) {
+                    // Handle the success response
+                    console.log(response.data);
+                    localStorage.setItem("token",response.data.Access_token)
+                },
+                error: function (error) {
+                    // Handle the error response
+                    console.log(error);
+                }
+            });
+
+            // Example: Check if the username and password are c orrect
+
+        }
+    </script>
+</body>
+
+</html>
