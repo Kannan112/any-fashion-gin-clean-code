@@ -105,17 +105,20 @@ func (c *ProductDataBase) DeleteProduct(id int) error {
 	err := c.DB.Exec(query, id).Error
 	return err
 }
+
 func (c *ProductDataBase) DeleteAllProducts() error {
 	query := `DELETE FROM product`
 	err := c.DB.Exec(query).Error
 	return err
 }
+
 func (c *ProductDataBase) DisplayProduct(id int) ([]res.Product, error) {
 	var product []res.Product
 	query := `SELECT id, product_name AS name, description, brand, category_id FROM products WHERE id=$1`
 	err := c.DB.Raw(query, id).Scan(&product).Error
 	return product, err
 }
+
 func (c *ProductDataBase) ListProducts() ([]res.Product, error) {
 	var products []res.Product
 	query := `SELECT id, product_name AS name, description,brand,
@@ -129,10 +132,11 @@ func (c *ProductDataBase) ListProducts() ([]res.Product, error) {
 func (c *ProductDataBase) AddProductItem(productItem req.ProductItem) (res.ProductItem, error) {
 	var NewProductItem res.ProductItem
 	query := `INSERT INTO product_items (product_id,sku,qnty_in_stock,gender,model,size,color,material,price,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW())
-	RETURNING product_id AS item_id,qnty_in_stock,gender,model,size,color,material,price,created_at`
+	RETURNING id,qnty_in_stock,sku,gender,model,size,color,material,price,created_at`
 	err := c.DB.Raw(query, productItem.ProductID, productItem.SKU, productItem.Qty, productItem.Gender, productItem.Model, productItem.Size, productItem.Color, productItem.Material, productItem.Price).Scan(&NewProductItem).Error
 	return NewProductItem, err
 }
+
 func (c *ProductDataBase) UpdateProductItem(productItem req.ProductItems) (res.ProductItem, error) {
 	var UpdateProductItem res.ProductItem
 	query := `UPDATE product_items

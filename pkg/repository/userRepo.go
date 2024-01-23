@@ -249,3 +249,12 @@ func (c *userDatabase) AccountVerify(phone string) error {
 	}
 	return nil
 }
+
+func (c *userDatabase) GetUserDetailsFromUserID(userId uint) (domain.Users, error) {
+	var userDetails domain.Users
+	query := `SELECT * from users where id = $1`
+	if err := c.DB.Raw(query, userId).Scan(&userDetails).Error; err != nil {
+		return userDetails, err
+	}
+	return userDetails, nil
+}

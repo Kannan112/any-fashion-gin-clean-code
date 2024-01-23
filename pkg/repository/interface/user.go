@@ -11,6 +11,7 @@ import (
 type UserRepository interface {
 	UserSignUp(ctx context.Context, user req.UserReq) (res.UserData, error)
 	UserLogin(ctx context.Context, email string) (domain.Users, error)
+	GetUserDetailsFromUserID(userId uint) (domain.Users, error)
 	AuthSignUp(Oauth req.GoogleAuth) (res.UserResponse, error)
 	AuthLogin(email string) (bool, error)
 	CheckVerifyPhone(mobileNo string) (bool, error)

@@ -155,6 +155,21 @@ func (mr *MockUserRepositoryMockRecorder) FindAddress(ctx, userId interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAddress", reflect.TypeOf((*MockUserRepository)(nil).FindAddress), ctx, userId)
 }
 
+// GetUserDetailsFromUserID mocks base method.
+func (m *MockUserRepository) GetUserDetailsFromUserID(userId uint) (domain.Users, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserDetailsFromUserID", userId)
+	ret0, _ := ret[0].(domain.Users)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserDetailsFromUserID indicates an expected call of GetUserDetailsFromUserID.
+func (mr *MockUserRepositoryMockRecorder) GetUserDetailsFromUserID(userId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserDetailsFromUserID", reflect.TypeOf((*MockUserRepository)(nil).GetUserDetailsFromUserID), userId)
+}
+
 // IsSignIn mocks base method.
 func (m *MockUserRepository) IsSignIn(phno string) (bool, error) {
 	m.ctrl.T.Helper()

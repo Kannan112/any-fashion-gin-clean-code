@@ -1,7 +1,10 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
+	"github.com/kannan112/go-gin-clean-arch/pkg/domain"
 	interfaces "github.com/kannan112/go-gin-clean-arch/pkg/repository/interface"
 	"gorm.io/gorm"
 )
@@ -14,10 +17,14 @@ func NewPaymentRepo(DB *gorm.DB) interfaces.PaymentRepo {
 	return &PaymentDataBase{DB}
 }
 
-func (c PaymentDataBase) SavePaymentMethod(payment req.PaymentReq) error {
-	query := `INSERT INTO payment_methods(payment_type,block_status,maximum_amount,created_at,updated_at) VALUES($1,$2,$3,NOW(),0)`
-	err := c.DB.Exec(query, payment.PaymentType, payment.BlockStatus, payment.MaximumAmount).Error
-	return err
+func (c PaymentDataBase) ListPaymentMethod(ctx context.Context) ([]domain.PaymentMethod, error) {
+	var data []domain.PaymentMethod
+	ListPayment := `select * from payment_methods`
+	if err := c.DB.Raw(ListPayment).Scan(&data).Error; err != nil {
+		return data, err
+	}
+	return data, nil
+
 }
 
 //update the pament mathod
@@ -31,7 +38,7 @@ func (c PaymentDataBase) UpdatePaymentMethod(id int, pamyment req.PaymentReq) er
 		return err
 	}
 
-	query := `UPDATE payment_methods SET payment_type=$1, block_status=$2, maximum_amount=$3, updated_at=NOW() WHERE id=$4`
-	err = c.DB.Exec(query, pamyment.PaymentType, pamyment.BlockStatus, pamyment.MaximumAmount, id).Error
+	query := `UPDATE payment_methods SET block_status=$1, maximum_amount=$2 WHERE id=$3`
+	err = c.DB.Exec(query, pamyment.BlockStatus, pamyment.MaximumAmount, id).Error
 	return err
 }
