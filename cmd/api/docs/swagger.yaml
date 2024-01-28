@@ -98,6 +98,13 @@ definitions:
     - phoneNumber
     - pin
     type: object
+  req.PaymentReq:
+    properties:
+      block_status:
+        type: boolean
+      maximum_amount:
+        type: integer
+    type: object
   req.Product:
     properties:
       brand:
@@ -265,8 +272,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Admin, users and unregistered users can see all the available categories
-      operationId: view-all-categories
+      description: Admin can see all the available categories
+      operationId: view-all-categories-admin
       parameters:
       - description: Page number for pagination
         in: query
@@ -289,7 +296,7 @@ paths:
             $ref: '#/definitions/res.Response'
       security:
       - BearerTokenAuth: []
-      summary: View all available categories
+      summary: View all available categories for admin
       tags:
       - Category
   /api/admin/category/update/{id}:
@@ -582,6 +589,59 @@ paths:
       summary: order placed
       tags:
       - Order
+  /api/admin/payment-methods:
+    get:
+      description: API for admin to get all payment methods
+      operationId: GetAllPaymentMethodsAdmin
+      responses:
+        "200":
+          description: Failed to retrieve payment methods
+          schema:
+            $ref: '#/definitions/res.Response'
+        "500":
+          description: Successfully retrieved all payment methods
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get payment methods
+      tags:
+      - Payments
+  /api/admin/payment-update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a payment method by providing the payment ID and request
+        payload
+      parameters:
+      - description: Payment ID
+        format: int
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payment request payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/req.PaymentReq'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Update a payment method
+      tags:
+      - Payments
   /api/admin/product-item/add:
     post:
       consumes:
@@ -805,6 +865,36 @@ paths:
       summary: Admin can unbolock a blocked user
       tags:
       - Admin
+  /api/auth/google-callback:
+    get:
+      consumes:
+      - application/json
+      description: Callback endpoint after Google authentication
+      parameters:
+      - description: Authorization Code
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Google Auth Callback
+      tags:
+      - Authentication
   /api/auth/google-login:
     get:
       description: Initiates the Google login flow
@@ -1066,6 +1156,37 @@ paths:
       summary: user remove item
       tags:
       - Cart
+  /api/user/category/listall:
+    get:
+      consumes:
+      - application/json
+      description: Users and unregistered users can see all the available categories
+      operationId: view-all-categories-users
+      parameters:
+      - description: Page number for pagination
+        in: query
+        name: count
+        type: integer
+      - description: Number of items to retrieve per page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: View all available categories for users
+      tags:
+      - Category
   /api/user/category/listspecific/{category_id}:
     get:
       consumes:
@@ -1167,8 +1288,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
-      security:
-      - BearerTokenAuth: []
       summary: User Login
       tags:
       - Users
@@ -1292,7 +1411,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Send OTP to user's mobile
       tags:
-      - Otp
+      - OTP Verification
   /api/user/otp/verify:
     post:
       consumes:
@@ -1319,7 +1438,147 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: Validate the OTP to user's mobile
       tags:
-      - Otp
+      - OTP Verification
+  /api/user/payment/checkout/payment-select-page:
+    get:
+      description: API for user to render payment select page
+      operationId: CartOrderPaymentSelectPage
+      responses:
+        "200":
+          description: Successfully rendered payment page
+          schema:
+            $ref: '#/definitions/res.Response'
+        "500":
+          description: Failed to render payment page
+          schema:
+            $ref: '#/definitions/res.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Render Payment Page (User)
+      tags:
+      - Payments
+  /api/user/payment/payment-methods:
+    get:
+      description: API for user to get all payment methods
+      operationId: GetAllPaymentMethodsUser
+      responses:
+        "200":
+          description: Failed to retrieve payment methods
+          schema:
+            $ref: '#/definitions/res.Response'
+        "500":
+          description: Successfully retrieved all payment methods
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Get payment methods
+      tags:
+      - Payments
+  /api/user/payment/razorpay-checkout:
+    get:
+      consumes:
+      - application/json
+      description: Handle RazorPay checkout for a specific payment ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Handle RazorPay checkout
+      tags:
+      - Payments
+  /api/user/payment/razorpay-verify:
+    post:
+      consumes:
+      - application/json
+      description: Verify RazorPay payment using the provided parameters
+      parameters:
+      - description: RazorPay Payment ID
+        in: formData
+        name: razorpay_payment_id
+        required: true
+        type: string
+      - description: RazorPay Order ID
+        in: formData
+        name: razorpay_order_id
+        required: true
+        type: string
+      - description: RazorPay Signature
+        in: formData
+        name: razorpay_signature
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Verify RazorPay payment
+      tags:
+      - Payments
+  /api/user/payment/stripe-checkout:
+    post:
+      description: API for user to create stripe payment
+      operationId: StripPaymentCheckout
+      parameters:
+      - description: Shop Order ID
+        in: formData
+        name: shop_order_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successfully stripe payment order created
+          schema:
+            $ref: '#/definitions/res.Response'
+        "500":
+          description: Failed to create stripe order
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Stripe checkout (User)
+      tags:
+      - Payments
+  /api/user/payment/stripe-verify:
+    post:
+      description: API for user to callback backend after stripe payment for verification
+      operationId: StripePaymentVeify
+      parameters:
+      - description: Stripe payment ID
+        in: formData
+        name: stripe_payment_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Successfully stripe payment verified
+          schema:
+            $ref: '#/definitions/res.Response'
+        "402":
+          description: Payment not approved
+          schema:
+            $ref: '#/definitions/res.Response'
+        "500":
+          description: Failed to Approve order
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: Stripe verify (User)
+      tags:
+      - Payments
   /api/user/product-item/{product_id}:
     get:
       consumes:
@@ -1423,8 +1682,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/res.Response'
-      security:
-      - BearerTokenAuth: []
       summary: user-signup
       tags:
       - Users

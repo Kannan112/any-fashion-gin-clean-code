@@ -155,7 +155,7 @@ const docTemplate = `{
                         "BearerTokenAuth": []
                     }
                 ],
-                "description": "Admin, users and unregistered users can see all the available categories",
+                "description": "Admin can see all the available categories",
                 "consumes": [
                     "application/json"
                 ],
@@ -165,8 +165,8 @@ const docTemplate = `{
                 "tags": [
                     "Category"
                 ],
-                "summary": "View all available categories",
-                "operationId": "view-all-categories",
+                "summary": "View all available categories for admin",
+                "operationId": "view-all-categories-admin",
                 "parameters": [
                     {
                         "type": "integer",
@@ -650,6 +650,88 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/admin/payment-methods": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "API for admin to get all payment methods",
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get payment methods",
+                "operationId": "GetAllPaymentMethodsAdmin",
+                "responses": {
+                    "200": {
+                        "description": "Failed to retrieve payment methods",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Successfully retrieved all payment methods",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/payment-update/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Update a payment method by providing the payment ID and request payload",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Update a payment method",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int",
+                        "description": "Payment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payment request payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/req.PaymentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/admin/product-item/add": {
             "post": {
                 "security": [
@@ -984,6 +1066,51 @@ const docTemplate = `{
                         "description": "ID of the user to be blocked",
                         "name": "user_id",
                         "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/google-callback": {
+            "get": {
+                "description": "Callback endpoint after Google authentication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Google Auth Callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization Code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "State",
+                        "name": "state",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -1413,6 +1540,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/category/listall": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Users and unregistered users can see all the available categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "View all available categories for users",
+                "operationId": "view-all-categories-users",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items to retrieve per page",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/category/listspecific/{category_id}": {
             "get": {
                 "security": [
@@ -1533,11 +1709,6 @@ const docTemplate = `{
         },
         "/api/user/login": {
             "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
                 "description": "Login as a user to access the ecommerce site",
                 "consumes": [
                     "application/json"
@@ -1736,7 +1907,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Otp"
+                    "OTP Verification"
                 ],
                 "summary": "Send OTP to user's mobile",
                 "operationId": "send-otp",
@@ -1777,7 +1948,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Otp"
+                    "OTP Verification"
                 ],
                 "summary": "Validate the OTP to user's mobile",
                 "operationId": "validate-otp",
@@ -1801,6 +1972,218 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/checkout/payment-select-page": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "API for user to render payment select page",
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Render Payment Page (User)",
+                "operationId": "CartOrderPaymentSelectPage",
+                "responses": {
+                    "200": {
+                        "description": "Successfully rendered payment page",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to render payment page",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/payment-methods": {
+            "get": {
+                "description": "API for user to get all payment methods",
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get payment methods",
+                "operationId": "GetAllPaymentMethodsUser",
+                "responses": {
+                    "200": {
+                        "description": "Failed to retrieve payment methods",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Successfully retrieved all payment methods",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/razorpay-checkout": {
+            "get": {
+                "description": "Handle RazorPay checkout for a specific payment ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Handle RazorPay checkout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/razorpay-verify": {
+            "post": {
+                "description": "Verify RazorPay payment using the provided parameters",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Verify RazorPay payment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "RazorPay Payment ID",
+                        "name": "razorpay_payment_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "RazorPay Order ID",
+                        "name": "razorpay_order_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "RazorPay Signature",
+                        "name": "razorpay_signature",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/stripe-checkout": {
+            "post": {
+                "description": "API for user to create stripe payment",
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Stripe checkout (User)",
+                "operationId": "StripPaymentCheckout",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Shop Order ID",
+                        "name": "shop_order_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully stripe payment order created",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to create stripe order",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/payment/stripe-verify": {
+            "post": {
+                "description": "API for user to callback backend after stripe payment for verification",
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Stripe verify (User)",
+                "operationId": "StripePaymentVeify",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Stripe payment ID",
+                        "name": "stripe_payment_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully stripe payment verified",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "402": {
+                        "description": "Payment not approved",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to Approve order",
                         "schema": {
                             "$ref": "#/definitions/res.Response"
                         }
@@ -1935,11 +2318,6 @@ const docTemplate = `{
         },
         "/api/user/signup": {
             "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
                 "description": "Signup as a new user to access the ecommerce site",
                 "consumes": [
                     "application/json"
@@ -2368,6 +2746,17 @@ const docTemplate = `{
                 },
                 "pin": {
                     "type": "string"
+                }
+            }
+        },
+        "req.PaymentReq": {
+            "type": "object",
+            "properties": {
+                "block_status": {
+                    "type": "boolean"
+                },
+                "maximum_amount": {
+                    "type": "integer"
                 }
             }
         },
