@@ -6,6 +6,4 @@ type Admin struct {
 	Email    string `json:"email" gorm:"not null" binding:"omitempty,email"`
 	Password string `json:"password" gorm:"not null" binding:"required,min=5,max=30"`
 	IsSuper  bool
-	// CreatedAt time.Time `json:"created_at" gorm:"not null"`
-	// UpdatedAt time.Time `json:"updated_at"`
 }

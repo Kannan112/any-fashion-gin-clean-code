@@ -2,6 +2,10 @@ package domain
 
 import "time"
 
+type OrderStatusType string
+
+const ()
+
 type Orders struct {
 	Id          uint `gorm:"primaryKey;unique;not null"`
 	UsersId     uint
@@ -30,4 +34,9 @@ type OrderItem struct {
 	ProductItem   ProductItem
 	Quantity      int
 	Price         int
+}
+
+type OrderStatus struct {
+	Id     uint `gorm:"primaryKey;unique;not null"`
+	Status OrderStatusType
 }
