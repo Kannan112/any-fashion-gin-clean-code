@@ -99,9 +99,9 @@ func (cr *AdminHandler) AdminLogin(c *gin.Context) {
 	c.JSON(http.StatusOK, res.Response{
 		StatusCode: 200,
 		Message:    "logined success fully",
-		Data: res.Token{
-			Access_token:  result.Access_token,
-			Refresh_token: result.Refresh_token,
+		Data: res.AdminToken{
+			Token: result.Access_token,
+			//Refresh_token: result.Refresh_token,
 		},
 		Errors: nil,
 	})

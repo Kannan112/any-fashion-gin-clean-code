@@ -25,19 +25,14 @@ type ServerHTTP struct {
 // @BasePath /
 // @query.collection.format multi
 func NewServerHTTP(
-	userHandler *handler.UserHandler,
-	adminHandler *handler.AdminHandler,
-	cartHandler *handler.CartHandler,
-	productHandler *handler.ProductHandler,
-	orderHandler *handler.OrderHandler,
-	paymentHandler *handler.PaymentHandler,
-	wishlistHandler *handler.WishlistHandler,
-	couponHandler *handler.CouponHandler,
-	walletHandler *handler.WalletHandler,
-	OtpHandler *handler.OtpHandler,
-	RenewHandler *handler.RenewHandler,
-	AuthHandler *handler.AuthHandler,
+	userHandler *handler.UserHandler, adminHandler *handler.AdminHandler,
+	cartHandler *handler.CartHandler, productHandler *handler.ProductHandler,
+	orderHandler *handler.OrderHandler, paymentHandler *handler.PaymentHandler,
+	wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler,
+	walletHandler *handler.WalletHandler, OtpHandler *handler.OtpHandler,
+	RenewHandler *handler.RenewHandler, AuthHandler *handler.AuthHandler,
 ) *ServerHTTP {
+
 	engine := gin.New()
 
 	// Use logger from Gin
@@ -48,10 +43,11 @@ func NewServerHTTP(
 	// Swagger docs
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// Setup user routes
-	routes.SetupUserRoutes(engine.Group("/api"), userHandler, cartHandler, productHandler, orderHandler, wishlistHandler, couponHandler, walletHandler, OtpHandler, RenewHandler, AuthHandler)
+	routes.SetupUserRoutes(engine.Group("/api"), userHandler, cartHandler, productHandler, orderHandler,
+		wishlistHandler, couponHandler, walletHandler, OtpHandler, RenewHandler, AuthHandler, paymentHandler)
 
 	// Setup admin routes
-	routes.SetupAdminRoutes(engine.Group("/api"), adminHandler, productHandler, orderHandler, couponHandler)
+	routes.SetupAdminRoutes(engine.Group("/api"), adminHandler, productHandler, orderHandler, couponHandler, paymentHandler)
 
 	return &ServerHTTP{engine: engine}
 }

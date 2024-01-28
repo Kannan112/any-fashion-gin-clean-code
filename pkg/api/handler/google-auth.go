@@ -132,7 +132,6 @@ func (c *AuthHandler) GoogleAuthCallback(ctx *gin.Context) {
 		Name:  userInfo.Name,
 		Email: userInfo.Email,
 	}
-	fmt.Println("testingAneERror")
 	accessToken, refreshToken, err := c.AuthUseCase.GoogleLoginUser(ctx, data)
 	if err != nil {
 		ctx.JSON(http.StatusNonAuthoritativeInfo, res.Response{
@@ -148,8 +147,8 @@ func (c *AuthHandler) GoogleAuthCallback(ctx *gin.Context) {
 		"refreshToken": refreshToken,
 	}
 
-	fmt.Println("testingAne")
-
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie("UserAuth", accessToken, 3600*24*30, "", "", false, true)
 	ctx.JSON(http.StatusOK, res.Response{
 		StatusCode: http.StatusOK,
 		Message:    "successfully login",

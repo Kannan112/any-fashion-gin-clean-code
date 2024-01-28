@@ -28,7 +28,7 @@ func NewOtpHandler(cfg config.Config, otpUseCase services.OtpUseCase, userUseCas
 // @Summary Send OTP to user's mobile
 // @ID send-otp
 // @Description Send OTP to use's mobile
-// @Tags Otp
+// @Tags OTP Verification
 // @Accept json
 // @Produce json
 // @Param user_mobile body  req.OTPData true "User mobile number"
@@ -91,7 +91,7 @@ func (cr *OtpHandler) SendOtp(c *gin.Context) {
 // @Summary Validate the OTP to user's mobile
 // @ID validate-otp
 // @Description Validate the  OTP sent to use's mobile
-// @Tags Otp
+// @Tags OTP Verification
 // @Accept json
 // @Produce json
 // @Param otp body req.Otpverifier true "OTP sent to user's mobile number"

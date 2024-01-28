@@ -6,7 +6,13 @@ import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware"
 )
 
-func SetupAdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, couponHandler *handler.CouponHandler) {
+func SetupAdminRoutes(engine *gin.RouterGroup,
+	adminHandler *handler.AdminHandler,
+	productHandler *handler.ProductHandler,
+	orderHandler *handler.OrderHandler,
+	couponHandler *handler.CouponHandler,
+	paymentHandler *handler.PaymentHandler,
+) {
 	admin := engine.Group("/admin")
 	{
 		// Admin routes
@@ -35,7 +41,7 @@ func SetupAdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandle
 			category.POST("add", productHandler.CreateCategory)
 			category.PATCH("update/:id", productHandler.UpdateCategory)
 			category.DELETE("delete/:category_id")
-			category.GET("listall", productHandler.ListCategories)
+			category.GET("listall", productHandler.AdminListCategory())
 			category.GET("listspecific/:category_id", productHandler.DisplayCategory)
 		}
 
@@ -84,6 +90,12 @@ func SetupAdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandle
 		{
 			sales.GET("get", adminHandler.ViewSalesReport)
 			sales.GET("download", adminHandler.DownloadSalesReport)
+		}
+
+		adminPayment := admin.Group("payment-methods")
+		{
+			adminPayment.GET("/", paymentHandler.GetPaymentMethodAdmin())
+			adminPayment.PUT("/:id", paymentHandler.UpdatePaymentMethod)
 		}
 	}
 }

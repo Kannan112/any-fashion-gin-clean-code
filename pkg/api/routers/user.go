@@ -6,14 +6,17 @@ import (
 	"github.com/kannan112/go-gin-clean-arch/pkg/api/middleware"
 )
 
-func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, cartHandler *handler.CartHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler, walletHandler *handler.WalletHandler, otpHandler *handler.OtpHandler, renew *handler.RenewHandler, authHandler *handler.AuthHandler) {
+func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, cartHandler *handler.CartHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, wishlistHandler *handler.WishlistHandler, couponHandler *handler.CouponHandler, walletHandler *handler.WalletHandler, otpHandler *handler.OtpHandler, renew *handler.RenewHandler, authHandler *handler.AuthHandler, paymentHandler *handler.PaymentHandler) {
 
 	engine.POST("/renew-token", renew.GetAccessToken)
 	auth := engine.Group("/auth")
-	auth.GET("/google-login", authHandler.GoogleLogin)
-	auth.GET("/google-callback", authHandler.GoogleAuthCallback)
-
+	{
+		auth.GET("/google-login", authHandler.GoogleLogin)
+		auth.GET("/google-callback", authHandler.GoogleAuthCallback)
+	}
 	user := engine.Group("/user")
+
+	user.GET("/login", userHandler.LLLogin)
 	{
 		//otp
 		otp := user.Group("/otp")
@@ -53,7 +56,7 @@ func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, 
 		// Categories
 		categories := user.Group("category", middleware.UserAuth)
 		{
-			categories.GET("listall", productHandler.ListCategories)
+			categories.GET("listall", productHandler.UserListCategory())
 			categories.GET("listspecific/:category_id", productHandler.DisplayCategory)
 		}
 
@@ -69,31 +72,32 @@ func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, 
 			productitem.GET("/:product_id", productHandler.DisaplyaAllProductItems)
 		}
 
-		// Cart
 		cart := user.Group("/cart", middleware.UserAuth)
 		{
 			cart.POST("add/:product_items_id", cartHandler.AddToCart)
 			cart.DELETE("remove/:product_item_id", cartHandler.RemoveFromCart)
 			cart.GET("list", cartHandler.ListCart)
+
 		}
 
 		// Cart Items
 		cartitem := user.Group("/cart-item", middleware.UserAuth)
 		{
 			cartitem.GET("list", cartHandler.ListCartItems)
-			// 	cartitem.GET("list/:id", cartHandler.DisplayCartItem)
+			//	cartitem.GET("list/:id", cartHandler.DisplayCartItem)
 		}
 
 		// Order
 		order := user.Group("/order", middleware.UserAuth)
 		{
-			order.GET("/razorpay/checkout/:payment_id", orderHandler.RazorPayCheckout)
-			order.POST("/razorpay/verify", orderHandler.RazorPayVerify)
+
 			order.GET("orderall", orderHandler.OrderAll)
 			order.PATCH("cancel/:orderId", orderHandler.UserCancelOrder)
 			order.GET("listall", orderHandler.ListOrdersOfUsers)
 			order.GET("/:orderId", orderHandler.OrderDetails)
 		}
+		//	engine.GET("/razorpay/checkout/:payment_id", paymentHandler.RazorPayCheckout)
+		//	engine.POST("/razorpay/verify", paymentHa ndler.RazorPayVerify)
 
 		// Coupon
 		coupon := user.Group("/coupon", middleware.UserAuth)
@@ -110,5 +114,20 @@ func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, 
 			wallet.DELETE("/remove", walletHandler.RemoveWallet)
 			//wallet apply while purchasing{reduce the amount in wallet}
 		}
+
+		payment := user.Group("/payment", middleware.UserAuthCookie)
+		{
+			payment.GET("payment-methods", paymentHandler.GetPaymentMethodUser())
+			payment.GET("/checkout/payment-select-page", paymentHandler.CartOrderPaymentSelectPage)
+
+			// razorpay-payment
+			payment.GET("/razorpay-checkout", paymentHandler.RazorPayCheckout)
+			payment.POST("/razorpay-verify", paymentHandler.RazorPayVerify)
+
+			// stripe-payment
+			payment.POST("/stripe-checkout", paymentHandler.StripeCheckout)
+			payment.POST("/stripe-verify", paymentHandler.StripePaymentVerify)
+		}
+
 	}
 }

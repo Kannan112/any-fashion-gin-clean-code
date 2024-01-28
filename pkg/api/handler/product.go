@@ -162,9 +162,9 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 }
 
 // ListAllCategories
-// @Summary View all available categories
-// @ID view-all-categories
-// @Description Admin, users and unregistered users can see all the available categories
+// @Summary View all available categories for admin
+// @ID view-all-categories-admin
+// @Description Admin can see all the available categories
 // @Tags Category
 // @Accept json
 // @Produce json
@@ -174,44 +174,67 @@ func (cr *ProductHandler) DeleteCategory(c *gin.Context) {
 // @Failure 400 {object} res.Response
 // @Security BearerTokenAuth
 // @Router /api/admin/category/listall [get]
-func (cr *ProductHandler) ListCategories(c *gin.Context) {
-	var pagenation req.Pagenation
-	countStr := c.Query("count")
-	pageStr := c.Query("page")
-	if countStr != "" || pageStr != "" {
-		count, err1 := strconv.Atoi(countStr)
-		page, err := strconv.Atoi(pageStr)
-		pagenation.Count = count
-		pagenation.Page = page
-		if err != nil || err1 != nil {
+func (c *ProductHandler) AdminListCategory() func(ctx *gin.Context) {
+	return c.ListCategories()
+}
+
+// ListAllCategories
+// @Summary View all available categories for users
+// @ID view-all-categories-users
+// @Description Users and unregistered users can see all the available categories
+// @Tags Category
+// @Accept json
+// @Produce json
+// @Param count query int false "Page number for pagination"
+// @Param page query int false "Number of items to retrieve per page"
+// @Success 200 {object} res.Response
+// @Failure 400 {object} res.Response
+// @Security BearerTokenAuth
+// @Router /api/user/category/listall [get]
+func (c *ProductHandler) UserListCategory() func(ctx *gin.Context) {
+	return c.ListCategories()
+}
+
+func (cr *ProductHandler) ListCategories() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		var pagenation req.Pagenation
+		countStr := c.Query("count")
+		pageStr := c.Query("page")
+		if countStr != "" || pageStr != "" {
+			count, err1 := strconv.Atoi(countStr)
+			page, err := strconv.Atoi(pageStr)
+			pagenation.Count = count
+			pagenation.Page = page
+			if err != nil || err1 != nil {
+				c.JSON(http.StatusBadRequest, res.Response{
+					StatusCode: 400,
+					Message:    "page not found",
+					Data:       nil,
+					Errors:     err,
+				})
+				return
+			}
+
+		}
+		fmt.Printf("count: %v,page: %v", pagenation.Count, pagenation.Page)
+		categories, err := cr.productuseCase.ListCategories(c, pagenation)
+		if err != nil {
 			c.JSON(http.StatusBadRequest, res.Response{
 				StatusCode: 400,
-				Message:    "page not found",
+				Message:    "can't find category",
 				Data:       nil,
-				Errors:     err,
+				Errors:     err.Error(),
 			})
 			return
 		}
 
-	}
-	fmt.Printf("count: %v,page: %v", pagenation.Count, pagenation.Page)
-	categories, err := cr.productuseCase.ListCategories(c, pagenation)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, res.Response{
-			StatusCode: 400,
-			Message:    "can't find category",
-			Data:       nil,
-			Errors:     err.Error(),
+		c.JSON(http.StatusOK, res.Response{
+			StatusCode: 200,
+			Message:    "Ctegories are",
+			Data:       categories,
+			Errors:     nil,
 		})
-		return
 	}
-
-	c.JSON(http.StatusOK, res.Response{
-		StatusCode: 200,
-		Message:    "Ctegories are",
-		Data:       categories,
-		Errors:     nil,
-	})
 }
 
 // FindCategoryByID
