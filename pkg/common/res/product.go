@@ -32,13 +32,13 @@ type OfferTable struct {
 }
 
 type ProductItem struct {
-	ProductId uint
-	Sku       string
-	Qty       int
-	Gender    string
-	Model     string
-	Size      int
-	Color     string
-	Material  string
-	Price     float64
+	Id          uint
+	Sku         string
+	QntyInStock uint
+	Gender      string
+	Model       string
+	Size        int
+	Color       string
+	Material    string
+	Price       float64
 }

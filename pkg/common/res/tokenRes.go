@@ -9,3 +9,7 @@ type TokenCalim struct {
 	ID   uint
 	Role string
 }
+
+type AdminToken struct {
+	Token string
+}

@@ -6,11 +6,11 @@ type CartItemsLim struct {
 }
 
 type Display struct {
-	ProductName string
-	Brand       string
-	Color       string
-	Size        int
-	Price       int
+	ProductName string `json:"product_name"`
+	Brand       string `json:"brand"`
+	Color       string `json:"color"`
+	Size        int    `json:"size"`
+	Price       int    `json:"price"`
 }
 
 type ViewCart struct {
