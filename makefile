@@ -49,3 +49,12 @@ mockgen:
 	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/usecase/mockusecase/mock_user.go
 	mockgen -source=pkg/usecase/interface/cart.go -destination=pkg/usecase/mockusecase/mock_cart.go
 	mockgen -source=pkg/usecase/interface/wallet.go -destination=pkg/usecase/mockusecase/mock_wallet.go
+
+docker-up: ## To up the docker compose file
+	docker-compose up 
+
+docker-down: ## To down the docker compose file
+	docker-compose down
+
+docker-build: ## To build newdocker file for this project
+	docker build -t kannan112/any-fashion-store . 
