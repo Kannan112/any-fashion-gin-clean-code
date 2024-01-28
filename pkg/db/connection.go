@@ -28,16 +28,20 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		&domain.CartItem{},
 		&domain.Orders{},
 		&domain.OrderItem{},
-		//&domain.OrderStatus{},
+		&domain.OrderStatus{},
 		&domain.PaymentMethod{},
 		&domain.WishList{},
 		&domain.Coupon{},
 		&domain.Wallet{},
 		&domain.OfferTable{},
 		&domain.Images{},
-		&domain.AdminRefreshToken{},
 		&domain.UserRefreshToken{},
 	)
+	if err := SavePaymentMethods(db); err != nil {
+		fmt.Println("failed to setup database")
+		return nil, err
+	}
 
 	return db, dbErr
+
 }
