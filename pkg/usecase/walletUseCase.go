@@ -27,7 +27,7 @@ func (uc *WalletUseCase) SaveWallet(ctx context.Context, userID int) error {
 }
 
 func (uc *WalletUseCase) GetWalletProfile(ctx context.Context, userID uint) (res.Wallet, error) {
-	response, err := uc.WalletRepo.GetWalletProfile(ctx,userID)
+	response, err := uc.WalletRepo.GetWalletProfile(ctx, userID)
 	if err != nil {
 		return response, err
 	}

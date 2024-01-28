@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/req"
 	"github.com/kannan112/go-gin-clean-arch/pkg/common/res"
@@ -23,6 +24,9 @@ func NewProductUsecase(productRepo interfaces.ProductRepository) services.Produc
 // CATEGORY
 func (c *ProductUseCase) CreateCategory(category req.Category) (res.Category, error) {
 	newCategort, err := c.productRepo.CreateCategory(category)
+	if err != nil {
+		return newCategort, errors.New("category already exists")
+	}
 	return newCategort, err
 }
 func (c *ProductUseCase) UpdateCategory(category req.Category, id int) (res.Category, error) {
@@ -76,7 +80,7 @@ func (c ProductUseCase) AddProductItem(productItem req.ProductItem) (res.Product
 	return NewProductItem, err
 }
 func (c ProductUseCase) UpdateProductItem(productItem req.ProductItems) (res.ProductItem, error) {
-	UpdateProductitem, err := c.productRepo.UpdateProductItem( productItem)
+	UpdateProductitem, err := c.productRepo.UpdateProductItem(productItem)
 	return UpdateProductitem, err
 }
 func (c ProductUseCase) DeleteProductItem(id int) error {

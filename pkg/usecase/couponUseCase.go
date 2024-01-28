@@ -23,6 +23,7 @@ func (c *CouponUseCase) AddCoupon(ctx context.Context, coupon req.Coupons) error
 	if err != nil {
 		return err
 	} else if checkCoupon {
+		
 		return fmt.Errorf("there already a coupon exist with coupon_name %v", coupon.Code)
 	}
 	// validate the coupn expire date

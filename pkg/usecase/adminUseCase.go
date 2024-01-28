@@ -56,18 +56,18 @@ func (c *adminUseCase) AdminLogin(admin req.LoginReq) (res.Token, error) {
 	if err != nil {
 		return result, err
 	}
-	refreshToken, err := token.GenerateRefreshToken(int(adminData.ID), "admin")
+	//, err := token.GenerateRefreshToken(int(adminData.ID), "admin")
 	if err != nil {
 
 		return result, err
 	}
 	result = res.Token{
-		Access_token:  accessToken,
-		Refresh_token: refreshToken,
+		Access_token: accessToken,
+		//Refresh_token: refreshToken,
 	}
-	if err := c.refreshTokenRepo.AdminRefreshTokenAdd(result.Refresh_token, adminData.ID); err != nil {
-		return result, err
-	}
+	// if err := c.refreshTokenRepo.AdminRefreshTokenAdd(result.Refresh_token, adminData.ID); err != nil {
+	// 	return result, err
+	// }
 
 	return result, nil
 }

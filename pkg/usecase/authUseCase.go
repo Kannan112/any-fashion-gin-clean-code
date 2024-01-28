@@ -12,16 +12,18 @@ import (
 )
 
 type AuthUseCase struct {
-	UserRepo  interfaces.UserRepository
-	TokenRepo interfaces.RefreshTokenRepository
-	CartRepo  interfaces.CartRepository
+	UserRepo   interfaces.UserRepository
+	TokenRepo  interfaces.RefreshTokenRepository
+	CartRepo   interfaces.CartRepository
+	walletRepo interfaces.WalletRepo
 }
 
-func NewAuthUseCase(Repo interfaces.UserRepository, token interfaces.RefreshTokenRepository, cart interfaces.CartRepository) services.AuthUserCase {
+func NewAuthUseCase(Repo interfaces.UserRepository, token interfaces.RefreshTokenRepository, cart interfaces.CartRepository, wallet interfaces.WalletRepo) services.AuthUserCase {
 	return &AuthUseCase{
-		UserRepo:  Repo,
-		TokenRepo: token,
-		CartRepo:  cart,
+		UserRepo:   Repo,
+		TokenRepo:  token,
+		CartRepo:   cart,
+		walletRepo: wallet,
 	}
 }
 
@@ -38,6 +40,10 @@ func (c *AuthUseCase) GoogleLoginUser(ctx context.Context, googleuser req.Google
 		}
 		if err := c.CartRepo.CreateCart(int(data.Id)); err != nil {
 			return "", "", errors.New("failed to create cart")
+		}
+		err = c.walletRepo.SaveWallet(ctx, int(data.Id))
+		if err != nil {
+			return "", "", errors.New("failed to create user wallet")
 		}
 		AccessTokenString, err := token.GenerateAccessToken(int(data.Id), "user")
 		if err != nil {
