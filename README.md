@@ -33,8 +33,8 @@ Make sure you have the following installed on your system:
 ### 1. Clone the Repository
 Clone the ecommerce-gin-clean-arch repository to your local system:
 ```bash
-git clone https://github.com/nikhilnarayanan623/ecommerce-gin-clean-arch.git
-cd ecommerce-gin-clean-arch
+git clone https://github.com/kannan112/any-fashion-gin-clean-code.git
+cd any-fashion-gin-clean-code
 ```
 ### 2. Install Dependencies
 Install the required dependencies using either the provided Makefile command or Go's built-in module management:
