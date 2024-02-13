@@ -2033,7 +2033,7 @@ const docTemplate = `{
             }
         },
         "/api/user/payment/razorpay-checkout": {
-            "get": {
+            "post": {
                 "description": "Handle RazorPay checkout for a specific payment ID",
                 "consumes": [
                     "application/json"
