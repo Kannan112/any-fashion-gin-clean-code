@@ -31,6 +31,7 @@ func NewPaymentUsecase(paymentrepo interfaces.PaymentRepo, cartRepo interfaces.C
 	return &PaymentUsecase{
 		paymentrepo: paymentrepo,
 		cartrepo:    cartRepo,
+		userrepo:    userRepo,
 		config:      config,
 	}
 }
@@ -48,24 +49,25 @@ func (c *PaymentUsecase) UpdatePaymentMethod(id int, Payment req.PaymentReq) err
 	return err
 }
 
-func (c *PaymentUsecase) RazorPayCheckout(ctx context.Context, userId int) (res.RazorPayResponse, error) {
-	var RazorPay res.RazorPayResponse
+func (c *PaymentUsecase) RazorPayCheckout(ctx context.Context, userId int) (res.RazorpayOrder, error) {
+	var razorPay res.RazorpayOrder
 	cart, err := c.cartrepo.FindCart(ctx, userId)
 	if err != nil {
-		return RazorPay, errors.New("failed to find cart")
+		return razorPay, errors.New("failed to find cart")
 	}
 	if cart.Sub_total == 0 {
-		return RazorPay, errors.New("there is no products in your list")
+		return razorPay, errors.New("there are no products in your list")
 	}
 
-	//	check the addresses move to user repo as FIND addres
-	checkbool, err := c.userrepo.FindAddress(ctx, userId)
+	// Check the addresses, move to user repo as FindAddress
+	checkBool, err := c.userrepo.FindAddress(ctx, userId)
 	if err != nil {
-		return RazorPay, errors.New("error found at find address checkout usecase")
+		return razorPay, errors.New("error found at finding address in checkout usecase")
 	}
-	if !checkbool {
-		return RazorPay, errors.New("add addresses")
+	if !checkBool {
+		return razorPay, errors.New("add addresses")
 	}
+
 	razorpayKey := config.GetConfig().RazorKey
 	razorpaySecret := config.GetConfig().RazorSec
 
@@ -76,24 +78,28 @@ func (c *PaymentUsecase) RazorPayCheckout(ctx context.Context, userId int) (res.
 	data := map[string]interface{}{
 		"amount":   razorPayAmount,
 		"currency": "INR",
-		"receipt":  "reciept_id",
+		"receipt":  "receipt_id",
 	}
-	// create an order on razor pay
+	// Create an order on Razorpay
 	order, err := client.Order.Create(data, nil)
-
 	if err != nil {
-		return RazorPay, fmt.Errorf("faild to create razorpay order")
+		return razorPay, fmt.Errorf("failed to create Razorpay order: %v", err)
 	}
 
-	return res.RazorPayResponse{
-		Email:       "abhinandarun11@gmail.com",
-		PhoneNumber: "9846789099",
-		RazorpayKey: razorpayKey,
-		PaymentId:   uint(1),
-		OrderId:     order["id"],
-		Total:       uint(razorPayAmount),
-		AmountToPay: uint(cart.Sub_total),
-	}, nil
+	razorpayOrderID := order["id"]
+
+	razorPayOrder := res.RazorpayOrder{
+		ShopOrderID:     cart.Id,
+		AmountToPay:     uint(cart.Sub_total),
+		RazorpayAmount:  uint(razorPayAmount),
+		RazorpayKey:     razorpayKey,
+		RazorpayOrderID: razorpayOrderID,
+		UserID:          uint(userId),
+		Email:           "example@gmail.com",
+		Phone:           "99999999",
+	}
+	return razorPayOrder, nil
+
 }
 
 func (c *PaymentUsecase) VerifyRazorPay(ctx context.Context, body req.RazorPayRequest) error {
@@ -170,20 +176,25 @@ func (c *PaymentUsecase) MakeStripeOrder(ctx context.Context, userID uint) (res.
 		ClientSecret:   clientSecret,
 		PublishableKey: stripePublishKey,
 	}
+
+	fmt.Println("->>>>", stripeOrder)
 	return stripeOrder, nil
 
 }
 
 func (c *PaymentUsecase) VerifyStripeOrder(ctx context.Context, stripePaymentID string) error {
-	stripe.Key = stripePaymentID
+	stripe.Key = c.config.StripeKey
+
+	// get payment by payment_id
 	paymentIntent, err := paymentintent.Get(stripePaymentID, nil)
 
 	if err != nil {
-		return errors.New("failed to get payment intent from stripe")
+		return fmt.Errorf("failed to get payment intent from stripe")
 	}
-	if paymentIntent.Status == "succeeded" {
-		return nil
-	} else {
-		return errors.New("payment not approved")
+
+	// verify the payment intent
+	if paymentIntent.Status != stripe.PaymentIntentStatusSucceeded && paymentIntent.Status != stripe.PaymentIntentStatusRequiresCapture {
+		return ErrPaymentNotApproved
 	}
+	return nil
 }
