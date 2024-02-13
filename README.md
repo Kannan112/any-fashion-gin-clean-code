@@ -70,6 +70,8 @@ make test
 # Set up Environment Variables
 Set up the necessary environment variables in a .env file at the project's root directory. Below are the variables required:
 ```.env
+## Server
+PORT="localhost default :8080"
 ### PostgreSQL database details
 DB_NAME="your database name"
 DB_USER="your database user name"
@@ -79,19 +81,18 @@ DB_PORT="your database running port number"
 ADMIN_AUTH_KEY="secret code for signing admin JWT token"
 USER_AUTH_KEY="secret code for signing user JWT token"
 ### Twilio
-AUTH_TOKEN="your Twilio authentication token"
-ACCOUNT_SID="your Twilio account SID"
-SERVICE_SID="your Twilio messaging service SID"
+TWILIO_AUTHTOKEN="your Twilio authentication token"
+TWILIO_ACCOUNT_SID="your Twilio account SID"
+TWILIO_SERVICES_ID="your Twilio messaging service SID"
 ### Razorpay
 RAZOR_PAY_KEY="your Razorpay API test key"
 RAZOR_PAY_SECRET="your Razorpay API test secret key"
 ### Google Auth
 GOAUTH_CLIENT_ID="your Google auth client ID"
 GOAUTH_CLIENT_SECRET="your Google auth secret key"
-GOAUTH_CALL_BACK_URL="your registered callback URL for Google Auth"
-### AWS S3 Service
-AWS_ACCESS_KEY_ID="your aws access key id"
-AWS_SECRET_ACCESS_KEY="your AWS secret access key"
-AWS_REGION="your AWS region"
-AWS_BUCKET_NAME="your AWS s3 bucket name"
+REDIRECT_URL="your registered callback URL for Google Auth"
+### Stripe
+SECRET_KEY="your stripe secret key"
+PUBLISHABLE_KEY="your stripe publishable key"
+
 ```
