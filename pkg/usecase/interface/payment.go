@@ -13,7 +13,7 @@ type PaymentUsecases interface {
 	UpdatePaymentMethod(id int, Paymen req.PaymentReq) error
 
 	// razorpay
-	RazorPayCheckout(ctx context.Context, userId int) (res.RazorPayResponse, error)
+	RazorPayCheckout(ctx context.Context, userId int) (res.RazorpayOrder, error)
 	VerifyRazorPay(ctx context.Context, body req.RazorPayRequest) error
 
 	// stripe
