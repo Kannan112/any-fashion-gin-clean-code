@@ -25,12 +25,7 @@
               <option value="stripe">Stripe</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="name">Shop Order ID:</label>
-            <input type="text" class="form-control" id="name" name="shop_order_id" placeholder="Enter Shop Order ID">
-          </div>
           <button type="submit" class="btn btn-primary">Submit</button>
-
         </form>
       </div>
     </div>
@@ -56,18 +51,6 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-  let bearerToken = localStorage.getItem("token")
-    (function () {
-      // Check if the token is present
-      var token = localStorage.getItem('token'); // Replace with your actual token
-      if (!token) {
-        // Token is not present, redirect or perform other actions
-        window.location.href = "/api/user/login"; // Redirect to the login page
-        return;
-      }
-    })();
-
-
   $('#place-order').submit((e) => {
     e.preventDefault()
     const paymentMethod = document.getElementById('payment_select').value
@@ -80,12 +63,13 @@
       // case 'cod':
       //   paymentApi = '/carts/place-order/cod'
       //   break;
-      case 'razorpay':
-        paymentApi = '/carts/place-order/razorpay-checkout'
+      case "razorpay":
+       
+        paymentApi = '/api/user/payment/razorpay-checkout'
         paymentName = 'RazorPay'
         break;
       case "stripe":
-        paymentApi = '/carts/place-order/stripe-checkout'
+        paymentApi = '/api/user/payment/stripe-checkout'
         paymentName = 'Stripe'
         break;
       default:
@@ -99,12 +83,6 @@
       url: paymentApi,
       type: 'post',
       data: $('#place-order').serialize(),
-      headers: {
-        'Authorization': `Bearer ${bearerToken}`,
-        'Content-Type': 'application/json', // adjust based on your needs
-        // Add other headers as needed
-      },
-      
       success: (response) => {
         console.log("response : ", response);
 
@@ -115,10 +93,10 @@
           return
         }
         switch (response.payment_type) {
-          case 'razor pay':
+          case 'razor payment':
             StartRazorpay(response.payment_order)
             break;
-          case 'stripe':
+          case 'stripe payment':
             StartStripe(response.payment_order)
             break;
           default:
@@ -211,12 +189,7 @@
     $.ajax({
       //call backend api with data data to vefiry
       type: "post",
-      url: '/carts/place-order/razorpay-verify',
-      headers: {
-        'Authorization': `Bearer ${bearerToken}`,
-        'Content-Type': 'application/json', // adjust based on your needs
-        // Add other headers as needed
-      },
+      url: '/api/user/payment/razorpay-verify',
       data: {
         "razorpay_payment_id": response.razorpay_payment_id,
         "razorpay_order_id": response.razorpay_order_id,
@@ -225,7 +198,6 @@
         "shop_order_id": order.shop_order_id,
 
       },
-     
       success: (response) => {
         console.log("verification response backend", response)
         if (response.data) {
@@ -314,19 +286,13 @@
         console.log(paymentIntent, "success payment intent");
 
         $.ajax({ // for backend call
-          url: '/carts/place-order/stripe-verify',
+          url: '/api/user/payment/stripe-verify',
           type: 'post',
-          headers: {
-            'Authorization': `Bearer ${bearerToken}`,
-            'Content-Type': 'application/json', // adjust based on your needs
-            // Add other headers as needed
-          },
           data: {
             "stripe_payment_id": paymentIntent.id,
             "client_secret": paymentIntent.client_secret,
             "shop_order_id": shopOrderID,
           },
-          
 
           success: (response) => {
             // unmount the stipe payment page
@@ -340,9 +306,6 @@
             DisplayServerError('Stripe', err)
           }
         })
-
-
-
       }
     })
   }
