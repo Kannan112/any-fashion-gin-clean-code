@@ -19,7 +19,7 @@ import (
 // @Success 200 {object} res.Response
 // @Failure 400 {object} res.Response
 // @Failure 401 {object} res.Response
-// @Router /api/user/payment/razorpay-checkout [get]
+// @Router /api/user/payment/razorpay-checkout [post]
 func (cr *PaymentHandler) RazorPayCheckout(ctx *gin.Context) {
 	//paramsId := ctx.Param("payment_id")
 	UserId, err := handlerUtil.GetUserIdFromContext(ctx)

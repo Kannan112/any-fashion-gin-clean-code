@@ -121,7 +121,7 @@ func SetupUserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, 
 			payment.GET("/checkout/payment-select-page", paymentHandler.CartOrderPaymentSelectPage)
 
 			// razorpay-payment
-			payment.GET("/razorpay-checkout", paymentHandler.RazorPayCheckout)
+			payment.POST("/razorpay-checkout", paymentHandler.RazorPayCheckout)
 			payment.POST("/razorpay-verify", paymentHandler.RazorPayVerify)
 
 			// stripe-payment
