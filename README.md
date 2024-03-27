@@ -16,9 +16,12 @@ The project utilizes the following packages:
 8. [Twilio](https://github.com/twilio/twilio-go): A Go client library for the Twilio API, enabling communication via SMS, voice, and other channels.
 9. [Razorpay](https://github.com/razorpay/razorpay-go): A Go client library for the Razorpay API, facilitating payment processing and 
 management.
-10. [AWS SDK](https://github.com/aws/aws-sdk-go): A comprehensive SDK for integrating Go applications with Amazon Web Services, providing functionalities for interacting with Amazon S3 and other AWS services.
+10. Stripe: A Go client library for the Stripe API, allowing seamless integration with Stripe's payment platform.
+11. [AWS SDK](https://github.com/aws/aws-sdk-go): A comprehensive SDK for integrating Go applications with Amazon Web Services, providing functionalities for interacting with Amazon S3 and other AWS services.
 
-Please refer to the respective package documentation for more information on how to use and integrate these packages into your Go application.
+Additionally, the project boasts robust CI/CD capabilities, leveraging GitHub Actions for automated build, test, and deployment processes. The source code is dockerized for seamless containerization, enhancing portability and scalability. Kubernetes (K8s) is utilized for efficient orchestration and management of containerized applications, ensuring optimal performance and scalability. This entire deployment process is demonstrated live on anyfashion.abhinand.live/swagger/index.html, providing transparency and insight into the project's deployment pipeline.
+
+Feel free to reach out if you need further clarification or details!
 
 # Setup Instructions
 To use and test the ecommerce-gin-clean-arch project, please follow these steps:
